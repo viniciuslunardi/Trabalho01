@@ -3,7 +3,7 @@ from Entidades.Registro import Registro
 from Entidades.Registro import EventoRegistro
 
 
-class ControladorVeiculo:
+class ControladorRegistro:
     def __init__(self):
         self.__tela_registro = TelaRegistro(self)
         self.__registros = []

@@ -9,7 +9,7 @@ class TelaVeiculo(AbstractTela):
     def mostrar_opcoes(self):
         print("---------------VEICULO---------------")
         print("0: CADASTRAR VEÍCULO")
-        print("2: ")
+        print("1: LISTA DE VEÍCULOS")
         print("3: ")
         print("4: ")
         print("5: ")

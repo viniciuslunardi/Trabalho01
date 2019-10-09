@@ -12,7 +12,7 @@ class ControladorFuncionario:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {0: self.cadastra, 1: self.lista_funcionario()}
+        switcher = {0: self.cadastra, 1: self.lista_funcionario}
         while True:
             opcao = self.__tela_funcionario.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -21,12 +21,12 @@ class ControladorFuncionario:
     def cadastrar_funcionario(self, numero_matricula, nome, data_nascimento, telefone, veiculos, cargo: Cargo):
         try:
             funcionario = Funcionario(numero_matricula, nome, data_nascimento, telefone, veiculos, cargo)
-            if funcionario not in self.__funcionarios:
-                self.__funcionarios.append(funcionario)
-            else:
+            if self.existe_funcionario(funcionario):
                 raise Exception
+            else:
+                self.__funcionarios.append(funcionario)
         except Exception:
-            print("Funcionário já cadastrado")
+            print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
     def cadastra(self):
         self.cadastrar_funcionario(input("NÚMERO MATRICULA: "), input("NOME: "), input("DATA NASC: "), input("TELEFONE"),
@@ -37,6 +37,9 @@ class ControladorFuncionario:
             print("NÚMERO MATRICULA: ", funcionario.numero_matricula, "NOME: ", funcionario.nome, "DATA NASC: ", funcionario.data_nascimento,
                   "TELEFONE: ", funcionario.telefone,
                   "VEICULOS: ", funcionario.veiculos, "CARGO: ", funcionario.cargo)
+
+    def existe_funcionario(self, funcionario):
+        return funcionario in self.__funcionarios
 
     @property
     def funcionarios(self):

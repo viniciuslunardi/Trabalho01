@@ -27,7 +27,7 @@ class ControladorVeiculo:
             else:
                 self.__veiculos.append(veiculo)
         except Exception:
-            print("Veículo já cadastrado")
+            print("---------------ATENÇÃO--------------- \n * Veículo já cadastrado *")
 
     def existe_veiculo(self, veiculo):
         return veiculo in self.__veiculos

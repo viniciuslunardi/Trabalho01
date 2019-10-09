@@ -63,3 +63,6 @@ class Funcionario:
     @cargo.setter
     def cargo(self, cargo):
         self.__cargo = cargo
+
+    def __eq__(self, other):
+        return self.__numero_matricula == other.numero_matriculo

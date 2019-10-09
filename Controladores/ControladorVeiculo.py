@@ -13,7 +13,7 @@ class ControladorVeiculo:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {0: self.cadastra, 1: self.lista_veiculo, 2: self.verificando_veiculo}
+        switcher = {0: self.cadastra, 1: self.lista_veiculo}
         while True:
             opcao = self.__tela_veiculo.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -22,26 +22,28 @@ class ControladorVeiculo:
     def cadastrar_veiculo(self, placa, modelo, marca, ano, quilometragem_atual, chave):
         try:
             veiculo = Veiculo(placa, modelo, marca, ano, quilometragem_atual, chave)
-            if veiculo not in self.__veiculos:
-                self.__veiculos.append(veiculo)
-            else:
+            if self.existe_veiculo(veiculo):
                 raise Exception
+            else:
+                self.__veiculos.append(veiculo)
         except Exception:
             print("Veículo já cadastrado")
+
+    def existe_veiculo(self, veiculo):
+        return veiculo in self.__veiculos
 
     def cadastra(self):
         self.cadastrar_veiculo(input("PLACA: "), input("MODELO: "), input("MARCA"), input("ANO"),
                                input("KM ATUAL: "), input("CHAVE"))
 
     def lista_veiculo(self):
-        for veiculo in self.__veiculos:
-            print("PLACA: ", veiculo.placa, "MODELO: ", veiculo.modelo,"MARCA: ", veiculo.marca,"ANO: ", veiculo.ano,
-                  "KM: ", veiculo.quilometragem_atual, "CHAVE", veiculo.chave)
-
-    def verificando_veiculo(self):
-        for veiculo in self.__veiculos:
-            if veiculo.placa == '1' or 1:
-                print("aiai papi")
+        if len(self.__veiculos) > 0:
+            for veiculo in self.__veiculos:
+                print("PLACA: ", veiculo.placa, "MODELO: ", veiculo.modelo, "MARCA: ", veiculo.marca, "ANO: ",
+                      veiculo.ano,
+                      "KM: ", veiculo.quilometragem_atual, "CHAVE", veiculo.chave)
+        else:
+            print("Nenhum veículo cadastrado")
 
     def emprestar_veiculo(self):
         pass

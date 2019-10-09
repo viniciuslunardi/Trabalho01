@@ -12,7 +12,7 @@ class ControladorRegistro:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {0: self.cadastra, 1: self.lista_registros}
+        switcher = {0: self.cadastra}
         while True:
             opcao = self.__tela_registro.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]

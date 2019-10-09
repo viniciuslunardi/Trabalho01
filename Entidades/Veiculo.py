@@ -55,3 +55,6 @@ class Veiculo:
     @chave.setter
     def chave(self, chave):
         self.__chave = chave
+
+    def __eq__(self, other):
+        return self.__placa == other.placa

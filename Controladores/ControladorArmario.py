@@ -13,7 +13,7 @@ class ControladorArmario:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {0: self.cadastra, 1: self.lista_chavess}
+        switcher = {0: self.cadastra}
         while True:
             opcao = self.__tela_armario.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]

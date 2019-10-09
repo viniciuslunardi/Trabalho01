@@ -8,8 +8,8 @@ class TelaFuncionario(AbstractTela):
 
     def mostrar_opcoes(self):
         print("---------------FUNCIONÁRIO---------------")
-        print("0: CADASTRAR FUNCIONÁRIO")
-        print("1: LISTA DE FUNCIONÁRIOS")
+        print("1: CADASTRAR FUNCIONÁRIO")
+        print("2: LISTA DE FUNCIONÁRIOS")
         print("3: ")
         print("4: ")
         print("5: ")

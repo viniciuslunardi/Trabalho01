@@ -3,13 +3,14 @@ from Entidades.Armario import Armario
 
 
 class ControladorArmario:
-    def __init__(self):
+    def __init__(self, controlador_principal):
         self.__tela_armario = TelaArmario(self)
         self.__chaves = []
         self.__chaves_emprestadas = []
         self.__chaves_disponiveis = []
+        self.__controlador_principal = controlador_principal
 
-    def inicia(self):
+    def abre_armario(self):
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):

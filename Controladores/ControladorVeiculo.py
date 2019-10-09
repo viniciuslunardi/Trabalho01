@@ -1,19 +1,19 @@
 from Telas.TelaVeiculo import TelaVeiculo
 from Entidades.Veiculo import Veiculo
 
-
 class ControladorVeiculo:
-    def __init__(self):
+    def __init__(self, controlador_principal):
         self.__tela_veiculo = TelaVeiculo(self)
         self.__veiculos = []
         self.__veiculos_emprestados = []
         self.__veiculos_disponives = []
+        self.__controlador_principal = controlador_principal
 
-    def inicia(self):
+    def abre_veiculo(self):
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {0: self.cadastra, 1: self.lista_veiculo}
+        switcher = {0: self.voltar, 1: self.cadastra, 2: self.lista_veiculo}
         while True:
             opcao = self.__tela_veiculo.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -71,3 +71,6 @@ class ControladorVeiculo:
     @property
     def veiculos_disponiveis(self):
         return self.__veiculos_disponives
+
+    def voltar(self):
+        self.__controlador_principal.abre_tela_inicial()

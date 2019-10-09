@@ -7,9 +7,9 @@ class TelaVeiculo(AbstractTela):
         self.__controlador = controlador
 
     def mostrar_opcoes(self):
-        print("---------------VEICULO---------------")
-        print("0: CADASTRAR VEÍCULO")
-        print("1: LISTA DE VEÍCULOS")
+        print("---------------VEÍCULO---------------")
+        print("1: CADASTRAR VEÍCULO")
+        print("2: LISTA DE VEÍCULOS")
         print("3: ")
         print("4: ")
         print("5: ")

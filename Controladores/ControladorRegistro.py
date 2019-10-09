@@ -4,11 +4,12 @@ from Entidades.Registro import EventoRegistro
 
 
 class ControladorRegistro:
-    def __init__(self):
+    def __init__(self, controlador_principal):
         self.__tela_registro = TelaRegistro(self)
         self.__registros = []
+        self.__controlador_principal = controlador_principal
 
-    def inicia(self):
+    def abre_registros(self):
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):

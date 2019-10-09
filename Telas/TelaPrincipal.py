@@ -8,8 +8,8 @@ class TelaPrincipal(AbstractTela):
 
     def mostrar_opcoes(self):
         print("---------------INÍCIO---------------")
-        print("0: IR PARA FUNCIONÁRIO")
-        print("1: IR PARA DE VEÍCULOS")
+        print("1: IR PARA FUNCIONÁRIO")
+        print("2: IR PARA DE VEÍCULOS")
         print("3: IR PARA ARMÁRIO")
         print("4: IR PARA REGISTROS")
         print("5: ")

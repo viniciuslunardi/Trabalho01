@@ -65,4 +65,4 @@ class Funcionario:
         self.__cargo = cargo
 
     def __eq__(self, other):
-        return self.__numero_matricula == other.numero_matriculo
+        return self.__numero_matricula == other.numero_matricula

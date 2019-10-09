@@ -31,10 +31,9 @@ class ControladorFuncionario:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
     def cadastra(self):
-        cargo = {1: Cargo.DIRETORIA, 2: Cargo.RH, 3: Cargo.OPERARIO}
         self.cadastrar_funcionario(input("NÚMERO MATRICULA: "), input("NOME: "), input("DATA NASC: "), input("TELEFONE"),
                                input("VEICULOS: "),
-                                   Cargo(self.cadastrar_cargo())) #mostrar opcoes de cargo
+                                   Cargo(self.cadastrar_cargo()))
 
     def cadastrar_cargo(self):
         cargo = {1: Cargo.DIRETORIA, 2: Cargo.RH, 3: Cargo.OPERARIO}
@@ -46,13 +45,11 @@ class ControladorFuncionario:
                 if numeros_validos and inteiro not in numeros_validos:
                     raise ValueError
                 else:
-                    self.__cargo = Cargo(cargo[inteiro])
-                return inteiro
+                    return inteiro
+                #return inteiro
             except ValueError:
                 print("Valor incorreto")
                 print("Valores validos: ", numeros_validos)
-
-
 
     def lista_funcionario(self):
         for funcionario in self.__funcionarios:

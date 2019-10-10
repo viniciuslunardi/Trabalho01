@@ -23,6 +23,22 @@ class ControladorPrincipal:
             funcao_escolhida = switcher[opcao]
             funcao_escolhida()
 
+    @property
+    def controlador_funcionario(self):
+        return self.__controlador_funcionario
+
+    @property
+    def controlador_veiculo(self):
+        return self.__controlador_veiculo
+
+    @property
+    def controlador_armario(self):
+        return self.__controlador_armario
+
+    @property
+    def controlador_registro(self):
+        return self.__controlador_registro
+
     def funcionario(self):
         self.__controlador_funcionario.abre_funcionario()
 

@@ -8,13 +8,13 @@ class Cargo(Enum):
 
 
 class Funcionario:
-    def __init__(self, numero_matricula, nome, data_nascimento, telefone, veiculos, cargo: Cargo):
+    def __init__(self, numero_matricula, nome, data_nascimento, telefone, cargo: Cargo):
         self.__numero_matricula = numero_matricula
         self.__nome = nome
         self.__data_nascimento = data_nascimento
         self.__telefone = telefone
-        self.__veiculos = veiculos
         self.__cargo = cargo
+        self.__veiculos = {}
 
     @property
     def numero_matricula(self):

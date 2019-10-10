@@ -1,5 +1,5 @@
 from Telas.AbstractTela import AbstractTela
-
+from Controladores.ControladorVeiculo import ControladorVeiculo
 
 class TelaFuncionario(AbstractTela):
     def __init__(self, controlador):

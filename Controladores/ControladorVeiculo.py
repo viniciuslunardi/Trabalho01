@@ -4,7 +4,7 @@ from Entidades.Veiculo import Veiculo
 class ControladorVeiculo:
     def __init__(self, controlador_principal):
         self.__tela_veiculo = TelaVeiculo(self)
-        self.__veiculos = []
+        self.__veiculos = {}
         self.__veiculos_emprestados = []
         self.__veiculos_disponives = []
         self.__controlador_principal = controlador_principal
@@ -22,15 +22,15 @@ class ControladorVeiculo:
     def cadastrar_veiculo(self, placa, modelo, marca, ano, quilometragem_atual, chave):
         try:
             veiculo = Veiculo(placa, modelo, marca, ano, quilometragem_atual, chave)
-            if self.existe_veiculo(veiculo):
+            if self.existe_veiculo(placa):
                 raise Exception
             else:
-                self.__veiculos.append(veiculo)
+                self.__veiculos[placa] = veiculo
         except Exception:
             print("---------------ATENÇÃO--------------- \n * Veículo já cadastrado *")
 
-    def existe_veiculo(self, veiculo):
-        return veiculo in self.__veiculos
+    def existe_veiculo(self, placa):
+        return placa in self.__veiculos
 
     def cadastra(self):
         self.cadastrar_veiculo(input("PLACA: "), input("MODELO: "), input("MARCA"), input("ANO"),
@@ -39,11 +39,19 @@ class ControladorVeiculo:
     def lista_veiculo(self):
         if len(self.__veiculos) > 0:
             for veiculo in self.__veiculos:
-                print("PLACA: ", veiculo.placa, "MODELO: ", veiculo.modelo, "MARCA: ", veiculo.marca, "ANO: ",
-                      veiculo.ano,
-                      "KM: ", veiculo.quilometragem_atual, "CHAVE", veiculo.chave)
+                print("PLACA: ", self.__veiculos[veiculo].placa,
+                      "MODELO: ", self.__veiculos[veiculo].modelo,
+                      "MARCA: ", self.__veiculos[veiculo].marca,
+                      "ANO: ", self.__veiculos[veiculo].ano,
+                      "QUILOMETRAGEM ATUAL: ", self.__veiculos[veiculo].quilometragem_atual,
+                      "CHAVE", self.__veiculos[veiculo].chave)
         else:
             print("Nenhum veículo cadastrado")
+
+    def mostrar_veiculos(self):
+        print("MODELO: PLACA: ")
+        for veiculo in self.__veiculos:
+            print("%s: %s:", self.__veiculos[veiculo].modelo, self.__veiculos[veiculo].placa)
 
     def emprestar_veiculo(self):
         pass

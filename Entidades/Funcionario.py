@@ -3,8 +3,8 @@ from enum import Enum
 
 class Cargo(Enum):
     DIRETORIA = 1
-    RH = 2
-    OPERARIO = 3
+    COMERCIAL = 2
+    DESENVOLVEDOR = 3
 
 
 class Funcionario:

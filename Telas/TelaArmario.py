@@ -8,11 +8,11 @@ class TelaArmario(AbstractTela):
 
     def mostrar_opcoes(self):
         print("---------------ARMÁRIO---------------")
-        print("0: CADASTRAR CHAVE")
-        print("1: LISTA DE CHAVES")
-        print("3: ")
+        print("1: VEÍCULOS NA CARAGEM")
+        print("2: PEGAR VEÍCULO")
+        print("3: DEVOLVER VEÍCULO")
         print("4: ")
-        print("5: ")
+        print("0: VOLTAR PARA TELA PRINCIPAL")
         opcao = self.le_num_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4])
 
         return opcao

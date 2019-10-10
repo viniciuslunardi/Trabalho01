@@ -2,10 +2,7 @@ from Telas.TelaFuncionario import TelaFuncionario
 from Entidades.Funcionario import Funcionario
 from Entidades.Funcionario import Cargo
 from Controladores.ControladorVeiculo import ControladorVeiculo
-from Telas.TelaPrincipal import TelaPrincipal
 
-
-# PARA VEÍCULOS, PRECISAREMOS USAR A CLASSE DE VEÍCULOS :)
 
 class ControladorFuncionario:
     def __init__(self, controlador_principal):
@@ -19,8 +16,12 @@ class ControladorFuncionario:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {1: self.cadastra, 2: self.lista_funcionario, 3: self.cadastra_veiculos, 0: self.voltar,
-                    4: self.cadastrar_veiculo}
+        switcher = {
+            1: self.cadastra,
+            2: self.lista_funcionario,
+            3: self.cadastrar_veiculo,
+            0: self.voltar
+        }
         while True:
             opcao = self.__tela_funcionario.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -34,6 +35,8 @@ class ControladorFuncionario:
                 raise Exception
             else:
                 self.__funcionarios[numero_matricula] = funcionario
+                if funcionario.cargo == Cargo.DIRETORIA:
+                    funcionario.veiculos = self.__controlador_principal.controlador_veiculo.veiculos
         except Exception:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
@@ -46,7 +49,7 @@ class ControladorFuncionario:
         # cargo = {1: Cargo.DIRETORIA, 2: Cargo.RH, 3: Cargo.OPERARIO}
         numeros_validos = [1, 2, 3]
         while True:
-            entrada = input("CARGO: \n  * 1: DIRETORIA \n  * 2: RH \n  * 3: OPERARIO \n")
+            entrada = input("CARGO: \n  * 1: DIRETORIA \n  * 2: COMERCIAL \n  * 3: DESENVOLVEDOR \n")
             try:
                 inteiro = int(entrada)
                 if numeros_validos and inteiro not in numeros_validos:
@@ -55,9 +58,6 @@ class ControladorFuncionario:
             except ValueError:
                 print("Valor incorreto")
                 print("Valores validos: ", numeros_validos)
-
-    def cadastra_veiculos(self):
-        pass
 
     def pedir_placa(self):
         input("Veículo")
@@ -70,8 +70,8 @@ class ControladorFuncionario:
                       "DATA DE NASCIMENTO: ", self.__funcionarios[funcionario].data_nascimento,
                       "TELEFONE: ", self.__funcionarios[funcionario].telefone,
                       "CARGO: ", self.__funcionarios[funcionario].cargo)
-            else:
-                print("Nenhum funcionário cadastrado")
+        else:
+            print("Nenhum funcionário cadastrado")
 
     def existe_funcionario(self, numero_matricula):
         return numero_matricula in self.__funcionarios
@@ -82,15 +82,24 @@ class ControladorFuncionario:
         if matricula not in self.__funcionarios:
             print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
             return
+        else:
+            funcionario = self.__funcionarios[matricula]
+        if funcionario.cargo == Cargo.DIRETORIA:
+            print("Este funcionário já tem acesso a todos os carros da garagem")
+            for carro in funcionario.veiculos:
+                print("Funcionário tem acesso aos seguintes carros: ")
+                print("PLACA: %s MODELO: %s" % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
+            return
         placa = input("Digite a placa do veículo autorizado: ")
         if placa not in veiculos:
-            print("Não existe este veículo com placa '" + str(placa)+"' na garagem")
+            print("Não existe veículo com placa '" + str(placa) + "' na garagem")
             return
 
-        veiculo = self.__controlador_principal.controlador_veiculo.veiculos[placa]
-        self.__funcionarios[matricula].veiculos[placa] = veiculo
-        for carro in self.__funcionarios[matricula].veiculos:
-            print(self.funcionarios[matricula].veiculos[carro].placa)
+        veiculo = veiculos[placa]
+        funcionario.veiculos[placa] = veiculo
+        for carro in funcionario.veiculos:
+            print("Funcionário tem acesso aos seguintes carros: ")
+            print("PLACA: %s MODELO: %s" % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
 
     @property
     def funcionarios(self):
@@ -98,3 +107,5 @@ class ControladorFuncionario:
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()
+
+# Próximo passo será fazer a retirada de veículos

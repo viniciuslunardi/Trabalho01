@@ -13,7 +13,8 @@ class TelaVeiculo(AbstractTela):
         print("3: ")
         print("4: ")
         print("5: ")
-        opcao = self.le_num_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4])
+        print("0: VOLTAR PARA TELA PRINCIPAL")
+        opcao = self.le_num_inteiro("Escolha a opção: ", [0, 1, 2])
 
         return opcao
 

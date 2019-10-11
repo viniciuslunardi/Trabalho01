@@ -29,7 +29,6 @@ class ControladorFuncionario:
 
     def cadastrar_funcionario(self, numero_matricula, nome, data_nascimento, telefone, cargo: Cargo):
         try:
-
             funcionario = Funcionario(numero_matricula, nome, data_nascimento, telefone, cargo)
             if self.existe_funcionario(numero_matricula):
                 raise Exception
@@ -37,6 +36,8 @@ class ControladorFuncionario:
                 self.__funcionarios[numero_matricula] = funcionario
                 if funcionario.cargo == Cargo.DIRETORIA:
                     funcionario.veiculos = self.__controlador_principal.controlador_veiculo.veiculos
+                else:
+                    self.cadastrar_veiculo(numero_matricula)
         except Exception:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
@@ -76,9 +77,12 @@ class ControladorFuncionario:
     def existe_funcionario(self, numero_matricula):
         return numero_matricula in self.__funcionarios
 
-    def cadastrar_veiculo(self):
+    def cadastrar_veiculo(self, num_matricula: str = None):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
-        matricula = input("Digite a matricula do funcionário a ser autorizado: ")
+        if not num_matricula:
+            matricula = input("Digite a matricula do funcionário a ser autorizado: ")
+        else:
+            matricula = num_matricula
         if matricula not in self.__funcionarios:
             print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
             return
@@ -96,7 +100,10 @@ class ControladorFuncionario:
             return
 
         veiculo = veiculos[placa]
-        funcionario.veiculos[placa] = veiculo
+        if funcionario.veiculos[placa] == veiculo:
+            print("Funcioário já tem acesso a este veículo")
+        else:
+            funcionario.veiculos[placa] = veiculo
         for carro in funcionario.veiculos:
             print("Funcionário tem acesso aos seguintes carros: ")
             print("PLACA: %s MODELO: %s" % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))

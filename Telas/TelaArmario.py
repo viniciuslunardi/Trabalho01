@@ -11,7 +11,7 @@ class TelaArmario(AbstractTela):
         print("1: VEÍCULOS NA CARAGEM")
         print("2: PEGAR VEÍCULO")
         print("3: DEVOLVER VEÍCULO")
-        print("4: ")
+        print("4: CHAVES DISPONÍVEIS")
         print("0: VOLTAR PARA TELA PRINCIPAL")
         opcao = self.le_num_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4])
 

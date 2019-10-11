@@ -59,7 +59,7 @@ class ControladorArmario:
                             # EMITIR REGISTRO ACESSO NEGADO
                             tentativas += 1
                             print("Funcionário não tem acesso a este veiculo")
-                        elif placa not in self.__chaves_emprestadas[chave]:
+                        elif placa not in self.__chaves_emprestadas or len(self.__chaves_emprestadas) == 0:
                             # EIMITIR REGISTRO ACESSO PERMITIDO
                             self.__chaves_emprestadas[chave] = veiculos_funcionario[placa]
                             print("Pode pegar a chave %s do veículo %s"

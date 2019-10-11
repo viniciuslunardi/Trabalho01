@@ -15,7 +15,11 @@ class ControladorArmario:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {0: self.voltar, 1: self.veiculos_na_garagem, 2: self.pegar_veiculo, 4: self.veiculos_emprestados}
+        switcher = {0: self.voltar,
+                    1: self.veiculos_na_garagem,
+                    2: self.pegar_veiculo,
+                    3: self.devolver_chave,
+                    4: self.veiculos_emprestados}
         while True:
             opcao = self.__tela_armario.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -29,7 +33,7 @@ class ControladorArmario:
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
         print("---------------GARAGEM---------------")
         if len(self.__chaves_emprestadas) == len(veiculos):
-            print("Nenhum veículo na garem no momento")
+            print("Nenhum veículo na garagem no momento")
         else:
             for veiculo in veiculos:
                 if veiculo not in self.__chaves_emprestadas:
@@ -38,7 +42,10 @@ class ControladorArmario:
     def pegar_veiculo(self):
         self.veiculos_na_garagem()
         tentativas = 0
+        veiculos_garagem = self.__controlador_principal.controlador_veiculo.veiculos
         while tentativas < 3:
+            if len(veiculos_garagem) == 0:
+                return
             matricula = input("Digite o seu número de matrícula: ")
             if not self.__controlador_principal.controlador_funcionario.existe_funcionario(matricula):
                 # EMITIR REGISTRO ACESSO NEGADO
@@ -46,7 +53,6 @@ class ControladorArmario:
                 print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
             else:
                 funcionario = self.__controlador_principal.controlador_funcionario.funcionarios
-                veiculos_garagem = self.__controlador_principal.controlador_veiculo.veiculos
                 veiculos_funcionario = funcionario[matricula].veiculos
                 if len(veiculos_garagem) > 1:
                     if len(veiculos_funcionario) > 1:
@@ -92,6 +98,7 @@ class ControladorArmario:
                         print("Veículo não está disponível no momento")
                 else:
                     print("Não existe nenhum veículo na garagem")
+                    return
         if tentativas == 3:
             # EMITIR EVENTO ACESSO BLOQUEADO
             print("Acesso bloqueado")
@@ -104,8 +111,30 @@ class ControladorArmario:
                 print("MODELO: %s PLACA: %s" % (veiculos[veiculo].modelo, veiculos[veiculo].placa))
 
     def devolver_chave(self):
-        pass
-
+        veiculos = self.__controlador_principal.controlador_veiculo.veiculos
+        if len(self.__chaves_emprestadas) == 0:
+            print("Todos os veículos da garagem estão disponíveis")
+            return
+        while True:
+            matricula = input("Digite seu número de matrícula: ")
+            if not self.__controlador_principal.controlador_funcionario.existe_funcionario(matricula):
+                print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
+            else:
+                placa = input("Digite a placa do veículo que vai devolver: ")
+                if not self.__controlador_principal.controlador_veiculo.existe_veiculo(placa):
+                    print("Não existe veículo com placa '" + str(placa) + "' na garagem")
+                else:
+                    try:
+                        km_andado = int(input("Informe o número de quilometros andados: "))
+                        if km_andado:
+                            chave = veiculos[placa].chave
+                            del self.__chaves_emprestadas[chave]
+                            # EMITIR EVENTO ACESSO LIBERADO
+                            self.__controlador_principal.controlador_veiculo.atualiza_quilometragem(placa, km_andado)
+                            print("Veículo devolvido com sucesso")
+                            return
+                    except ValueError:
+                        print("Quilometros andados devem ser informados com números inteiros")
 
     @property
     def chaves(self):

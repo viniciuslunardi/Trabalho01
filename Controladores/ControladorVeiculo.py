@@ -13,7 +13,9 @@ class ControladorVeiculo:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {0: self.voltar, 1: self.cadastra, 2: self.lista_veiculo}
+        switcher = {0: self.voltar,
+                    1: self.cadastra,
+                    2: self.lista_veiculo}
         while True:
             opcao = self.__tela_veiculo.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -33,25 +35,25 @@ class ControladorVeiculo:
         return placa in self.__veiculos
 
     def cadastra(self):
-        self.cadastrar_veiculo(input("PLACA: "), input("MODELO: "), input("MARCA"), input("ANO"),
-                               input("KM ATUAL: "), input("CHAVE"))
+        self.cadastrar_veiculo(input("PLACA: "), input("MODELO: "), input("MARCA: "), input("ANO: "),
+                               input("KM ATUAL: "), input("CHAVE: "))
 
     def lista_veiculo(self):
         if len(self.__veiculos) > 0:
-            for veiculo in self.__veiculos:
-                print("PLACA: ", self.__veiculos[veiculo].placa,
-                      "MODELO: ", self.__veiculos[veiculo].modelo,
-                      "MARCA: ", self.__veiculos[veiculo].marca,
-                      "ANO: ", self.__veiculos[veiculo].ano,
-                      "QUILOMETRAGEM ATUAL: ", self.__veiculos[veiculo].quilometragem_atual,
-                      "CHAVE", self.__veiculos[veiculo].chave)
+            for placa in self.__veiculos:
+                print("PLACA: ", self.__veiculos[placa].placa,
+                      "MODELO: ", self.__veiculos[placa].modelo,
+                      "MARCA: ", self.__veiculos[placa].marca,
+                      "ANO: ", self.__veiculos[placa].ano,
+                      "QUILOMETRAGEM ATUAL: ", self.__veiculos[placa].quilometragem_atual,
+                      "CHAVE", self.__veiculos[placa].chave)
         else:
             print("Nenhum veículo cadastrado")
 
     def mostrar_veiculos(self):
         print("MODELO: PLACA: ")
-        for veiculo in self.__veiculos:
-            print("%s: %s:", self.__veiculos[veiculo].modelo, self.__veiculos[veiculo].placa)
+        for placa in self.__veiculos:
+            print("%s: %s:", self.__veiculos[placa].modelo, self.__veiculos[placa].placa)
 
     def emprestar_veiculo(self):
         pass
@@ -76,9 +78,11 @@ class ControladorVeiculo:
     def veiculos_emprestados(self):
         return self.__veiculos_emprestados
 
-    @property
-    def veiculos_disponiveis(self):
-        return self.__veiculos_disponives
+    def atualiza_quilometragem(self, placa, km_andado):
+        km_atual = int(self.__veiculos[placa].quilometragem_atual)
+        int(km_atual)
+        km_atual += km_andado
+        self.__veiculos[placa].quilometragem_atual = km_atual
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

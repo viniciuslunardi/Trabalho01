@@ -1,5 +1,4 @@
 from Telas.TelaArmario import TelaArmario
-from Entidades.Armario import Armario
 from Controladores.ControladorVeiculo import ControladorVeiculo
 from Controladores.ControladorFuncionario import ControladorFuncionario
 
@@ -24,10 +23,6 @@ class ControladorArmario:
             opcao = self.__tela_armario.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
             funcao_escolhida()
-
-    def lista__chaves(self):
-        for chave in self.__chaves:
-            print("CHAVE", chave.chave)
 
     def veiculos_na_garagem(self):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
@@ -68,11 +63,11 @@ class ControladorArmario:
                         tentativas += 1
                     elif placa not in self.__chaves_emprestadas or len(self.__chaves_emprestadas) == 0:
                         # EIMITIR REGISTRO ACESSO PERMITIDO
-                        chave = veiculos_funcionario[placa].chave
+                        chave = veiculos_funcionario[placa].placa
                         self.__chaves_emprestadas[chave] = veiculos_funcionario[placa]
                         funcionario[matricula].veiculo_usado[placa] = veiculos_funcionario[placa]
-                        print("Pode pegar a chave %s do veículo %s"
-                              % (veiculos_garagem[placa].chave, veiculos_garagem[placa].modelo))
+                        print("Pode pegar a chave do veículo %s"
+                              % (veiculos_garagem[placa].modelo))
                         return
                     else:
                         # EMITIR REGISTRO ACESSO NEGADO
@@ -81,7 +76,7 @@ class ControladorArmario:
                     placa = list(veiculos_funcionario)
                     if placa[0] not in self.__chaves_emprestadas:
                         # EMITIR REGISTRO ACESSO PERMITIDO
-                        chave = veiculos_funcionario[placa[0]].chave
+                        chave = veiculos_funcionario[placa[0]].placa
                         self.__chaves_emprestadas[chave] = veiculos_funcionario[placa[0]]
                         funcionario[matricula].veiculo_usado[chave] = veiculos_funcionario[placa[0]]
                         print("Retire seu veiculo")
@@ -89,6 +84,7 @@ class ControladorArmario:
                     else:
                         # EVENTO ACESSO NEGADO
                         print("O único veículo que este funcionário tem acesso está indisponível")
+                        return
                 else:
                     print("Funcionário não tem acesso a nenhum carro")
                     if len(funcionario) == 1:
@@ -129,15 +125,17 @@ class ControladorArmario:
                             try:
                                 km_andado = float(input("Informe o número de quilometros andados: "))
                                 if km_andado:
-                                    chave = veiculos[placa].chave
+                                    chave = veiculos[placa].placa
                                     del self.__chaves_emprestadas[chave]
                                     del funcionario.veiculo_usado[placa]
                                     # EMITIR EVENTO VEICULO DEVOLVIDO
-                                    self.__controlador_principal.controlador_veiculo.atualiza_quilometragem(placa, km_andado)
+                                    self.__controlador_principal.controlador_veiculo\
+                                        .atualiza_quilometragem(placa, km_andado)
                                     print("Veículo devolvido com sucesso")
                                     return
                             except ValueError:
-                                print("Quilometros andados devem ser informados com números inteiros")
+                                print("Quilometros andados devem ser informados com números "
+                                      "(usando '.' para  números não inteiros)")
                 else:
                     print("Este funcionário não está usando nenhum veículo")
 

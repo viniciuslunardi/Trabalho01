@@ -21,9 +21,9 @@ class ControladorVeiculo:
             funcao_escolhida = switcher[opcao]
             funcao_escolhida()
 
-    def cadastrar_veiculo(self, placa, modelo, marca, ano, quilometragem_atual, chave):
+    def cadastrar_veiculo(self, placa, modelo, marca, ano, quilometragem_atual):
         try:
-            veiculo = Veiculo(placa, modelo, marca, ano, quilometragem_atual, chave)
+            veiculo = Veiculo(placa, modelo, marca, ano, quilometragem_atual)
             if self.existe_veiculo(placa):
                 raise Exception
             else:
@@ -36,7 +36,7 @@ class ControladorVeiculo:
 
     def cadastra(self):
         self.cadastrar_veiculo(input("PLACA: "), input("MODELO: "), input("MARCA: "), input("ANO: "),
-                               input("KM ATUAL: "), input("CHAVE: "))
+                               input("KM ATUAL: "))
 
     def lista_veiculo(self):
         if len(self.__veiculos) > 0:
@@ -45,8 +45,7 @@ class ControladorVeiculo:
                       "MODELO: ", self.__veiculos[placa].modelo,
                       "MARCA: ", self.__veiculos[placa].marca,
                       "ANO: ", self.__veiculos[placa].ano,
-                      "QUILOMETRAGEM ATUAL: ", self.__veiculos[placa].quilometragem_atual,
-                      "CHAVE", self.__veiculos[placa].chave)
+                      "QUILOMETRAGEM ATUAL: ", self.__veiculos[placa].quilometragem_atual)
         else:
             print("Nenhum veículo cadastrado")
 

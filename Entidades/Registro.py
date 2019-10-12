@@ -6,7 +6,6 @@ class EventoRegistro(Enum):
     ACESSO_NEGADO = 2
     ACESSO_BLOQUEADO = 3
     VEICULO_DEVOLVIDO = 4
-    VEICULO_EMPRESTADO = 5
 
 
 class Registro:

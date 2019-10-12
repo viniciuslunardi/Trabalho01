@@ -1,6 +1,6 @@
 from Telas.TelaArmario import TelaArmario
-from Controladores.ControladorVeiculo import ControladorVeiculo
-from Controladores.ControladorFuncionario import ControladorFuncionario
+from Entidades.Registro import Registro, EventoRegistro
+from datetime import datetime
 
 
 class ControladorArmario:
@@ -44,6 +44,11 @@ class ControladorArmario:
             matricula = input("Digite o seu número de matrícula: ")
             if not self.__controlador_principal.controlador_funcionario.existe_funcionario(matricula):
                 # EMITIR REGISTRO ACESSO NEGADO
+                evento = EventoRegistro(2)
+                data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                motivo = "Tentou acessar uma matrícula de funcionário não cadastrada no sistema"
+                registro = Registro(data, "Não existe", motivo, None, evento)
+                self.__controlador_principal.controlador_registro.imprime_registro(registro)
                 print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
             else:
                 funcionario = self.__controlador_principal.controlador_funcionario.funcionarios

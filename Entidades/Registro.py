@@ -15,3 +15,19 @@ class Registro:
         self.__motivo = motivo
         self.__placa_veiculo = placa_veiculo
         self.__evento = evento
+
+    def __str__(self):
+        evento = self.__evento
+        if evento == evento.ACESSO_PERMITIDO:
+            evento = "ACESSO PERMITIDO"
+        elif evento == evento.ACESSO_NEGADO:
+            evento = "ACESSO NEGADO"
+        elif evento == evento.ACESSO_BLOQUEADO:
+            evento = "ACESSO BLOQUEADO"
+        elif evento == evento.VEICULO_DEVOLVIDO:
+            evento = "VEICULO DEVOLVIDO"
+        s = "-------------REGISTRO-------------"
+        s += "\nEVENTO: " + evento
+        s += "\nDATA: " + str(self.__data)
+        s += "\nMOTIVO: " + str(self.__motivo)
+        return s

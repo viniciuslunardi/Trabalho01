@@ -21,6 +21,7 @@ class ControladorFuncionario:
             2: self.lista_funcionario,
             3: self.dar_acesso_veiculo,
             4: self.veiculos_funcionario,
+            5: self.deletar_funcionario,
             0: self.voltar
         }
         while True:
@@ -43,12 +44,27 @@ class ControladorFuncionario:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
     def cadastra(self):
-        self.cadastrar_funcionario(input("NÚMERO MATRICULA: "), input("NOME: "), input("DATA NASC: "),
-                                   input("TELEFONE"),
-                                   Cargo(self.cadastrar_cargo()))
+        while True:
+            try:
+                matricula = int(input("Informe o número de matrícula do funcionário: "))
+                if matricula:
+                    try:
+                        nome = input("Informe o nome do funcionário: ")
+                        data = input("Informe a data de nascimento do funcionário: ")
+                        telefone = input("Informe o número do telefone do funcionário ")
+                        if nome == "" or data == "" or telefone == "":
+                            raise Exception
+                        else:
+                            self.cadastrar_funcionario(matricula, nome, data, telefone, Cargo(self.cadastrar_cargo()))
+                            return
+                    except Exception:
+                        print("Todos os campos devem ser preenchidos!")
+                else:
+                    raise Exception
+            except Exception:
+                print("Matrícula do funcionário deve ser um número inteiro")
 
     def cadastrar_cargo(self):
-        # cargo = {1: Cargo.DIRETORIA, 2: Cargo.RH, 3: Cargo.OPERARIO}
         numeros_validos = [1, 2, 3]
         while True:
             entrada = input("CARGO: \n  * 1: DIRETORIA \n  * 2: COMERCIAL \n  * 3: DESENVOLVEDOR \n")
@@ -61,17 +77,22 @@ class ControladorFuncionario:
                 print("Valor incorreto")
                 print("Valores validos: ", numeros_validos)
 
-    def pedir_placa(self):
-        input("Veículo")
-
     def lista_funcionario(self):
         if len(self.__funcionarios) > 0:
             for funcionario in self.__funcionarios:
-                print("NÚMERO DE MATRICULA: ", self.__funcionarios[funcionario].numero_matricula,
-                      "NOME: ", self.__funcionarios[funcionario].nome,
-                      "DATA DE NASCIMENTO: ", self.__funcionarios[funcionario].data_nascimento,
-                      "TELEFONE: ", self.__funcionarios[funcionario].telefone,
-                      "CARGO: ", self.__funcionarios[funcionario].cargo)
+                cargo = self.__funcionarios[funcionario].cargo
+                if cargo == cargo.DIRETORIA:
+                    cargo = "Diretoria"
+                elif cargo == cargo.COMERCIAL:
+                    cargo = "Comercial"
+                else:
+                    cargo = "Desenvolvedor"
+                print("NÚMERO DE MATRICULA: ", str(self.__funcionarios[funcionario].numero_matricula),
+                      "NOME: ", str(self.__funcionarios[funcionario].nome),
+                      "DATA DE NASCIMENTO: ", str(self.__funcionarios[funcionario].data_nascimento),
+                      "TELEFONE: ", str(self.__funcionarios[funcionario].telefone),
+                      "CARGO: ", cargo)
+                print("")
         else:
             print("Nenhum funcionário cadastrado")
 
@@ -138,6 +159,15 @@ class ControladorFuncionario:
                     print("PLACA: %s MODELO: %s"
                           % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
                 return
+
+    def deletar_funcionario(self):
+        matricula = input("Digite o número de matrícula do funcionário: ")
+        if matricula in self.__funcionarios:
+            del self.__funcionarios[matricula]
+        else:
+            print("Não existe funcionário com esse número de matrícula")
+        return
+
     @property
     def funcionarios(self):
         return self.__funcionarios

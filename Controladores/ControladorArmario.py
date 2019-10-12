@@ -143,8 +143,6 @@ class ControladorArmario:
                     registro = Registro(data, matricula, motivo, None, evento)
                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
         if tentativas == 3:
-            # EMITIR EVENTO ACESSO BLOQUEADO
-
             print("Acesso bloqueado")
 
 

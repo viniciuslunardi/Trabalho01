@@ -1,6 +1,7 @@
 from Telas.TelaVeiculo import TelaVeiculo
 from Entidades.Veiculo import Veiculo
 
+
 class ControladorVeiculo:
     def __init__(self, controlador_principal):
         self.__tela_veiculo = TelaVeiculo(self)
@@ -15,7 +16,8 @@ class ControladorVeiculo:
     def abre_tela_inicial(self):
         switcher = {0: self.voltar,
                     1: self.cadastra,
-                    2: self.lista_veiculo}
+                    2: self.lista_veiculo,
+                    3: self.deletar_carro}
         while True:
             opcao = self.__tela_veiculo.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -89,6 +91,15 @@ class ControladorVeiculo:
         float(km_atual)
         km_atual += km_andado
         self.__veiculos[placa].quilometragem_atual = km_atual
+
+    def deletar_carro(self):
+        placa = (input("Digite a placa do veículo: "))
+        if placa in self.__veiculos:
+            del self.__veiculos[placa]
+            print("Veículo excluido com sucesso")
+        else:
+            print("Não existe veículo com essa placa cadastrado no sistema")
+
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

@@ -120,7 +120,7 @@ class ControladorArmario:
                                     evento = EventoRegistro(1)
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Funcionário tem acesso ao veículo que tentou retirar"
-                                    registro = Registro(data, matricula, motivo, placa, evento)
+                                    registro = Registro(data, matricula, motivo, placa[0], evento)
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     chave = veiculos_funcionario[placa[0]].placa
@@ -161,7 +161,6 @@ class ControladorArmario:
                 print("Matrícula deve ser um número inteiro")
         if tentativas == 3:
             print("Acesso bloqueado")
-
 
     def veiculos_emprestados(self):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos

@@ -100,6 +100,5 @@ class ControladorVeiculo:
         else:
             print("Não existe veículo com essa placa cadastrado no sistema")
 
-
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

@@ -11,6 +11,6 @@ class TelaRegistro(AbstractTela):
         print("1: LISTA DE REGISTROS")
         print("2: FILTRAR REGISTROS")
         print("0: VOLTAR PARA TELA PRINCIPAL")
-        opcao = self.le_num_inteiro("Escolha a opção: ", [0, 1])
+        opcao = self.le_num_inteiro("Escolha a opção: ", [0, 1, 2])
         return opcao
 

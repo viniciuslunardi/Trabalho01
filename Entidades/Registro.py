@@ -41,3 +41,14 @@ class Registro:
         s += "\nFUNCIONÁRIO COM MATRÍCULA: " + matricula
         s += "\nVEÍCULO COM PLACA: " + placa
         return s
+
+    @property
+    def matricula_funcionario(self):
+        return self.__matricula_funcionario
+
+    @property
+    def placa_veiculo(self):
+        return self.__placa_veiculo
+
+    def __eq__(self, other):
+        return self.__matricula_funcionario == other.matricula_funcionario or self.__placa_veiculo == other.placa_veiculo

@@ -26,8 +26,18 @@ class Registro:
             evento = "ACESSO BLOQUEADO"
         elif evento == evento.VEICULO_DEVOLVIDO:
             evento = "VEICULO DEVOLVIDO"
+
+        matricula = "NÃO EXISTE"
+        if self.__matricula_funcionario is not None:
+            matricula = str(self.__matricula_funcionario)
+
+        placa = "NÃO EXISTE"
+        if self.__placa_veiculo is not None:
+            placa = str(self.__placa_veiculo)
         s = "-------------REGISTRO-------------"
         s += "\nEVENTO: " + evento
         s += "\nDATA: " + str(self.__data)
         s += "\nMOTIVO: " + str(self.__motivo)
+        s += "\nFUNCIONÁRIO COM MATRÍCULA: " + matricula
+        s += "\nVEÍCULO COM PLACA: " + placa
         return s

@@ -16,6 +16,7 @@ class Funcionario:
         self.__cargo = cargo
         self.__veiculos = {}
         self.__veiculo_usado = {}
+        self.__bloqueado = False
 
     @property
     def numero_matricula(self):
@@ -72,6 +73,14 @@ class Funcionario:
     @veiculo_usado.setter
     def veiculo_usado(self, veiculo_usado):
         self.__veiculo_usado = veiculo_usado
+
+    @property
+    def bloqueado(self):
+        return self.__bloqueado
+
+    @bloqueado.setter
+    def bloqueado(self, bloqueado):
+        self.__bloqueado = bloqueado
 
     def __eq__(self, other):
         return self.__numero_matricula == other.numero_matricula

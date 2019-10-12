@@ -46,57 +46,105 @@ class ControladorArmario:
                 # EMITIR REGISTRO ACESSO NEGADO
                 evento = EventoRegistro(2)
                 data = datetime.now().strftime('%d/%m/%Y %H:%M')
-                motivo = "Tentou acessar uma matrícula de funcionário não cadastrada no sistema"
-                registro = Registro(data, "Não existe", motivo, None, evento)
+                motivo = "Tentou acessar uma matrícula de funcionário não cadastrado no sistema"
+                registro = Registro(data, None, motivo, None, evento)
                 self.__controlador_principal.controlador_registro.imprime_registro(registro)
                 print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
             else:
                 funcionario = self.__controlador_principal.controlador_funcionario.funcionarios
                 veiculos_funcionario = funcionario[matricula].veiculos
-
-                if len(veiculos_funcionario) > 1:
-                    placa = input("Digite a placa do veículo que deseja utilizar: ")
-                    if placa not in veiculos_garagem:
-                        # EMITIR REGISTRO ACESSO NEGADO
-                        print("Não existe veículo com placa '" + str(placa) + "' na garagem")
-                    elif placa not in veiculos_funcionario:
-                        # EMITIR REGISTRO ACESSO NEGADO
-                        print("Funcionário não tem acesso a este veiculo")
-                        if tentativas == 1:
-                            print("----------------CUIDADO!----------------"
-                                  " \n Mais uma tentativa de acesso a veículo não permitido irá bloquear seu acesso")
-                        tentativas += 1
-                    elif placa not in self.__chaves_emprestadas or len(self.__chaves_emprestadas) == 0:
-                        # EIMITIR REGISTRO ACESSO PERMITIDO
-                        chave = veiculos_funcionario[placa].placa
-                        self.__chaves_emprestadas[chave] = veiculos_funcionario[placa]
-                        funcionario[matricula].veiculo_usado[placa] = veiculos_funcionario[placa]
-                        print("Pode pegar a chave do veículo %s"
-                              % (veiculos_garagem[placa].modelo))
-                        return
+                if not funcionario[matricula].bloqueado:
+                    if len(veiculos_funcionario) > 1:
+                        placa = input("Digite a placa do veículo que deseja utilizar: ")
+                        if placa not in veiculos_garagem:
+                            # EMITIR REGISTRO ACESSO NEGADO
+                            evento = EventoRegistro(2)
+                            data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                            motivo = "Não existe veículo com esta placa cadastrado no sistema"
+                            registro = Registro(data, matricula, motivo, None, evento)
+                            self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                            print("Não existe veículo com placa '" + str(placa) + "' na garagem")
+                        elif placa not in veiculos_funcionario:
+                            # EMITIR REGISTRO ACESSO NEGADO
+                            evento = EventoRegistro(2)
+                            data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                            motivo = "Tentou acessar um veículo que não tem permissão"
+                            registro = Registro(data, matricula, motivo, placa, evento)
+                            self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                            print("Funcionário não tem acesso a este veiculo")
+                            if tentativas == 1:
+                                print("----------------CUIDADO!----------------"
+                                      "\nMais uma tentativa de acesso a veículo não permitido irá bloquear seu acesso")
+                            tentativas += 1
+                            if tentativas > 2:
+                                evento = EventoRegistro(3)
+                                data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                                motivo = "Tentou acessar veículo que não tem permissão por 3 vezes"
+                                registro = Registro(data, matricula, motivo, placa, evento)
+                                self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                                funcionario[matricula].bloqueado = True
+                        elif placa not in self.__chaves_emprestadas or len(self.__chaves_emprestadas) == 0:
+                            # EIMITIR REGISTRO ACESSO PERMITIDO
+                            evento = EventoRegistro(1)
+                            data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                            motivo = "Funcionário tem acesso ao veículo que tentou retirar"
+                            registro = Registro(data, matricula, motivo, placa, evento)
+                            self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                            chave = veiculos_funcionario[placa].placa
+                            self.__chaves_emprestadas[chave] = veiculos_funcionario[placa]
+                            funcionario[matricula].veiculo_usado[placa] = veiculos_funcionario[placa]
+                            print("Pode pegar a chave do veículo %s"
+                                  % (veiculos_garagem[placa].modelo))
+                            return
+                        else:
+                            # EMITIR REGISTRO ACESSO NEGADO
+                            evento = EventoRegistro(2)
+                            data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                            motivo = "Tentou acessar veículo que não está disponível no momento"
+                            registro = Registro(data, matricula, motivo, placa, evento)
+                            self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                            print("Esse veículo não está disponível no momento")
+                    elif len(veiculos_funcionario) == 1:
+                        placa = list(veiculos_funcionario)
+                        if placa[0] not in self.__chaves_emprestadas:
+                            # EMITIR REGISTRO ACESSO PERMITIDO
+                            evento = EventoRegistro(1)
+                            data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                            motivo = "Funcionário tem acesso ao veículo que tentou retirar"
+                            registro = Registro(data, matricula, motivo, placa, evento)
+                            self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                            chave = veiculos_funcionario[placa[0]].placa
+                            self.__chaves_emprestadas[chave] = veiculos_funcionario[placa[0]]
+                            funcionario[matricula].veiculo_usado[chave] = veiculos_funcionario[placa[0]]
+                            print("Retire seu veiculo")
+                            return
+                        else:
+                            # EVENTO ACESSO NEGADO
+                            evento = EventoRegistro(2)
+                            data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                            motivo = "Tentou acessar veículo que não está disponível no momento"
+                            registro = Registro(data, matricula, motivo, placa, evento)
+                            self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                            print("O único veículo que este funcionário tem acesso está indisponível")
+                            return
                     else:
-                        # EMITIR REGISTRO ACESSO NEGADO
-                        print("Esse veículo não está disponível no momento")
-                elif len(veiculos_funcionario) == 1:
-                    placa = list(veiculos_funcionario)
-                    if placa[0] not in self.__chaves_emprestadas:
-                        # EMITIR REGISTRO ACESSO PERMITIDO
-                        chave = veiculos_funcionario[placa[0]].placa
-                        self.__chaves_emprestadas[chave] = veiculos_funcionario[placa[0]]
-                        funcionario[matricula].veiculo_usado[chave] = veiculos_funcionario[placa[0]]
-                        print("Retire seu veiculo")
-                        return
-                    else:
-                        # EVENTO ACESSO NEGADO
-                        print("O único veículo que este funcionário tem acesso está indisponível")
-                        return
+                        evento = EventoRegistro(2)
+                        data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                        motivo = "Funcionário não tem acesso a nenhum veículo"
+                        registro = Registro(data, matricula, motivo, None, evento)
+                        self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                        print("Funcionário não tem acesso a nenhum carro")
+                        if len(funcionario) == 1:
+                            return
                 else:
-                    print("Funcionário não tem acesso a nenhum carro")
-                    if len(funcionario) == 1:
-                        return
-
+                    evento = EventoRegistro(2)
+                    data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                    motivo = "Funcionário está com o acesso bloqueado"
+                    registro = Registro(data, matricula, motivo, None, evento)
+                    self.__controlador_principal.controlador_registro.imprime_registro(registro)
         if tentativas == 3:
             # EMITIR EVENTO ACESSO BLOQUEADO
+
             print("Acesso bloqueado")
 
 
@@ -134,6 +182,11 @@ class ControladorArmario:
                                     del self.__chaves_emprestadas[chave]
                                     del funcionario.veiculo_usado[placa]
                                     # EMITIR EVENTO VEICULO DEVOLVIDO
+                                    evento = EventoRegistro(4)
+                                    data = datetime.now().strftime('%d/%m/%Y %H:%M')
+                                    motivo = "Devolveu o veículo"
+                                    registro = Registro(data, matricula, motivo, placa, evento)
+                                    self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     self.__controlador_principal.controlador_veiculo\
                                         .atualiza_quilometragem(placa, km_andado)
                                     print("Veículo devolvido com sucesso")

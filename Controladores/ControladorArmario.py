@@ -49,7 +49,6 @@ class ControladorArmario:
             matricula = input("Digite o seu número de matrícula: ")
             if not self.__controlador_principal.controlador_funcionario.existe_funcionario(matricula):
                 # EMITIR REGISTRO ACESSO NEGADO
-                tentativas += 1
                 print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
             else:
                 funcionario = self.__controlador_principal.controlador_funcionario.funcionarios
@@ -57,17 +56,19 @@ class ControladorArmario:
 
                 if len(veiculos_funcionario) > 1:
                     placa = input("Digite a placa do veículo que deseja utilizar: ")
-                    chave = veiculos_funcionario[placa].chave
                     if placa not in veiculos_garagem:
-                        tentativas += 1
                         # EMITIR REGISTRO ACESSO NEGADO
                         print("Não existe veículo com placa '" + str(placa) + "' na garagem")
                     elif placa not in veiculos_funcionario:
                         # EMITIR REGISTRO ACESSO NEGADO
-                        tentativas += 1
                         print("Funcionário não tem acesso a este veiculo")
+                        if tentativas == 1:
+                            print("----------------CUIDADO!----------------"
+                                  " \n Mais uma tentativa de acesso a veículo não permitido irá bloquear seu acesso")
+                        tentativas += 1
                     elif placa not in self.__chaves_emprestadas or len(self.__chaves_emprestadas) == 0:
                         # EIMITIR REGISTRO ACESSO PERMITIDO
+                        chave = veiculos_funcionario[placa].chave
                         self.__chaves_emprestadas[chave] = veiculos_funcionario[placa]
                         funcionario[matricula].veiculo_usado[placa] = veiculos_funcionario[placa]
                         print("Pode pegar a chave %s do veículo %s"
@@ -75,7 +76,6 @@ class ControladorArmario:
                         return
                     else:
                         # EMITIR REGISTRO ACESSO NEGADO
-                        tentativas += 1
                         print("Esse veículo não está disponível no momento")
                 elif len(veiculos_funcionario) == 1:
                     placa = list(veiculos_funcionario)
@@ -88,7 +88,6 @@ class ControladorArmario:
                         return
                     else:
                         # EVENTO ACESSO NEGADO
-                        tentativas += 1
                         print("O único veículo que este funcionário tem acesso está indisponível")
                 else:
                     print("Funcionário não tem acesso a nenhum carro")

@@ -19,7 +19,8 @@ class ControladorFuncionario:
         switcher = {
             1: self.cadastra,
             2: self.lista_funcionario,
-            3: self.cadastrar_veiculo,
+            3: self.dar_acesso_veiculo,
+            4: self.veiculos_funcionario,
             0: self.voltar
         }
         while True:
@@ -37,7 +38,7 @@ class ControladorFuncionario:
                 if funcionario.cargo == Cargo.DIRETORIA:
                     funcionario.veiculos = self.__controlador_principal.controlador_veiculo.veiculos
                 else:
-                    self.cadastrar_veiculo(numero_matricula)
+                    self.dar_acesso_veiculo(numero_matricula)
         except Exception:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
@@ -77,7 +78,7 @@ class ControladorFuncionario:
     def existe_funcionario(self, numero_matricula):
         return numero_matricula in self.__funcionarios
 
-    def cadastrar_veiculo(self, num_matricula: str = None):
+    def dar_acesso_veiculo(self, num_matricula: str = None):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
         if not num_matricula:
             matricula = input("Digite a matricula do funcionário a ser autorizado: ")
@@ -89,25 +90,53 @@ class ControladorFuncionario:
         else:
             funcionario = self.__funcionarios[matricula]
         if funcionario.cargo == Cargo.DIRETORIA:
-            print("Este funcionário já tem acesso a todos os carros da garagem")
+            print("Este funcionário já tem acesso a todos os veiculos da garagem")
             for carro in funcionario.veiculos:
-                print("Funcionário tem acesso aos seguintes carros: ")
+                print("Funcionário tem acesso aos seguintes veículos: ")
                 print("PLACA: %s MODELO: %s" % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
             return
-        placa = input("Digite a placa do veículo autorizado: ")
-        if placa not in veiculos:
-            print("Não existe veículo com placa '" + str(placa) + "' na garagem")
-            return
+        try:
+            qtd_carros = int(input("Digite quantos veículos este funcionário terá acesso: "))
+            carros_cadastrados = 0
+            if qtd_carros:
+                while True:
+                    if qtd_carros > len(self.__controlador_principal.controlador_veiculo.veiculos):
+                        print("Não existem tantos veículos assim na garagem!")
+                    else:
+                        while carros_cadastrados <= qtd_carros:
+                            placa = input("Digite a placa do veículo autorizado: ")
+                            if placa not in veiculos:
+                                print("Não existe veículo com placa '" + str(placa) + "' na garagem")
+                                return
 
-        veiculo = veiculos[placa]
-        if funcionario.veiculos[placa] == veiculo:
-            print("Funcioário já tem acesso a este veículo")
-        else:
-            funcionario.veiculos[placa] = veiculo
-        for carro in funcionario.veiculos:
-            print("Funcionário tem acesso aos seguintes carros: ")
-            print("PLACA: %s MODELO: %s" % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
+                            veiculo = veiculos[placa]
+                            if placa not in funcionario.veiculos:
+                                funcionario.veiculos[placa] = veiculo
+                            else:
+                                print("Funcionário já tem acesso a esse veículo")
+                            print("Funcionário tem acesso aos seguintes carros: ")
+                            for carro in funcionario.veiculos:
+                                print("PLACA: %s MODELO: %s"
+                                      % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
+                                carros_cadastrados += 1
+            else:
+                raise ValueError
+        except ValueError:
+            print("Quantidade de carros deve ser um número inteiro")
 
+
+    def veiculos_funcionario(self):
+        while True:
+            matricula = input("Digite o número de matrícula do funcionário que deseja verificar: ")
+            if matricula not in self.__funcionarios:
+                print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
+            else:
+                funcionario = self.__funcionarios[matricula]
+                print("Funcionário tem acesso aos seguintes carros: ")
+                for carro in funcionario.veiculos:
+                    print("PLACA: %s MODELO: %s"
+                          % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
+                    return
     @property
     def funcionarios(self):
         return self.__funcionarios

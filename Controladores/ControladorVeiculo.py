@@ -79,8 +79,8 @@ class ControladorVeiculo:
         return self.__veiculos_emprestados
 
     def atualiza_quilometragem(self, placa, km_andado):
-        km_atual = int(self.__veiculos[placa].quilometragem_atual)
-        int(km_atual)
+        km_atual = float(self.__veiculos[placa].quilometragem_atual)
+        float(km_atual)
         km_atual += km_andado
         self.__veiculos[placa].quilometragem_atual = km_atual
 

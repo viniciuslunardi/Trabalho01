@@ -8,12 +8,11 @@ class TelaPrincipal(AbstractTela):
 
     def mostrar_opcoes(self):
         print("---------------INÍCIO---------------")
-        print("1: IR PARA FUNCIONÁRIO")
-        print("2: IR PARA DE VEÍCULOS")
+        print("1: IR PARA ÁREA DE FUNCIONÁRIO")
+        print("2: IR PARA ÁREA DE VEÍCULOS")
         print("3: IR PARA ARMÁRIO")
-        print("4: IR PARA REGISTROS")
-        print("5: ")
-        opcao = self.le_num_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4])
+        print("4: IR PARA ÁREA DE REGISTROS")
+        opcao = self.le_num_inteiro("Escolha a opção: ", [1, 2, 3, 4])
 
         return opcao
 

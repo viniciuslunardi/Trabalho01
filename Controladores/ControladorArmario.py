@@ -69,39 +69,31 @@ class ControladorArmario:
                     elif placa not in self.__chaves_emprestadas or len(self.__chaves_emprestadas) == 0:
                         # EIMITIR REGISTRO ACESSO PERMITIDO
                         self.__chaves_emprestadas[chave] = veiculos_funcionario[placa]
+                        funcionario[matricula].veiculo_usado[placa] = veiculos_funcionario[placa]
                         print("Pode pegar a chave %s do veículo %s"
                               % (veiculos_garagem[placa].chave, veiculos_garagem[placa].modelo))
                         return
                     else:
                         # EMITIR REGISTRO ACESSO NEGADO
+                        tentativas += 1
                         print("Esse veículo não está disponível no momento")
                 elif len(veiculos_funcionario) == 1:
-                    if self.__chaves_emprestadas == {}:
+                    placa = list(veiculos_funcionario)
+                    if placa[0] not in self.__chaves_emprestadas:
                         # EMITIR REGISTRO ACESSO PERMITIDO
-                        # self.__chaves_emprestadas.keys() = veiculos_funcionario[placa]
-                        placa = list(veiculos_funcionario)
                         chave = veiculos_funcionario[placa[0]].chave
                         self.__chaves_emprestadas[chave] = veiculos_funcionario[placa[0]]
-                        # self.__chaves_emprestadas[chave] = veiculos_funcionario[placa]
+                        funcionario[matricula].veiculo_usado[chave] = veiculos_funcionario[placa[0]]
                         print("Retire seu veiculo")
                         return
+                    else:
+                        # EVENTO ACESSO NEGADO
+                        tentativas += 1
+                        print("O único veículo que este funcionário tem acesso está indisponível")
                 else:
                     print("Funcionário não tem acesso a nenhum carro")
                     if len(funcionario) == 1:
                         return
-            # elif len(veiculos_garagem) == 1:
-            #     if self.__chaves_emprestadas == {}:
-            #         # EMITIR REGISTRO ACESSO PERMITIDO
-            #         placa = list(veiculos_garagem)
-            #         chave = veiculos_garagem[placa[0]].chave
-            #         self.__chaves_emprestadas[chave] = veiculos_garagem[placa[0]]
-            #         print("Retire seu veiculo")
-            #         return
-            #     else:
-            #         print("Veículo não está disponível no momento")
-            # else:
-            #     print("Não existe nenhum veículo na garagem")
-            #     return
 
         if tentativas == 3:
             # EMITIR EVENTO ACESSO BLOQUEADO
@@ -115,10 +107,10 @@ class ControladorArmario:
             if veiculo in self.__chaves_emprestadas:
                 print("MODELO: %s PLACA: %s" % (veiculos[veiculo].modelo, veiculos[veiculo].placa))
 
-
     def devolver_chave(self):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
         if len(self.__chaves_emprestadas) == 0:
+            print("----------------------------------------------")
             print("Todos os veículos da garagem estão disponíveis")
             return
         while True:
@@ -126,32 +118,37 @@ class ControladorArmario:
             if not self.__controlador_principal.controlador_funcionario.existe_funcionario(matricula):
                 print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
             else:
-                placa = input("Digite a placa do veículo que vai devolver: ")
-                if not self.__controlador_principal.controlador_veiculo.existe_veiculo(placa):
-                    print("Não existe veículo com placa '" + str(placa) + "' na garagem")
+                funcionario = self.__controlador_principal.controlador_funcionario.funcionarios[matricula]
+                if len(funcionario.veiculo_usado) >= 1:
+                    placa = input("Digite a placa do veículo que vai devolver: ")
+                    if not self.__controlador_principal.controlador_veiculo.existe_veiculo(placa):
+                        print("Não existe veículo com placa '" + str(placa) + "' na garagem")
+                    else:
+                        if placa not in funcionario.veiculo_usado:
+                            print("Funcionário não está utilizando veículo com placa igual a " + str(placa))
+                        else:
+                            try:
+                                km_andado = float(input("Informe o número de quilometros andados: "))
+                                if km_andado:
+                                    chave = veiculos[placa].chave
+                                    del self.__chaves_emprestadas[chave]
+                                    del funcionario.veiculo_usado[placa]
+                                    # EMITIR EVENTO VEICULO DEVOLVIDO
+                                    self.__controlador_principal.controlador_veiculo.atualiza_quilometragem(placa, km_andado)
+                                    print("Veículo devolvido com sucesso")
+                                    return
+                            except ValueError:
+                                print("Quilometros andados devem ser informados com números inteiros")
                 else:
-                    try:
-                        km_andado = float(input("Informe o número de quilometros andados: "))
-                        if km_andado:
-                            chave = veiculos[placa].chave
-                            del self.__chaves_emprestadas[chave]
-                            # EMITIR EVENTO ACESSO LIBERADO
-                            self.__controlador_principal.controlador_veiculo.atualiza_quilometragem(placa, km_andado)
-                            print("Veículo devolvido com sucesso")
-                            return
-                    except ValueError:
-                        print("Quilometros andados devem ser informados com números inteiros")
-
+                    print("Este funcionário não está usando nenhum veículo")
 
     @property
     def chaves(self):
         return self.__chaves
 
-
     @property
     def chaves_emprestadas(self):
         return self.__chaves_emprestadas
-
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

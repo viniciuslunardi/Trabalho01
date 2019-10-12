@@ -91,8 +91,8 @@ class ControladorFuncionario:
             funcionario = self.__funcionarios[matricula]
         if funcionario.cargo == Cargo.DIRETORIA:
             print("Este funcionário já tem acesso a todos os veiculos da garagem")
+            print("Funcionário tem acesso aos seguintes veículos: ")
             for carro in funcionario.veiculos:
-                print("Funcionário tem acesso aos seguintes veículos: ")
                 print("PLACA: %s MODELO: %s" % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
             return
         try:
@@ -102,23 +102,24 @@ class ControladorFuncionario:
                 while True:
                     if qtd_carros > len(self.__controlador_principal.controlador_veiculo.veiculos):
                         print("Não existem tantos veículos assim na garagem!")
+                        break
                     else:
-                        while carros_cadastrados <= qtd_carros:
+                        while carros_cadastrados < qtd_carros:
                             placa = input("Digite a placa do veículo autorizado: ")
                             if placa not in veiculos:
                                 print("Não existe veículo com placa '" + str(placa) + "' na garagem")
                                 return
-
                             veiculo = veiculos[placa]
                             if placa not in funcionario.veiculos:
                                 funcionario.veiculos[placa] = veiculo
                             else:
                                 print("Funcionário já tem acesso a esse veículo")
                             print("Funcionário tem acesso aos seguintes carros: ")
+                            carros_cadastrados += 1
                             for carro in funcionario.veiculos:
                                 print("PLACA: %s MODELO: %s"
                                       % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
-                                carros_cadastrados += 1
+                    return
             else:
                 raise ValueError
         except ValueError:
@@ -136,12 +137,10 @@ class ControladorFuncionario:
                 for carro in funcionario.veiculos:
                     print("PLACA: %s MODELO: %s"
                           % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
-                    return
+                return
     @property
     def funcionarios(self):
         return self.__funcionarios
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()
-
-# Próximo passo será fazer a retirada de veículos

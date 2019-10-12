@@ -15,6 +15,7 @@ class Funcionario:
         self.__telefone = telefone
         self.__cargo = cargo
         self.__veiculos = {}
+        self.__veiculo_usado = {}
 
     @property
     def numero_matricula(self):
@@ -63,6 +64,14 @@ class Funcionario:
     @cargo.setter
     def cargo(self, cargo):
         self.__cargo = cargo
+
+    @property
+    def veiculo_usado(self):
+        return self.__veiculo_usado
+
+    @veiculo_usado.setter
+    def veiculo_usado(self, veiculo_usado):
+        self.__veiculo_usado = veiculo_usado
 
     def __eq__(self, other):
         return self.__numero_matricula == other.numero_matricula

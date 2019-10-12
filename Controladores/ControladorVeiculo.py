@@ -55,18 +55,6 @@ class ControladorVeiculo:
         for placa in self.__veiculos:
             print("%s: %s:", self.__veiculos[placa].modelo, self.__veiculos[placa].placa)
 
-    def emprestar_veiculo(self):
-        pass
-
-    def devolver_veiculo(self):
-        pass
-
-    def veiculos_disponiveis(self):
-        pass
-
-    def atualizar_veiculo(self):
-        pass
-
     def alterar_veiculo(self):
         pass
 

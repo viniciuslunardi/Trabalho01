@@ -178,6 +178,7 @@ class ControladorFuncionario:
             if matricula:
                 if matricula in self.__funcionarios:
                     del self.__funcionarios[matricula]
+                    print("Funcionário demitido com sucesso >:)")
                 else:
                     print("Não existe funcionário com esse número de matrícula")
                 return

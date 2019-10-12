@@ -35,8 +35,27 @@ class ControladorVeiculo:
         return placa in self.__veiculos
 
     def cadastra(self):
-        self.cadastrar_veiculo(input("PLACA: "), input("MODELO: "), input("MARCA: "), input("ANO: "),
-                               input("KM ATUAL: "))
+        while True:
+            try:
+                placa = input("Informe a placa do veículo: ")
+                modelo = input("Informe o modelo do veículo: ")
+                marca = input("Informe a marca do veículo: ")
+                ano = input("Informe o ano de fabricaçao do veículo:  ")
+                if placa == "" or modelo == "" or marca == "" or ano == "":
+                    raise Exception
+                else:
+                    try:
+                        km = float(input("Informe quilometragem atual do veículo "))
+                        if km:
+                            self.cadastrar_veiculo(placa, modelo, marca, ano, km)
+                            return
+                        else:
+                            raise ValueError
+                    except ValueError:
+                        print("Quilometragem atual deve ser informada em números "
+                              " (utilize '.' para números não inteiros)")
+            except Exception:
+                print("Todos os campos devem ser preenchidos! ")
 
     def lista_veiculo(self):
         if len(self.__veiculos) > 0:

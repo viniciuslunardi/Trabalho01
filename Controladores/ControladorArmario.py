@@ -50,6 +50,7 @@ class ControladorArmario:
                         data = datetime.now().strftime('%d/%m/%Y %H:%M')
                         motivo = "Tentou acessar uma matrícula de funcionário não cadastrado no sistema"
                         registro = Registro(data, None, motivo, None, evento)
+                        self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                         self.__controlador_principal.controlador_registro.imprime_registro(registro)
                         print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
                     else:
@@ -64,6 +65,7 @@ class ControladorArmario:
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Não existe veículo com esta placa cadastrado no sistema"
                                     registro = Registro(data, matricula, motivo, None, evento)
+                                    self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     print("Não existe veículo com placa '" + str(placa) + "' na garagem")
                                 elif placa not in veiculos_funcionario:
@@ -72,6 +74,7 @@ class ControladorArmario:
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Tentou acessar um veículo que não tem permissão"
                                     registro = Registro(data, matricula, motivo, placa, evento)
+                                    self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     print("Funcionário não tem acesso a este veiculo")
                                     if tentativas == 1:
@@ -83,6 +86,7 @@ class ControladorArmario:
                                         data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                         motivo = "Tentou acessar veículo que não tem permissão por 3 vezes"
                                         registro = Registro(data, matricula, motivo, placa, evento)
+                                        self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                         self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                         funcionario[matricula].bloqueado = True
                                 elif placa not in self.__chaves_emprestadas or len(self.__chaves_emprestadas) == 0:
@@ -91,6 +95,7 @@ class ControladorArmario:
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Funcionário tem acesso ao veículo que tentou retirar"
                                     registro = Registro(data, matricula, motivo, placa, evento)
+                                    self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     chave = veiculos_funcionario[placa].placa
                                     self.__chaves_emprestadas[chave] = veiculos_funcionario[placa]
@@ -104,8 +109,10 @@ class ControladorArmario:
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Tentou acessar veículo que não está disponível no momento"
                                     registro = Registro(data, matricula, motivo, placa, evento)
+                                    self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     print("Esse veículo não está disponível no momento")
+                                    return
                             elif len(veiculos_funcionario) == 1:
                                 placa = list(veiculos_funcionario)
                                 if placa[0] not in self.__chaves_emprestadas:
@@ -114,6 +121,7 @@ class ControladorArmario:
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Funcionário tem acesso ao veículo que tentou retirar"
                                     registro = Registro(data, matricula, motivo, placa, evento)
+                                    self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     chave = veiculos_funcionario[placa[0]].placa
                                     self.__chaves_emprestadas[chave] = veiculos_funcionario[placa[0]]
@@ -126,6 +134,7 @@ class ControladorArmario:
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Tentou acessar veículo que não está disponível no momento"
                                     registro = Registro(data, matricula, motivo, placa, evento)
+                                    self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     print("O único veículo que este funcionário tem acesso está indisponível")
                                     return
@@ -134,6 +143,7 @@ class ControladorArmario:
                                 data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                 motivo = "Funcionário não tem acesso a nenhum veículo"
                                 registro = Registro(data, matricula, motivo, None, evento)
+                                self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                 self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                 print("Funcionário não tem acesso a nenhum carro")
                                 if len(funcionario) == 1:
@@ -143,6 +153,7 @@ class ControladorArmario:
                             data = datetime.now().strftime('%d/%m/%Y %H:%M')
                             motivo = "Funcionário está com o acesso bloqueado"
                             registro = Registro(data, matricula, motivo, None, evento)
+                            self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                             self.__controlador_principal.controlador_registro.imprime_registro(registro)
                 else:
                     raise ValueError
@@ -192,6 +203,8 @@ class ControladorArmario:
                                             data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                             motivo = "Devolveu o veículo"
                                             registro = Registro(data, matricula, motivo, placa, evento)
+                                            self.__controlador_principal.controlador_registro.cadastrar_registro(
+                                                registro)
                                             self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                             self.__controlador_principal.controlador_veiculo\
                                                 .atualiza_quilometragem(placa, km_andado)

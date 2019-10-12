@@ -2,6 +2,7 @@ from Telas.TelaRegistro import TelaRegistro
 from Entidades.Registro import Registro
 from Entidades.Registro import EventoRegistro
 
+
 class ControladorRegistro:
     def __init__(self, controlador_principal):
         self.__tela_registro = TelaRegistro(self)
@@ -13,25 +14,20 @@ class ControladorRegistro:
 
     def abre_tela_inicial(self):
         switcher = {1: self.lista_registros,
-                    2: 0}
+                    2: 0,
+                    0: self.voltar}
         while True:
             opcao = self.__tela_registro.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
             funcao_escolhida()
 
-    def cadastrar_registro(self, data, matricula_funcionario, motivo, placa_veiculo, evento: EventoRegistro):
-        try:
-            registro = Registro(data, matricula_funcionario, motivo, placa_veiculo, evento)
-            if registro not in self.__registros:
-                self.__registros[registro] = registro
-            else:
-                raise Exception
-        except Exception:
-            print("Registro já cadastrado")
+    def cadastrar_registro(self, registro):
+        self.__registros[registro] = registro
 
     def lista_registros(self):
+        print("----------TODOS OS REGISTROS----------")
         for registro in self.__registros:
-            print(registro)
+            self.imprime_registro(registro)
 
     @property
     def registros(self):
@@ -39,3 +35,6 @@ class ControladorRegistro:
 
     def imprime_registro(self, registro):
         print(registro)
+
+    def voltar(self):
+        self.__controlador_principal.abre_tela_inicial()

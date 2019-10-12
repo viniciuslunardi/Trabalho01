@@ -49,6 +49,9 @@ class Registro:
     @property
     def placa_veiculo(self):
         return self.__placa_veiculo
+    @property
+    def motivo(self):
+        return self.__motivo
 
     def __eq__(self, other):
         return self.__matricula_funcionario == other.matricula_funcionario or self.__placa_veiculo == other.placa_veiculo

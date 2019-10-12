@@ -22,7 +22,7 @@ class ControladorRegistro:
             funcao_escolhida()
 
     def cadastrar_registro(self, registro):
-        self.__registros[registro.matricula_funcionario] = registro
+        self.__registros[registro.motivo] = registro
 
     def lista_registros(self):
         print("---------TODOS OS REGISTROS--------")

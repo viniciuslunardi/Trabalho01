@@ -7,6 +7,7 @@ class ControladorRegistro:
     def __init__(self, controlador_principal):
         self.__tela_registro = TelaRegistro(self)
         self.__registros = {}
+        self.__chave = 0
         self.__controlador_principal = controlador_principal
 
     def abre_registros(self):
@@ -22,7 +23,9 @@ class ControladorRegistro:
             funcao_escolhida()
 
     def cadastrar_registro(self, registro):
-        self.__registros[registro.motivo] = registro
+        chave = self.__chave
+        self.__registros[chave] = registro
+        self.__chave += 1
 
     def lista_registros(self):
         print("---------TODOS OS REGISTROS--------")
@@ -58,9 +61,9 @@ class ControladorRegistro:
         try:
             matricula = int(input("Digite o número de matricula: "))
             if matricula:
-                for registro in self.__registros:
+                for chave in self.__registros:
                     if matricula in self.__registros:
-                        print(self.__registros[registro])
+                        print(self.__registros[chave])
             else:
                 raise ValueError
         except ValueError:

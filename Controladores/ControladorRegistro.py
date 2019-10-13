@@ -28,7 +28,7 @@ class ControladorRegistro:
         self.__chave += 1
 
     def lista_registros(self):
-        print("---------TODOS OS REGISTROS--------")
+        print("---------TODOS OS REGISTROS-------")
         for registro in self.__registros:
             self.imprime_registro(self.__registros[registro])
 
@@ -44,7 +44,8 @@ class ControladorRegistro:
         print("1: Número de matrícula")
         print("2: Placa de veículo")
         entrada = input("Filtrar por: ")
-        filtros = {1: self.filtrar_matricula}
+        filtros = {1: self.filtrar_matricula,
+                   2: self.filtrar_placa}
         try:
             inteiro = int(entrada)
             if numeros_validos and inteiro not in numeros_validos:
@@ -59,15 +60,23 @@ class ControladorRegistro:
 
     def filtrar_matricula(self):
         try:
-            matricula = int(input("Digite o número de matricula: "))
-            if matricula:
+            matricula_funcionario = int(input("Digite o número de matricula: "))
+            if matricula_funcionario:
                 for chave in self.__registros:
-                    if matricula in self.__registros:
+                    if self.__registros[chave].matricula_funcionario == matricula_funcionario:
                         print(self.__registros[chave])
             else:
                 raise ValueError
         except ValueError:
             print("Matrícula deve ser número inteiro")
+
+    def filtrar_placa(self):
+        placa_veiculo = (input("Digite o número da placa do veículo: "))
+        if placa_veiculo:
+            for chave in self.__registros:
+                if self.__registros[chave].placa_veiculo == placa_veiculo:
+                    print(self.__registros[chave])
+
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

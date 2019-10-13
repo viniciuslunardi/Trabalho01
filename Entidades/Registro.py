@@ -49,6 +49,7 @@ class Registro:
     @property
     def placa_veiculo(self):
         return self.__placa_veiculo
+
     @property
     def motivo(self):
         return self.__motivo

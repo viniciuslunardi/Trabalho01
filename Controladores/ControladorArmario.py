@@ -53,6 +53,7 @@ class ControladorArmario:
                         self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                         self.__controlador_principal.controlador_registro.imprime_registro(registro)
                         print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
+                        return
                     else:
                         funcionario = self.__controlador_principal.controlador_funcionario.funcionarios
                         veiculos_funcionario = funcionario[matricula].veiculos
@@ -68,6 +69,7 @@ class ControladorArmario:
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     print("Não existe veículo com placa '" + str(placa) + "' na garagem")
+                                    return
                                 elif placa not in veiculos_funcionario:
                                     # EMITIR REGISTRO ACESSO NEGADO
                                     evento = EventoRegistro(2)
@@ -155,6 +157,7 @@ class ControladorArmario:
                             registro = Registro(data, matricula, motivo, None, evento)
                             self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                             self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                            return
                 else:
                     raise ValueError
             except ValueError:

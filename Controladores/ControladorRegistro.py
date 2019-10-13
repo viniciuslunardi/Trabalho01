@@ -1,6 +1,4 @@
 from Telas.TelaRegistro import TelaRegistro
-from Entidades.Registro import Registro
-from Entidades.Registro import EventoRegistro
 
 
 class ControladorRegistro:

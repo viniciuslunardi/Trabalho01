@@ -21,9 +21,11 @@ class ControladorFuncionario:
             2: self.lista_funcionario,
             3: self.dar_acesso_veiculo,
             4: self.veiculos_funcionario,
-            5: self.deletar_funcionario,
-            0: self.voltar
-        }
+            5: self.alterar_funcionario,
+            6: self.deletar_funcionario,
+            7: self.desbloquear_funcionario,
+            0: self.voltar}
+
         while True:
             opcao = self.__tela_funcionario.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -179,6 +181,57 @@ class ControladorFuncionario:
                 if matricula in self.__funcionarios:
                     del self.__funcionarios[matricula]
                     print("Funcionário demitido com sucesso >:)")
+                else:
+                    print("Não existe funcionário com esse número de matrícula")
+                return
+            else:
+                raise ValueError
+        except ValueError:
+            print("Matrícula é um número inteiro")
+
+    def alterar_funcionario(self):
+        while True:
+            try:
+                matricula_anterior = int(input("Digite a matrícula do funcionário: "))
+                if matricula_anterior:
+                    if matricula_anterior in self.__funcionarios:
+                        print("Informe os novos valores: ")
+                        try:
+                            matricula = int(input("Digite o novo valor da matrícula  do funcionário: "))
+                            if matricula:
+                                if matricula in self.__funcionarios:
+                                    print("Essa matrícula já está sendo utilizada por outro funcionário")
+                                else:
+                                    nome = (input("Digite o novo valor do nome do funcionário: "))
+                                    data = (input("Digite o novo valor do ano de nascimento do funcionário: "))
+                                    telefone = (input("Digite o novo valor do telefone do funcionário: "))
+                                    cargo = Cargo(self.cadastrar_cargo())
+                                    self.__funcionarios[matricula_anterior].numero_matricula = matricula
+                                    self.__funcionarios[matricula_anterior].nome = nome
+                                    self.__funcionarios[matricula_anterior].data_nascimento = data
+                                    self.__funcionarios[matricula_anterior].telefone = telefone
+                                    self.__funcionarios[matricula_anterior].cargo = cargo
+                                    print("Funcionário alterado com sucesso")
+                                    return
+                            else:
+                                raise ValueError
+                        except ValueError:
+                            print("Matrícula deve ser um número inteiro")
+                else:
+                    raise ValueError
+            except ValueError:
+                print("Matrícula deve ser um número inteiro")
+
+    def desbloquear_funcionario(self):
+        try:
+            matricula = int(input("Digite o número de matrícula do funcionário: "))
+            if matricula:
+                if matricula in self.__funcionarios:
+                    if self.__funcionarios[matricula].bloqueado:
+                        self.__funcionarios[matricula].bloqueado = False
+                        print("Funcionário desbloqueado com sucesso")
+                    else:
+                        print("Este funcionário já está desbloqueado")
                 else:
                     print("Não existe funcionário com esse número de matrícula")
                 return

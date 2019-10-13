@@ -6,8 +6,6 @@ class ControladorVeiculo:
     def __init__(self, controlador_principal):
         self.__tela_veiculo = TelaVeiculo(self)
         self.__veiculos = {}
-        self.__veiculos_emprestados = []
-        self.__veiculos_disponives = []
         self.__controlador_principal = controlador_principal
 
     def abre_veiculo(self):
@@ -17,7 +15,8 @@ class ControladorVeiculo:
         switcher = {0: self.voltar,
                     1: self.cadastra,
                     2: self.lista_veiculo,
-                    3: self.deletar_carro}
+                    3: self.alterar_carro,
+                    4: self.deletar_carro}
         while True:
             opcao = self.__tela_veiculo.mostrar_opcoes()
             funcao_escolhida = switcher[opcao]
@@ -75,16 +74,9 @@ class ControladorVeiculo:
         for placa in self.__veiculos:
             print("%s: %s:", self.__veiculos[placa].modelo, self.__veiculos[placa].placa)
 
-    def alterar_veiculo(self):
-        pass
-
     @property
     def veiculos(self):
         return self.__veiculos
-
-    @property
-    def veiculos_emprestados(self):
-        return self.__veiculos_emprestados
 
     def atualiza_quilometragem(self, placa, km_andado):
         km_atual = float(self.__veiculos[placa].quilometragem_atual)
@@ -99,6 +91,37 @@ class ControladorVeiculo:
             print("Veículo excluido com sucesso")
         else:
             print("Não existe veículo com essa placa cadastrado no sistema")
+
+    def alterar_carro(self):
+        while True:
+            placa_anterior = (input("Digite a placa do veículo: "))
+            if placa_anterior in self.__veiculos:
+                print("Informe os novos valores: ")
+                placa = (input("Digite o novo valor da placa do veículo: "))
+                if placa in self.__veiculos:
+                    print("Essa placa já está sendo utilizada por outro veículo")
+                else:
+                    modelo = (input("Digite o novo valor do modelo do veículo: "))
+                    marca = (input("Digite o novo valor da marca do veículo: "))
+                    ano = (input("Digite o novo valor do ano de fabricação do veículo: "))
+                    try:
+                        km = float(input("Digite o novo valor da quilometragem atual do veículo: "))
+                        if km:
+                            self.__veiculos[placa_anterior].placa = placa
+                            self.__veiculos[placa_anterior].modelo = modelo
+                            self.__veiculos[placa_anterior].marca = marca
+                            self.__veiculos[placa_anterior].ano = ano
+                            self.__veiculos[placa_anterior].quilometragem_atual = km
+                            print("Veículo alterado com sucesso")
+                            return
+                        else:
+                            raise ValueError
+                    except ValueError:
+                        print("Quilometragem atual deve ser informada em números "
+                              " (utilize '.' para números não inteiros)")
+            else:
+                print("Não existe veículo com essa placa cadastrado no sistema")
+                return
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

@@ -1,12 +1,11 @@
 
 class Veiculo:
-    def __init__(self, placa, modelo, marca, ano, quilometragem_atual, ):
+    def __init__(self, placa, modelo, marca, ano, quilometragem_atual):
         self.__placa = placa
         self.__modelo = modelo
         self.__marca = marca
         self.__ano = ano
         self.__quilometragem_atual = quilometragem_atual
-        self.__chave = 0
 
     @property
     def placa(self):
@@ -47,14 +46,6 @@ class Veiculo:
     @quilometragem_atual.setter
     def quilometragem_atual(self, quilometragem_atual):
         self.__quilometragem_atual = quilometragem_atual
-
-    @property
-    def chave(self):
-        return self.__chave
-
-    @chave.setter
-    def chave(self, chave):
-        self.__chave = chave
 
     def __eq__(self, other):
         return self.__placa == other.placa

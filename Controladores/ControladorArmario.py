@@ -6,7 +6,6 @@ from datetime import datetime
 class ControladorArmario:
     def __init__(self, controlador_principal):
         self.__tela_armario = TelaArmario(self)
-        self.__chaves = {}
         self.__chaves_emprestadas = {}
         self.__controlador_principal = controlador_principal
 
@@ -81,7 +80,8 @@ class ControladorArmario:
                                     print("Funcionário não tem acesso a este veiculo")
                                     if tentativas == 1:
                                         print("----------------CUIDADO!----------------"
-                                              "\nMais uma tentativa de acesso a veículo não permitido irá bloquear seu acesso")
+                                              "\nMais uma tentativa de acesso a veículo "
+                                              "não permitido irá bloquear seu acesso")
                                     tentativas += 1
                                     if tentativas > 2:
                                         evento = EventoRegistro(3)
@@ -221,10 +221,6 @@ class ControladorArmario:
                     raise ValueError
             except ValueError:
                 print("Matricula deve ser um número inteiro")
-
-    @property
-    def chaves(self):
-        return self.__chaves
 
     @property
     def chaves_emprestadas(self):

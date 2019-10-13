@@ -10,8 +10,9 @@ class TelaVeiculo(AbstractTela):
         print("---------------VEÍCULO---------------")
         print("1: CADASTRAR VEÍCULO")
         print("2: LISTA DE VEÍCULOS")
-        print("3: DELETAR VEÍCULO")
+        print("3: ALTERAR VEÍCULO")
+        print("4: DELETAR VEÍCULO")
         print("0: VOLTAR PARA TELA PRINCIPAL")
-        opcao = self.le_num_inteiro("Escolha a opção: ", [0, 1, 2, 3])
+        opcao = self.le_num_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4])
 
         return opcao

@@ -112,6 +112,7 @@ class ControladorVeiculo:
                             self.__veiculos[placa_anterior].marca = marca
                             self.__veiculos[placa_anterior].ano = ano
                             self.__veiculos[placa_anterior].quilometragem_atual = km
+                            self.__veiculos[placa] = self.__veiculos.pop(placa_anterior)
                             print("Veículo alterado com sucesso")
                             return
                         else:

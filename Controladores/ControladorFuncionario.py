@@ -211,6 +211,7 @@ class ControladorFuncionario:
                                     self.__funcionarios[matricula_anterior].data_nascimento = data
                                     self.__funcionarios[matricula_anterior].telefone = telefone
                                     self.__funcionarios[matricula_anterior].cargo = cargo
+                                    self.__funcionarios[matricula] = self.__funcionarios.pop(matricula_anterior)
                                     print("Funcionário alterado com sucesso")
                                     return
                             else:

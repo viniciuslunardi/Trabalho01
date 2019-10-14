@@ -75,6 +75,5 @@ class ControladorRegistro:
                 if self.__registros[chave].placa_veiculo == placa_veiculo:
                     print(self.__registros[chave])
 
-
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

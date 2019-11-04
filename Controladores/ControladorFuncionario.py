@@ -16,20 +16,21 @@ class ControladorFuncionario:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {
-            1: self.cadastra,
-            2: self.lista_funcionario,
-            3: self.dar_acesso_veiculo,
-            4: self.veiculos_funcionario,
-            5: self.alterar_funcionario,
-            6: self.deletar_funcionario,
-            7: self.desbloquear_funcionario,
-            0: self.voltar}
-
-        while True:
-            opcao = self.__tela_funcionario.mostrar_opcoes()
-            funcao_escolhida = switcher[opcao]
-            funcao_escolhida()
+        # switcher = {
+        #     1: self.cadastra,
+        #     2: self.lista_funcionario,
+        #     3: self.dar_acesso_veiculo,
+        #     4: self.veiculos_funcionario,
+        #     5: self.alterar_funcionario,
+        #     6: self.deletar_funcionario,
+        #     7: self.desbloquear_funcionario,
+        #     0: self.voltar}
+        #
+        # while True:
+        #     opcao = self.__tela_funcionario.mostrar_opcoes()
+        #     funcao_escolhida = switcher[opcao]
+        #     funcao_escolhida()
+        self.__tela_funcionario.open()
 
     def cadastrar_funcionario(self, numero_matricula, nome, data_nascimento, telefone, cargo: Cargo):
         try:

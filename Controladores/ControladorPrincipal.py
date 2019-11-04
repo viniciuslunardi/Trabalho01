@@ -17,14 +17,16 @@ class ControladorPrincipal:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {1: self.funcionario,
-                    2: self.veiculo,
-                    3: self.armario,
-                    4: self.registros}
-        while True:
-            opcao = self.__tela_principal.mostrar_opcoes()
-            funcao_escolhida = switcher[opcao]
-            funcao_escolhida()
+        # switcher = {1: self.funcionario,
+        #             2: self.veiculo,
+        #             3: self.armario,
+        #             4: self.registros}
+        # while True:
+        #     opcao = self.__tela_principal.mostrar_opcoes()
+        #     funcao_escolhida = switcher[opcao]
+        #     funcao_escolhida()
+        (button, value) = self.__tela_principal.open()
+        self.funcionario()
 
     @property
     def controlador_funcionario(self):

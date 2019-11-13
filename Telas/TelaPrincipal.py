@@ -11,8 +11,11 @@ class TelaPrincipal(AbstractTela):
 
     def init_components(self):
         layout = [
-            [sg.Listbox(values=('Listbox 1', "Funcionario"), size=(100, 1), key="lb_itens")],
-            [sg.Submit("Ir", size=(30, 1))]
+            [sg.Submit("Ir para Funcionários", size=(30, 1), key="funcionarios")],
+            [sg.Submit("Ir para Veículos", size=(30, 1), key="veiculos")],
+            [sg.Submit("Ir para Armário", size=(30, 1), key="armario")],
+            [sg.Submit("Ir para Registros", size=(30, 1), key="registros")],
+            # [sg.Listbox(values=('Listbox 1', "Funcionario"), size=(100, 1), key="lb_itens")]
         ]
         self.__window = sg.Window("Início", default_element_size=(150, 300)).Layout(layout)
 
@@ -29,7 +32,6 @@ class TelaPrincipal(AbstractTela):
 
     def open(self):
         buttons, values = self.__window.Read()
-        print(buttons, values)
         return buttons, values
 
 

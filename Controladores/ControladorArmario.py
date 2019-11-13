@@ -13,15 +13,17 @@ class ControladorArmario:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {0: self.voltar,
-                    1: self.veiculos_na_garagem,
-                    2: self.pegar_veiculo,
-                    3: self.devolver_chave,
-                    4: self.veiculos_emprestados}
-        while True:
-            opcao = self.__tela_armario.mostrar_opcoes()
-            funcao_escolhida = switcher[opcao]
-            funcao_escolhida()
+
+        self.__tela_armario.open()
+        # switcher = {0: self.voltar,
+        #             1: self.veiculos_na_garagem,
+        #             2: self.pegar_veiculo,
+        #             3: self.devolver_chave,
+        #             4: self.veiculos_emprestados}
+        # while True:
+        #     opcao = self.__tela_armario.mostrar_opcoes()
+        #     funcao_escolhida = switcher[opcao]
+        #     funcao_escolhida()
 
     def veiculos_na_garagem(self):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos

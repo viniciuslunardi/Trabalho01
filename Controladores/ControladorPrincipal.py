@@ -26,7 +26,14 @@ class ControladorPrincipal:
         #     funcao_escolhida = switcher[opcao]
         #     funcao_escolhida()
         (button, value) = self.__tela_principal.open()
-        self.funcionario()
+        if button == "funcionarios":
+            self.funcionario()
+        elif button == "veiculos":
+            self.veiculo()
+        elif button == "armario":
+            self.armario()
+        else:
+            self.registros()
 
     @property
     def controlador_funcionario(self):

@@ -12,15 +12,16 @@ class ControladorVeiculo:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {0: self.voltar,
-                    1: self.cadastra,
-                    2: self.lista_veiculo,
-                    3: self.alterar_carro,
-                    4: self.deletar_carro}
-        while True:
-            opcao = self.__tela_veiculo.mostrar_opcoes()
-            funcao_escolhida = switcher[opcao]
-            funcao_escolhida()
+        self.__tela_veiculo.open()
+        # switcher = {0: self.voltar,
+        #             1: self.cadastra,
+        #             2: self.lista_veiculo,
+        #             3: self.alterar_carro,
+        #             4: self.deletar_carro}
+        # while True:
+        #     opcao = self.__tela_veiculo.mostrar_opcoes()
+        #     funcao_escolhida = switcher[opcao]
+        #     funcao_escolhida()
 
     def cadastrar_veiculo(self, placa, modelo, marca, ano, quilometragem_atual):
         try:

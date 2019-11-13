@@ -12,13 +12,14 @@ class ControladorRegistro:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        switcher = {1: self.lista_registros,
-                    2: self.filtra_registro,
-                    0: self.voltar}
-        while True:
-            opcao = self.__tela_registro.mostrar_opcoes()
-            funcao_escolhida = switcher[opcao]
-            funcao_escolhida()
+        self.__tela_registro.open()
+        # switcher = {1: self.lista_registros,
+        #             2: self.filtra_registro,
+        #             0: self.voltar}
+        # while True:
+        #     opcao = self.__tela_registro.mostrar_opcoes()
+        #     funcao_escolhida = switcher[opcao]
+        #     funcao_escolhida()
 
     def cadastrar_registro(self, registro):
         chave = self.__chave

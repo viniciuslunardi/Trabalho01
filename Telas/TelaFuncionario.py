@@ -10,10 +10,18 @@ class TelaFuncionario(AbstractTela):
         self.init_components()
 
     def init_components(self):
-        layout = [
-            [sg.Text("aiaiaiai")]
-        ]
 
+        layout = [
+            [sg.Submit("Cadastrar funcionário", size=(30, 1), key="cadastro")],
+            [sg.Submit("Lista de funcionários", size=(30, 1), key="lista")],
+            [sg.Submit("Liberar acesso de veículo", size=(30, 1), key="liberar")],
+            [sg.Submit("Verificar acesso de veículo por matrícula", size=(30, 1), key="verificar")],
+            [sg.Submit("Alterar funcionário", size=(30, 1), key="alterar")],
+            [sg.Submit("Demitir funcionário", size=(30, 1), key="demitir")],
+            [sg.Submit("Desbloquear funcionário", size=(30, 1), key="desbloquear")],
+            [sg.Submit("Voltar", size=(30, 1), key="voltar")],
+            # [sg.Listbox(values=('Listbox 1', "Funcionario"), size=(100, 1), key="lb_itens")]
+        ]
         self.__window = sg.Window("Funcionários", default_element_size=(150, 300)).Layout(layout)
 
     def mostrar_opcoes(self):

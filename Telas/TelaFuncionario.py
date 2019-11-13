@@ -10,7 +10,7 @@ class TelaFuncionario(AbstractTela):
         self.init_components()
 
     def init_components(self):
-
+        sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Submit("Cadastrar funcionário", size=(30, 1), key="cadastro")],
             [sg.Submit("Lista de funcionários", size=(30, 1), key="lista")],

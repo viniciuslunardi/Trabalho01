@@ -10,14 +10,15 @@ class TelaPrincipal(AbstractTela):
         self.init_components()
 
     def init_components(self):
+        sg.change_look_and_feel("Reddit")
         layout = [
-            [sg.Submit("Ir para Funcionários", size=(30, 1), key="funcionarios")],
-            [sg.Submit("Ir para Veículos", size=(30, 1), key="veiculos")],
-            [sg.Submit("Ir para Armário", size=(30, 1), key="armario")],
-            [sg.Submit("Ir para Registros", size=(30, 1), key="registros")],
+            [sg.Submit("Ir para Funcionários", size=(45, 1), key="funcionarios", font=("Helvetica", 15))],
+            [sg.Submit("Ir para Veículos", size=(45, 1), key="veiculos", font=("Helvetica", 15))],
+            [sg.Submit("Ir para Armário", size=(45, 1), key="armario", font=("Helvetica", 15))],
+            [sg.Submit("Ir para Registros", size=(45, 1), key="registros", font=("Helvetica", 15))],
             # [sg.Listbox(values=('Listbox 1', "Funcionario"), size=(100, 1), key="lb_itens")]
         ]
-        self.__window = sg.Window("Início", default_element_size=(150, 300)).Layout(layout)
+        self.__window = sg.Window("Início", default_element_size=(300, 300)).Layout(layout)
 
     def mostrar_opcoes(self):
         # print("---------------INÍCIO---------------")

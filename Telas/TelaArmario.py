@@ -10,6 +10,7 @@ class TelaArmario(AbstractTela):
         self.init_components()
 
     def init_components(self):
+        sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Submit("Veículos na garagem", size=(30, 1), key="veiculos_garagem")],
             [sg.Submit("Pegar veículo", size=(30, 1), key="pegar_veiculo")],

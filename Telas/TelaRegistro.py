@@ -18,6 +18,7 @@ class TelaRegistro(AbstractTela):
         return opcao
 
     def init_components(self):
+        sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Submit("Lista de registros", size=(30, 1), key="lista")],
             [sg.Submit("Filtrar registros", size=(30, 1), key="filtrar")],

@@ -1,10 +1,12 @@
 from Telas.TelaVeiculo import TelaVeiculo
+from Telas.TelaCadastroVeiculo import TelaCadastroVeiculo
 from Entidades.Veiculo import Veiculo
 
 
 class ControladorVeiculo:
     def __init__(self, controlador_principal):
         self.__tela_veiculo = TelaVeiculo(self)
+        self.__tela_cadastro = TelaCadastroVeiculo(self)
         self.__veiculos = {}
         self.__controlador_principal = controlador_principal
 
@@ -12,7 +14,13 @@ class ControladorVeiculo:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        self.__tela_veiculo.open()
+        button, values = self.__tela_veiculo.open()
+        print(button, values)
+        if button == "cadastrar":
+            button, values = self.__tela_cadastro.save()
+            print(str(values[0]))
+            self.cadastra(values)
+
         # switcher = {0: self.voltar,
         #             1: self.cadastra,
         #             2: self.lista_veiculo,
@@ -36,18 +44,18 @@ class ControladorVeiculo:
     def existe_veiculo(self, placa):
         return placa in self.__veiculos
 
-    def cadastra(self):
+    def cadastra(self, values):
         while True:
             try:
-                placa = input("Informe a placa do veículo: ")
-                modelo = input("Informe o modelo do veículo: ")
-                marca = input("Informe a marca do veículo: ")
-                ano = input("Informe o ano de fabricaçao do veículo:  ")
+                placa = values[0]
+                modelo = values[1]
+                marca = values[2]
+                ano = values[3]
                 if placa == "" or modelo == "" or marca == "" or ano == "":
                     raise Exception
                 else:
                     try:
-                        km = float(input("Informe quilometragem atual do veículo "))
+                        km = float(values[4])
                         if km:
                             self.cadastrar_veiculo(placa, modelo, marca, ano, km)
                             return
@@ -56,8 +64,15 @@ class ControladorVeiculo:
                     except ValueError:
                         print("Quilometragem atual deve ser informada em números "
                               " (utilize '.' para números não inteiros)")
+                        self.__tela_cadastro.show_message("Erro",
+                                                          "Quilometragem atual deve ser informada em números "
+                                                          " (utilize '.' para números não inteiros)")
+                        break
             except Exception:
-                print("Todos os campos devem ser preenchidos! ")
+                print("Todos os campos devem ser preenchidos!")
+                self.__tela_cadastro.show_message("Erro",
+                                                  "Todos os campos devem ser preenchidos! ")
+                break
 
     def lista_veiculo(self):
         if len(self.__veiculos) > 0:

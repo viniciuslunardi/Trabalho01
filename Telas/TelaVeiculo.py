@@ -21,6 +21,7 @@ class TelaVeiculo(AbstractTela):
         return opcao
 
     def init_components(self):
+        sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Submit("Cadastrar Veículo", size=(30, 1), key="cadastrar")],
             [sg.Submit("Lista de veículos", size=(30, 1), key="lista")],

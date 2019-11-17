@@ -7,7 +7,6 @@ class TelaArmario(AbstractTela):
         super().__init__(controlador)
         self.__controlador = controlador
         self.__window = None
-        self.init_components()
 
     def init_components(self):
         sg.change_look_and_feel("Reddit")
@@ -19,7 +18,7 @@ class TelaArmario(AbstractTela):
             [sg.Submit("Voltar", size=(30, 1), key="voltar")],
             # [sg.Listbox(values=('Listbox 1', "Funcionario"), size=(100, 1), key="lb_itens")]
         ]
-        self.__window = sg.Window("Armário", default_element_size=(150, 300)).Layout(layout)
+        self.__window = sg.Window("Armário", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(layout)
 
     def mostrar_opcoes(self):
         print("---------------ARMÁRIO---------------")
@@ -33,5 +32,6 @@ class TelaArmario(AbstractTela):
         return opcao
 
     def open(self):
-        buttons, values = self.__window.Read()
-        return buttons, values
+        self.init_components()
+        button, values = self.__window.Read()
+        return button, values

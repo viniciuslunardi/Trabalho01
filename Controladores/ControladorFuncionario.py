@@ -5,12 +5,18 @@ from Controladores.ControladorVeiculo import ControladorVeiculo
 
 
 class ControladorFuncionario:
+    __instance = None
     def __init__(self, controlador_principal):
         self.__tela_funcionario = TelaFuncionario(self)
         self.__funcionarios = {}
         self.__cargo = None
         self.__controlador_veiculo = ControladorVeiculo
         self.__controlador_principal = controlador_principal
+
+    def __new__(cls, *args, **kwargs):
+        if ControladorFuncionario.__instance is None:
+            ControladorFuncionario.__instance = object.__new__(cls)
+            return ControladorFuncionario.__instance
 
     def abre_funcionario(self):
         self.abre_tela_inicial()

@@ -4,10 +4,17 @@ from datetime import datetime
 
 
 class ControladorArmario:
+    __instance = None
+
     def __init__(self, controlador_principal):
         self.__tela_armario = TelaArmario(self)
         self.__chaves_emprestadas = {}
         self.__controlador_principal = controlador_principal
+
+    def __new__(cls, *args, **kwargs):
+        if ControladorArmario.__instance is None:
+            ControladorArmario.__instance = object.__new__(cls)
+            return ControladorArmario.__instance
 
     def abre_armario(self):
         self.abre_tela_inicial()

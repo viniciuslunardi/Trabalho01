@@ -6,6 +6,8 @@ from Controladores.ControladorRegistro import ControladorRegistro
 
 
 class ControladorPrincipal:
+    __instance = None
+
     def __init__(self):
         self.__tela_principal = TelaPrincipal(self)
         self.__controlador_funcionario = ControladorFuncionario(self)
@@ -13,27 +15,18 @@ class ControladorPrincipal:
         self.__controlador_armario = ControladorArmario(self)
         self.__controlador_registro = ControladorRegistro(self)
 
+    def __new__(cls, *args, **kwargs):
+        if ControladorPrincipal.__instance is None:
+            ControladorPrincipal.__instance = object.__new__(cls)
+            return ControladorPrincipal.__instance
+
     def inicia(self):
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        # switcher = {1: self.funcionario,
-        #             2: self.veiculo,
-        #             3: self.armario,
-        #             4: self.registros}
-        # while True:
-        #     opcao = self.__tela_principal.mostrar_opcoes()
-        #     funcao_escolhida = switcher[opcao]
-        #     funcao_escolhida()
-        (button, value) = self.__tela_principal.open()
-        if button == "funcionarios":
-            self.funcionario()
-        elif button == "veiculos":
-            self.veiculo()
-        elif button == "armario":
-            self.armario()
-        else:
-            self.registros()
+        options = {0: self.funcionario, 1: self.veiculo, 2: self.armario, 3: self.registros}
+        button, values = self.__tela_principal.open()
+        return options[button]()
 
     @property
     def controlador_funcionario(self):

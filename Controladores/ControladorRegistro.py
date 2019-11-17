@@ -2,11 +2,19 @@ from Telas.TelaRegistro import TelaRegistro
 
 
 class ControladorRegistro:
+    __instance = None
+
     def __init__(self, controlador_principal):
         self.__tela_registro = TelaRegistro(self)
         self.__registros = {}
         self.__chave = 0
         self.__controlador_principal = controlador_principal
+
+    def __new__(cls, *args, **kwargs):
+        if ControladorRegistro.__instance is None:
+            ControladorRegistro.__instance = object.__new__(cls)
+            return ControladorRegistro.__instance
+
 
     def abre_registros(self):
         self.abre_tela_inicial()

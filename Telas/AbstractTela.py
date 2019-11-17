@@ -17,7 +17,3 @@ class AbstractTela(ABC):
                 print("Valor incorreto")
                 if numeros_validos:
                     print("valores validos", numeros_validos)
-
-    @abstractmethod
-    def mostrar_opcoes(self):
-        pass

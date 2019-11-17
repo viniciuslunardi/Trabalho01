@@ -17,9 +17,9 @@ class TelaVeiculo(AbstractTela):
             [sg.Submit('Cadastrar Veículo', key=1),
              sg.Submit('Alterar Veículo', key=2),
              sg.Submit('Excluir Veículo', key=3),
-             sg.Button('Voltar', key=4)],
-            # [sg.Listbox(values=('Listbox 1', "Funcionario"), size=(100, 1), key="lb_itens")]
+             sg.Button('Voltar', key=4)]
         ]
+        # [sg.Listbox(values=('Listbox 1', "Funcionario"), size=(100, 1), key="lb_itens")]
         self.__window = sg.Window("Veículos", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(layout)
 
     def open(self, veiculos):
@@ -30,6 +30,3 @@ class TelaVeiculo(AbstractTela):
 
     def close(self):
         self.__window.Close()
-
-    def pop_mensagem(self, mensagem):
-        sg.Popup(mensagem)

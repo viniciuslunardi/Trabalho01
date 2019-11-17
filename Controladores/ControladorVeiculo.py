@@ -27,11 +27,11 @@ class ControladorVeiculo:
     def abre_tela_inicial(self):
         veiculos = []
         for placa in self.__veiculos:
-            veiculos.append(self.__veiculos[placa].placa + ' - ' +
-                            self.__veiculos[placa].marca + ' - ' +
-                            self.__veiculos[placa].modelo + ' - ' +
-                            self.__veiculos[placa].ano + ' - ' +
-                            str(self.__veiculos[placa].quilometragem_atual))
+            veiculos.append("Placa: " + self.__veiculos[placa].placa + '  -  ' +
+                            "Marca: " + self.__veiculos[placa].marca + '  -  ' +
+                            "Modelo: " + self.__veiculos[placa].modelo + '  -  ' +
+                            "Ano: " + self.__veiculos[placa].ano + '  -  ' +
+                            "KM Atual: " + str(self.__veiculos[placa].quilometragem_atual))
 
         button, values = self.__tela_veiculo.open(veiculos)
         options = {4: self.voltar,
@@ -73,6 +73,8 @@ class ControladorVeiculo:
                 return True
         except Exception:
             print("---------------ATENÇÃO--------------- \n * Veículo já cadastrado *")
+            self.__tela_cadastro.show_message("Erro",
+                                              "Já existe um veículo com placa " + placa + " cadastrado")
             return False
 
     def existe_veiculo(self, placa):
@@ -101,44 +103,55 @@ class ControladorVeiculo:
         self.__veiculos[placa].quilometragem_atual = km_atual
 
     def deletar_carro(self):
-        placa = (input("Digite a placa do veículo: "))
+        placa = self.__tela_veiculo.ask_verification("Placa",
+                                                     "Digite o valor da placa do carro que será deletado")
         if placa in self.__veiculos:
             del self.__veiculos[placa]
             print("Veículo excluido com sucesso")
+            self.__tela_veiculo.show_message("Sucesso",
+                                             "Veículo deletado com sucesso")
         else:
             print("Não existe veículo com essa placa cadastrado no sistema")
+            self.__tela_veiculo.show_message("Erro",
+                                             "Erro ao deletar veículo")
+        self.abre_veiculo()
 
     def alterar_carro(self):
-        while True:
-            placa_anterior = (input("Digite a placa do veículo: "))
-            if placa_anterior in self.__veiculos:
-                print("Informe os novos valores: ")
-                placa = (input("Digite o novo valor da placa do veículo: "))
-                if placa in self.__veiculos:
-                    print("Essa placa já está sendo utilizada por outro veículo")
+        placa_anterior = self.__tela_veiculo.ask_verification("Placa",
+                                                     "Digite o valor da placa do carro que será alterado")
+
+        if placa_anterior in self.__veiculos:
+            button, new_values = self.__tela_cadastro.open(self.__veiculos[placa_anterior])
+            try:
+                placa = new_values[0]
+                modelo = new_values[1]
+                marca = new_values[2]
+                ano = new_values[3]
+                km = float(new_values[4])
+                if km:
+                    self.__veiculos[placa_anterior].placa = placa
+                    self.__veiculos[placa_anterior].modelo = modelo
+                    self.__veiculos[placa_anterior].marca = marca
+                    self.__veiculos[placa_anterior].ano = ano
+                    self.__veiculos[placa_anterior].quilometragem_atual = km
+                    self.__veiculos[placa] = self.__veiculos.pop(placa_anterior)
+                    print("Veículo alterado com sucesso")
+                    self.__tela_cadastro.show_message("Sucesso",
+                                                      "Veículo alterado com sucesso")
+
                 else:
-                    modelo = (input("Digite o novo valor do modelo do veículo: "))
-                    marca = (input("Digite o novo valor da marca do veículo: "))
-                    ano = (input("Digite o novo valor do ano de fabricação do veículo: "))
-                    try:
-                        km = float(input("Digite o novo valor da quilometragem atual do veículo: "))
-                        if km:
-                            self.__veiculos[placa_anterior].placa = placa
-                            self.__veiculos[placa_anterior].modelo = modelo
-                            self.__veiculos[placa_anterior].marca = marca
-                            self.__veiculos[placa_anterior].ano = ano
-                            self.__veiculos[placa_anterior].quilometragem_atual = km
-                            self.__veiculos[placa] = self.__veiculos.pop(placa_anterior)
-                            print("Veículo alterado com sucesso")
-                            return
-                        else:
-                            raise ValueError
-                    except ValueError:
-                        print("Quilometragem atual deve ser informada em números "
-                              " (utilize '.' para números não inteiros)")
-            else:
-                print("Não existe veículo com essa placa cadastrado no sistema")
-                return
+                    raise ValueError
+            except ValueError:
+                print("Quilometragem atual deve ser informada em números "
+                      " (utilize '.' para números não inteiros)")
+                self.__tela_cadastro.show_message("Erro",
+                                                  "Quilometragem atual deve ser informada em números "
+                                                  " (utilize '.' para números não inteiros)")
+        else:
+            if placa_anterior:
+                self.__tela_veiculo.show_message("Erro", "Não existe veículo com placa " + placa_anterior +
+                                                " na garagem")
+        self.abre_veiculo()
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

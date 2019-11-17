@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import PySimpleGUI as sg
 
 class AbstractTela(ABC):
     @abstractmethod
@@ -17,3 +18,10 @@ class AbstractTela(ABC):
                 print("Valor incorreto")
                 if numeros_validos:
                     print("valores validos", numeros_validos)
+
+    def show_message(self, title, message):
+        sg.Popup(title, message, font=("Helvetica", 15))
+
+    def ask_verification(self, title, message):
+        text = sg.PopupGetText(title, message, font=("Helvetica", 15))
+        return text

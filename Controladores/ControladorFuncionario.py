@@ -1,4 +1,5 @@
 from Telas.TelaFuncionario import TelaFuncionario
+from Telas.TelaCadastroFuncionario import TelaCadastroFuncionario
 from Entidades.Funcionario import Funcionario
 from Entidades.Funcionario import Cargo
 from Controladores.ControladorVeiculo import ControladorVeiculo
@@ -6,8 +7,10 @@ from Controladores.ControladorVeiculo import ControladorVeiculo
 
 class ControladorFuncionario:
     __instance = None
+
     def __init__(self, controlador_principal):
         self.__tela_funcionario = TelaFuncionario(self)
+        self.__tela_cadastro = TelaCadastroFuncionario(self)
         self.__funcionarios = {}
         self.__cargo = None
         self.__controlador_veiculo = ControladorVeiculo
@@ -22,21 +25,24 @@ class ControladorFuncionario:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        # switcher = {
-        #     1: self.cadastra,
-        #     2: self.lista_funcionario,
-        #     3: self.dar_acesso_veiculo,
-        #     4: self.veiculos_funcionario,
-        #     5: self.alterar_funcionario,
-        #     6: self.deletar_funcionario,
-        #     7: self.desbloquear_funcionario,
-        #     0: self.voltar}
-        #
-        # while True:
-        #     opcao = self.__tela_funcionario.mostrar_opcoes()
-        #     funcao_escolhida = switcher[opcao]
-        #     funcao_escolhida()
-        self.__tela_funcionario.open()
+        funcionarios = []
+        for matricula in self.__funcionarios:
+            funcionarios.append("Matrícula: " + str(self.__funcionarios[matricula].numero_matricula) + '  -  ' +
+                                "Nome: " + self.__funcionarios[matricula].nome + '  -  ' +
+                                "Data de Nascimento: " + self.__funcionarios[matricula].data_nascimento + '  -  ' +
+                                "Telefone: " + self.__funcionarios[matricula].telefone + '  -  ' +
+                                "Cargo: " + str(self.__funcionarios[matricula].cargo))
+
+        button, values = self.__tela_funcionario.open(funcionarios)
+        options = {0: self.voltar,
+                   1: self.cadastra,
+                   2: self.dar_acesso_veiculo,
+                   3: self.veiculos_funcionario,
+                   4: self.alterar_funcionario,
+                   5: self.deletar_funcionario,
+                   6: self.desbloquear_funcionario}
+
+        return options[button]()
 
     def cadastrar_funcionario(self, numero_matricula, nome, data_nascimento, telefone, cargo: Cargo):
         try:
@@ -47,44 +53,48 @@ class ControladorFuncionario:
                 self.__funcionarios[numero_matricula] = funcionario
                 if funcionario.cargo == Cargo.DIRETORIA:
                     funcionario.veiculos = self.__controlador_principal.controlador_veiculo.veiculos
+                    self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
                 else:
                     self.dar_acesso_veiculo(numero_matricula)
+                    self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
         except Exception:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
-    def cadastra(self):
-        while True:
-            try:
-                matricula = int(input("Informe o número de matrícula do funcionário: "))
-                if matricula:
-                    try:
-                        nome = input("Informe o nome do funcionário: ")
-                        data = input("Informe a data de nascimento do funcionário: ")
-                        telefone = input("Informe o número do telefone do funcionário ")
-                        if nome == "" or data == "" or telefone == "":
-                            raise Exception
-                        else:
-                            self.cadastrar_funcionario(matricula, nome, data, telefone, Cargo(self.cadastrar_cargo()))
-                            return
-                    except Exception:
-                        print("Todos os campos devem ser preenchidos!")
-                else:
-                    raise Exception
-            except Exception:
-                print("Matrícula do funcionário deve ser um número inteiro")
+            self.__tela_cadastro.show_message("Erro", "Funcionário já cadastrado com essa matrícula")
 
-    def cadastrar_cargo(self):
-        numeros_validos = [1, 2, 3]
-        while True:
-            entrada = input("CARGO: \n  * 1: DIRETORIA \n  * 2: COMERCIAL \n  * 3: DESENVOLVEDOR \n")
-            try:
-                inteiro = int(entrada)
-                if numeros_validos and inteiro not in numeros_validos:
-                    raise ValueError
-                return inteiro
-            except ValueError:
-                print("Valor incorreto")
-                print("Valores validos: ", numeros_validos)
+    def cadastra(self):
+        button, values = self.__tela_cadastro.open()
+        try:
+            matricula = int(values[0])
+            if matricula:
+                try:
+                    nome = values[1]
+                    data = values[2]
+                    telefone = values[3]
+                    cargo = values[4]
+                    if nome == "" or data == "" or telefone == "" or cargo == "" or matricula == "":
+                        raise Exception
+                    else:
+                        self.cadastrar_funcionario(matricula, nome, data, telefone, Cargo(self.cadastrar_cargo(cargo)))
+                except Exception:
+                    print("Todos os campos devem ser preenchidos!")
+                    self.__tela_cadastro.show_message("Erro", "Todos os campos devem ser preenchidos")
+            else:
+                raise Exception
+        except Exception:
+            print("Matrícula do funcionário deve ser um número inteiro")
+            self.__tela_cadastro.show_message("Erro", "Matrícula do funcionário deve ser um número inteiro")
+
+        self.abre_funcionario()
+
+    def cadastrar_cargo(self, cargo):
+        if cargo == "Diretoria":
+            cargo = 1
+        elif cargo == "Comercial":
+            cargo = 2
+        else:
+            cargo = 3
+        return cargo
 
     def lista_funcionario(self):
         if len(self.__funcionarios) > 0:
@@ -126,7 +136,8 @@ class ControladorFuncionario:
                     print("Este funcionário já tem acesso a todos os veiculos da garagem")
                     print("Funcionário tem acesso aos seguintes veículos: ")
                     for carro in funcionario.veiculos:
-                        print("PLACA: %s MODELO: %s" % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
+                        print("PLACA: %s MODELO: %s" % (
+                            funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
                     return
                 try:
                     qtd_carros = int(input("Digite quantos veículos este funcionário terá acesso: "))

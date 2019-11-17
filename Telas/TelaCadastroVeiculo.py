@@ -33,9 +33,6 @@ class TelaCadastroVeiculo(AbstractTela):
         self.__window = sg.Window("Cadastro de Veículos", default_element_size=(50, 0), font=("Helvetica", 15)).Layout(
             layout)
 
-    def show_message(self, title, message):
-        sg.Popup(title, message, font=("Helvetica", 15))
-
     def open(self, veiculo=None):
         print(veiculo)
         self.init_components(veiculo)

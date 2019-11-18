@@ -204,7 +204,7 @@ class ControladorFuncionario:
                     try:
                         matricula = int(new_values[0])
                         if matricula:
-                            if matricula in self.__funcionarios:
+                            if matricula in self.__funcionarios and matricula != matricula_anterior:
                                 print("Essa matrícula já está sendo utilizada por outro funcionário")
                                 self.__tela_cadastro.show_message("Erro",
                                                                   "Essa matrícula já está sendo utilizada por outro funcionário" )

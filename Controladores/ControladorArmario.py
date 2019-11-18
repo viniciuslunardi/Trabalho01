@@ -20,13 +20,14 @@ class ControladorArmario:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
+        veiculos_garagem = self.veiculos_na_garagem()
+        button, values = self.__tela_armario.open(veiculos_garagem)
+        options = {9: self.voltar,
+                   2: self.pegar_veiculo,
+                   3: self.devolver_chave,
+                   4: self.veiculos_emprestados}
 
-        self.__tela_armario.open()
-        # switcher = {0: self.voltar,
-        #             1: self.veiculos_na_garagem,
-        #             2: self.pegar_veiculo,
-        #             3: self.devolver_chave,
-        #             4: self.veiculos_emprestados}
+        return options[button]()
         # while True:
         #     opcao = self.__tela_armario.mostrar_opcoes()
         #     funcao_escolhida = switcher[opcao]
@@ -34,13 +35,17 @@ class ControladorArmario:
 
     def veiculos_na_garagem(self):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
+        veiculos_garagem = []
         print("---------------GARAGEM---------------")
         if len(self.__chaves_emprestadas) == len(veiculos):
             print("Nenhum veículo na garagem no momento")
         else:
             for veiculo in veiculos:
                 if veiculo not in self.__chaves_emprestadas:
+                    veiculos_garagem.append("Placa: " + veiculos[veiculo].placa + '  -  ' +
+                                            "Modelo: " + veiculos[veiculo].modelo)
                     print("MODELO: %s PLACA: %s" % (veiculos[veiculo].modelo, veiculos[veiculo].placa))
+        return veiculos_garagem
 
     def pegar_veiculo(self):
         self.veiculos_na_garagem()
@@ -217,7 +222,7 @@ class ControladorArmario:
                                             self.__controlador_principal.controlador_registro.cadastrar_registro(
                                                 registro)
                                             self.__controlador_principal.controlador_registro.imprime_registro(registro)
-                                            self.__controlador_principal.controlador_veiculo\
+                                            self.__controlador_principal.controlador_veiculo \
                                                 .atualiza_quilometragem(placa, km_andado)
                                             print("Veículo devolvido com sucesso")
                                             return

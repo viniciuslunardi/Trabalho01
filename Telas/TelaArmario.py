@@ -23,4 +23,5 @@ class TelaArmario(AbstractTela):
     def open(self, garagem):
         self.init_components(garagem)
         button, values = self.__window.Read()
+        self.__window.Close()
         return button, values

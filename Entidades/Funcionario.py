@@ -14,6 +14,7 @@ class Funcionario:
         self.__data_nascimento = data_nascimento
         self.__telefone = telefone
         self.__cargo = cargo
+        self.__tentativas = 0
         self.__veiculos = {}
         self.__veiculo_usado = {}
         self.__bloqueado = False
@@ -81,6 +82,14 @@ class Funcionario:
     @bloqueado.setter
     def bloqueado(self, bloqueado):
         self.__bloqueado = bloqueado
+
+    @property
+    def tentativas(self):
+        return self.__tentativas
+
+    @tentativas.setter
+    def tentativas(self, tentativas):
+        self.__tentativas = tentativas
 
     def __eq__(self, other):
         return self.__numero_matricula == other.numero_matricula

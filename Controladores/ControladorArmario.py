@@ -49,13 +49,12 @@ class ControladorArmario:
 
     def pegar_veiculo(self):
         self.veiculos_na_garagem()
-        tentativas = 0
         veiculos_garagem = self.__controlador_principal.controlador_veiculo.veiculos
-        while tentativas < 3:
-            if len(veiculos_garagem) == 0:
-                return
+        if len(veiculos_garagem) == 0:
+            self.__tela_armario.show_message("Erro", "Não existem veículos na garagem.")
+        else:
             try:
-                matricula = int(input("Digite o seu número de matrícula: "))
+                matricula = int(self.__tela_armario.ask_verification("Digite o seu número de matrícula", "Info"))
                 if matricula:
                     if not self.__controlador_principal.controlador_funcionario.existe_funcionario(matricula):
                         # EMITIR REGISTRO ACESSO NEGADO
@@ -66,13 +65,12 @@ class ControladorArmario:
                         self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                         self.__controlador_principal.controlador_registro.imprime_registro(registro)
                         print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
-                        return
                     else:
                         funcionario = self.__controlador_principal.controlador_funcionario.funcionarios
                         veiculos_funcionario = funcionario[matricula].veiculos
                         if not funcionario[matricula].bloqueado:
                             if len(veiculos_funcionario) > 1:
-                                placa = input("Digite a placa do veículo que deseja utilizar: ")
+                                placa = self.__tela_armario.ask_verification("Digite a placa do veículo que deseja utilizar: ", "Info")
                                 if placa not in veiculos_garagem:
                                     # EMITIR REGISTRO ACESSO NEGADO
                                     evento = EventoRegistro(2)
@@ -82,7 +80,6 @@ class ControladorArmario:
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     print("Não existe veículo com placa '" + str(placa) + "' na garagem")
-                                    return
                                 elif placa not in veiculos_funcionario:
                                     # EMITIR REGISTRO ACESSO NEGADO
                                     evento = EventoRegistro(2)
@@ -92,12 +89,12 @@ class ControladorArmario:
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     print("Funcionário não tem acesso a este veiculo")
-                                    if tentativas == 1:
+                                    if funcionario[matricula].tentativas == 1:
                                         print("----------------CUIDADO!----------------"
                                               "\nMais uma tentativa de acesso a veículo "
                                               "não permitido irá bloquear seu acesso")
-                                    tentativas += 1
-                                    if tentativas > 2:
+                                    funcionario[matricula].tentativas += 1
+                                    if funcionario[matricula].tentativas > 2:
                                         evento = EventoRegistro(3)
                                         data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                         motivo = "Tentou acessar veículo que não tem permissão por 3 vezes"
@@ -118,7 +115,7 @@ class ControladorArmario:
                                     funcionario[matricula].veiculo_usado[placa] = veiculos_funcionario[placa]
                                     print("Pode pegar a chave do veículo %s"
                                           % (veiculos_garagem[placa].modelo))
-                                    return
+
                                 else:
                                     # EMITIR REGISTRO ACESSO NEGADO
                                     evento = EventoRegistro(2)
@@ -128,7 +125,7 @@ class ControladorArmario:
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     print("Esse veículo não está disponível no momento")
-                                    return
+
                             elif len(veiculos_funcionario) == 1:
                                 placa = list(veiculos_funcionario)
                                 if placa[0] not in self.__chaves_emprestadas:
@@ -143,7 +140,7 @@ class ControladorArmario:
                                     self.__chaves_emprestadas[chave] = veiculos_funcionario[placa[0]]
                                     funcionario[matricula].veiculo_usado[chave] = veiculos_funcionario[placa[0]]
                                     print("Retire seu veiculo")
-                                    return
+
                                 else:
                                     # EVENTO ACESSO NEGADO
                                     evento = EventoRegistro(2)
@@ -153,7 +150,7 @@ class ControladorArmario:
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     print("O único veículo que este funcionário tem acesso está indisponível")
-                                    return
+
                             else:
                                 evento = EventoRegistro(2)
                                 data = datetime.now().strftime('%d/%m/%Y %H:%M')
@@ -162,8 +159,8 @@ class ControladorArmario:
                                 self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                 self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                 print("Funcionário não tem acesso a nenhum carro")
-                                if len(funcionario) == 1:
-                                    return
+
+
                         else:
                             evento = EventoRegistro(2)
                             data = datetime.now().strftime('%d/%m/%Y %H:%M')
@@ -171,13 +168,13 @@ class ControladorArmario:
                             registro = Registro(data, matricula, motivo, None, evento)
                             self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                             self.__controlador_principal.controlador_registro.imprime_registro(registro)
-                            return
+
                 else:
                     raise ValueError
             except ValueError:
                 print("Matrícula deve ser um número inteiro")
-        if tentativas == 3:
-            print("Acesso bloqueado")
+        self.abre_armario()
+
 
     def veiculos_emprestados(self):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos

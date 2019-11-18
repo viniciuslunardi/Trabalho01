@@ -15,12 +15,12 @@ class TelaFuncionario(AbstractTela):
             [sg.Text("Funcionários cadastrados")],
             [sg.Listbox(values=funcionarios, size=(69, 10))],
             [sg.Submit("Cadastrar", key=1),
-             sg.Submit("Liberar acesso", key=2),
-             sg.Submit("Verificar acesso", key=3),
+          #  sg.Submit("Liberar acesso", key=2),
+          #  sg.Submit("Verificar acesso", key=3),
              sg.Submit("Alterar", key=4),
              sg.Submit("Demitir", key=5),
-             sg.Submit("Desbloquear", key=6),
-             sg.Submit("Voltar",key=0)],
+          #  sg.Submit("Desbloquear", key=6),
+             sg.Submit("Voltar", key=9)],
         ]
         self.__window = sg.Window("Funcionários", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(
             layout)

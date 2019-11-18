@@ -27,7 +27,7 @@ class TelaCadastroFuncionario(AbstractTela):
         layout = [
             [sg.Text("Matrícula", size=(10, 1)), sg.InputText(matricula)],
             [sg.Text("Nome", size=(10, 1)), sg.InputText(nome)],
-            [sg.Text("Data de Nascimento", size=(10, 1)), sg.InputText(data_nascimento)],
+            [sg.Text("Data de Nascimento", size=(15, 1)), sg.InputText(data_nascimento)],
             [sg.Text("Telefone", size=(10, 1)), sg.InputText(telefone)],
             [sg.Text("Cargo"), sg.Combo(size=(20, 1), values=cargos)],
             [sg.Button("Salvar", size=(30, 1), key="salvar")]

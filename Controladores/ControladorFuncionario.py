@@ -34,13 +34,13 @@ class ControladorFuncionario:
                                 "Cargo: " + str(self.__funcionarios[matricula].cargo))
 
         button, values = self.__tela_funcionario.open(funcionarios)
-        options = {0: self.voltar,
+        options = {9: self.voltar,
                    1: self.cadastra,
-                   2: self.dar_acesso_veiculo,
-                   3: self.veiculos_funcionario,
+                   #  2: self.dar_acesso_veiculo,
+                   #  3: self.veiculos_funcionario,
                    4: self.alterar_funcionario,
-                   5: self.deletar_funcionario,
-                   6: self.desbloquear_funcionario}
+                   5: self.deletar_funcionario,}
+                  # 6: self.desbloquear_funcionario}
 
         return options[button]()
 
@@ -124,54 +124,35 @@ class ControladorFuncionario:
             matricula = input("Digite a matricula do funcionário a ser autorizado: ")
         else:
             matricula = num_matricula
-        try:
-            mat_int = int(matricula)
-            if mat_int:
-                if mat_int not in self.__funcionarios:
-                    print("Não existe funcionário com matrícula '" + str(mat_int) + "' cadastrado no sistema")
-                    return
-                else:
-                    funcionario = self.__funcionarios[mat_int]
-                if funcionario.cargo == Cargo.DIRETORIA:
-                    print("Este funcionário já tem acesso a todos os veiculos da garagem")
-                    print("Funcionário tem acesso aos seguintes veículos: ")
-                    for carro in funcionario.veiculos:
-                        print("PLACA: %s MODELO: %s" % (
-                            funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
-                    return
-                try:
-                    qtd_carros = int(input("Digite quantos veículos este funcionário terá acesso: "))
-                    carros_cadastrados = 0
-                    if qtd_carros:
-                        while True:
-                            if qtd_carros > len(self.__controlador_principal.controlador_veiculo.veiculos):
-                                print("Não existem tantos veículos assim na garagem!")
-                                break
-                            else:
-                                while carros_cadastrados < qtd_carros:
-                                    placa = input("Digite a placa do veículo autorizado: ")
-                                    if placa not in veiculos:
-                                        print("Não existe veículo com placa '" + str(placa) + "' na garagem")
-                                        return
-                                    veiculo = veiculos[placa]
-                                    if placa not in funcionario.veiculos:
-                                        funcionario.veiculos[placa] = veiculo
-                                    else:
-                                        print("Funcionário já tem acesso a esse veículo")
-                                    print("Funcionário tem acesso aos seguintes carros: ")
-                                    carros_cadastrados += 1
-                                    for carro in funcionario.veiculos:
-                                        print("PLACA: %s MODELO: %s"
-                                              % (funcionario.veiculos[carro].placa, funcionario.veiculos[carro].modelo))
-                            return
-                    else:
-                        raise ValueError
-                except ValueError:
-                    print("Quantidade de carros deve ser um número inteiro")
-            else:
-                raise ValueError
-        except ValueError:
-            print("Matricula é um numero inteiro")
+
+        funcionario = self.__funcionarios[matricula]
+        if funcionario.cargo == Cargo.DIRETORIA:
+            print("Este funcionário já tem acesso a todos os veiculos da garagem")
+            print("Funcionário tem acesso aos seguintes veículos: ")
+            self.__tela_funcionario.show_message("Erro",
+                                                 "Este funcionário já tem acesso a todos os veiculos da garagem")
+
+        placa = self.__tela_funcionario.ask_verification("Digite a placa do veículo que este funcionário terá acesso",
+                                                         "Info")
+        if placa not in veiculos:
+            print("Não existe veículo com placa '" + str(placa) + "' na garagem")
+            self.__tela_funcionario.show_message("Erro",
+                                                 "Não existe veículo com placa '"
+                                                 + str(placa) + "' na garagem")
+            return
+        veiculo = veiculos[placa]
+        if placa not in funcionario.veiculos:
+            funcionario.veiculos[placa] = veiculo
+        else:
+            print("Funcionário já tem acesso a esse veículo")
+            self.__tela_funcionario.show_message("Erro",
+                                                 "Funcionário já tem acesso a esse veículo")
+        print("Funcionário tem acesso aos seguintes carros: ")
+        keys = []
+        for placa in funcionario.veiculos:
+            keys.append("Placa: " + str(funcionario.veiculos[placa].placa) + " Modelo: " + str(
+                funcionario.veiculos[placa].modelo))
+        self.__tela_funcionario.show_message("Carros do funcionário", str(keys))
 
     def veiculos_funcionario(self):
         while True:
@@ -194,52 +175,64 @@ class ControladorFuncionario:
 
     def deletar_funcionario(self):
         try:
-            matricula = int(input("Digite o número de matrícula do funcionário: "))
+            matricula = int(self.__tela_funcionario.ask_verification("Informe a matrícula do funcionário", "Matrícula"))
             if matricula:
                 if matricula in self.__funcionarios:
                     del self.__funcionarios[matricula]
                     print("Funcionário demitido com sucesso >:)")
+                    self.__tela_funcionario.show_message("Sucesso", "Funcionário demitido com sucesso")
                 else:
                     print("Não existe funcionário com esse número de matrícula")
-                return
+                    self.__tela_funcionario.show_message("Erro", "Não existe funcionário com matrícula "
+                                                         + str(matricula) + " cadastrado")
             else:
                 raise ValueError
         except ValueError:
             print("Matrícula é um número inteiro")
+            self.__tela_funcionario.show_message("Erro", "Matrícula deve ser um número inteiro")
+
+        self.abre_funcionario()
 
     def alterar_funcionario(self):
-        while True:
-            try:
-                matricula_anterior = int(input("Digite a matrícula do funcionário: "))
-                if matricula_anterior:
-                    if matricula_anterior in self.__funcionarios:
-                        print("Informe os novos valores: ")
-                        try:
-                            matricula = int(input("Digite o novo valor da matrícula  do funcionário: "))
-                            if matricula:
-                                if matricula in self.__funcionarios:
-                                    print("Essa matrícula já está sendo utilizada por outro funcionário")
-                                else:
-                                    nome = (input("Digite o novo valor do nome do funcionário: "))
-                                    data = (input("Digite o novo valor do ano de nascimento do funcionário: "))
-                                    telefone = (input("Digite o novo valor do telefone do funcionário: "))
-                                    cargo = Cargo(self.cadastrar_cargo())
-                                    self.__funcionarios[matricula_anterior].numero_matricula = matricula
-                                    self.__funcionarios[matricula_anterior].nome = nome
-                                    self.__funcionarios[matricula_anterior].data_nascimento = data
-                                    self.__funcionarios[matricula_anterior].telefone = telefone
-                                    self.__funcionarios[matricula_anterior].cargo = cargo
-                                    self.__funcionarios[matricula] = self.__funcionarios.pop(matricula_anterior)
-                                    print("Funcionário alterado com sucesso")
-                                    return
+        try:
+            matricula_anterior = self.__tela_funcionario.ask_verification("Matrícula","Digite a matrícula do funcionário: ")
+            matricula_anterior = int(matricula_anterior)
+            if matricula_anterior:
+                if matricula_anterior in self.__funcionarios:
+                    print("Informe os novos valores: ")
+                    button, new_values = self.__tela_cadastro.open(self.__funcionarios[matricula_anterior])
+                    try:
+                        matricula = int(new_values[0])
+                        if matricula:
+                            if matricula in self.__funcionarios:
+                                print("Essa matrícula já está sendo utilizada por outro funcionário")
+                                self.__tela_cadastro.show_message("Erro",
+                                                                  "Essa matrícula já está sendo utilizada por outro funcionário" )
                             else:
-                                raise ValueError
-                        except ValueError:
-                            print("Matrícula deve ser um número inteiro")
-                else:
-                    raise ValueError
-            except ValueError:
-                print("Matrícula deve ser um número inteiro")
+                                nome = new_values[1]
+                                data = new_values[2]
+                                telefone = new_values[3]
+                                cargo = Cargo(self.cadastrar_cargo(new_values[4]))
+                                self.__funcionarios[matricula_anterior].numero_matricula = matricula
+                                self.__funcionarios[matricula_anterior].nome = nome
+                                self.__funcionarios[matricula_anterior].data_nascimento = data
+                                self.__funcionarios[matricula_anterior].telefone = telefone
+                                self.__funcionarios[matricula_anterior].cargo = cargo
+                                self.__funcionarios[matricula] = self.__funcionarios.pop(matricula_anterior)
+                                print("Funcionário alterado com sucesso")
+                                self.__tela_cadastro.show_message("Sucesso", "Funcionário alterado com sucesso")
+                        else:
+                            raise ValueError
+                    except ValueError:
+                        print("Matrícula deve ser um número inteiro")
+                        self.__tela_cadastro.show_message("Erro", "Matrícula deve ser um número inteiro")
+            else:
+                raise ValueError
+        except ValueError:
+            print("Matrícula deve ser um número inteiro")
+            self.__tela_cadastro.show_message("Erro", "Matrícula deve ser um número inteiro")
+
+        self.abre_funcionario()
 
     def desbloquear_funcionario(self):
         try:

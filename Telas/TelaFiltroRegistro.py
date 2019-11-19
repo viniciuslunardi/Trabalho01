@@ -12,7 +12,6 @@ class TelaFiltroRegistro(AbstractTela):
         sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Text("Filtrar por: ")],
-            [sg.Text("")],
             [sg.Submit("Matrícula", size=(30, 1), key=1), sg.Submit("Placa", size=(30, 1), key=2)]
         ]
         self.__window = sg.Window("Filtro", font=("Helvetica", 15)).Layout(layout)

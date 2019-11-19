@@ -70,8 +70,8 @@ class ControladorRegistro:
     def filtra_registro(self):
         button, values = self.__tela_filtro.open()
         options = {1: self.filtrar_matricula,
-                  # 2: self.filtrar_placa}
-                   }
+                   2: self.filtrar_placa}
+
         return options[button]()
 
     def filtrar_matricula(self):
@@ -92,11 +92,13 @@ class ControladorRegistro:
             self.abre_registros()
 
     def filtrar_placa(self):
-        placa_veiculo = (input("Digite o número da placa do veículo: "))
+        filtro = {}
+        placa_veiculo = self.__tela_filtro.ask_verification("Digite o número da placa do veículo: ", "Info")
         if placa_veiculo:
             for chave in self.__registros:
                 if self.__registros[chave].placa_veiculo == placa_veiculo:
-                    print(self.__registros[chave])
+                    filtro[chave] = self.__registros[chave]
+            self.abre_tela_inicial(filtro)
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

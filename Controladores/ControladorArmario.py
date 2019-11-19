@@ -64,6 +64,8 @@ class ControladorArmario:
                         registro = Registro(data, None, motivo, None, evento)
                         self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                         self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                        self.__tela_armario.show_message("Erro", "Não existe funcionário com matrícula '"
+                                                         + str(matricula) + "' cadastrado no sistema")
                         print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
                     else:
                         funcionario = self.__controlador_principal.controlador_funcionario.funcionarios
@@ -178,35 +180,50 @@ class ControladorArmario:
 
     def veiculos_emprestados(self):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
-        print("---------VEÍCULOS EMPRESTADOS--------")
-        for veiculo in veiculos:
-            if veiculo in self.__chaves_emprestadas:
-                print("MODELO: %s PLACA: %s" % (veiculos[veiculo].modelo, veiculos[veiculo].placa))
+        veiculos_emprestados = []
+        print("---------------GARAGEM---------------")
+        if len(self.__chaves_emprestadas) == len(veiculos):
+            print("Nenhum veículo na garagem no momento")
+        else:
+            for veiculo in veiculos:
+                if veiculo in self.__chaves_emprestadas:
+                    veiculos_emprestados.append("Placa: " + veiculos[veiculo].placa + '  -  ' +
+                                            "Modelo: " + veiculos[veiculo].modelo )
+                    print("MODELO: %s PLACA: %s" % (veiculos[veiculo].modelo, veiculos[veiculo].placa))
+
+        self.__tela_armario.show_message("Veículos emprestados", str(veiculos_emprestados))
+        self.abre_armario()
 
     def devolver_chave(self):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
         if len(self.__chaves_emprestadas) == 0:
             print("----------------------------------------------")
             print("Todos os veículos da garagem estão disponíveis")
-            return
-        while True:
+            self.__tela_armario.show_message("Erro", "Todos os veículos da garagem estão disponíveis")
+        else:
+
             try:
-                matricula = int(input("Digite seu número de matrícula: "))
+                matricula = int(self.__tela_armario.ask_verification("Digite seu número de matrícula", "Info"))
                 if matricula:
                     if not self.__controlador_principal.controlador_funcionario.existe_funcionario(matricula):
                         print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
+                        self.__tela_armario.show_message("Erro", "Não existe funcionário"
+                                                                 " com matrícula '" + str(matricula) + "' cadastrado no sistema")
                     else:
                         funcionario = self.__controlador_principal.controlador_funcionario.funcionarios[matricula]
                         if len(funcionario.veiculo_usado) >= 1:
-                            placa = input("Digite a placa do veículo que vai devolver: ")
+                            placa = self.__tela_armario.ask_verification("Digite a placa do veículo que vai devolver: ","Info")
                             if not self.__controlador_principal.controlador_veiculo.existe_veiculo(placa):
                                 print("Não existe veículo com placa '" + str(placa) + "' na garagem")
+                                self.__tela_armario.show_message("Erro", "Não existe veículo com placa '" + str(placa) + "' na garagem")
                             else:
                                 if placa not in funcionario.veiculo_usado:
                                     print("Funcionário não está utilizando veículo com placa igual a " + str(placa))
+                                    self.__tela_armario.show_message("Erro",
+                                                                     "Funcionário não está utilizando veículo com placa igual a " + str(placa) )
                                 else:
                                     try:
-                                        km_andado = float(input("Informe o número de quilometros andados: "))
+                                        km_andado = float(self.__tela_armario.ask_verification("Informe o número de quilometros andados", "Info"))
                                         if km_andado:
                                             chave = veiculos[placa].placa
                                             del self.__chaves_emprestadas[chave]
@@ -222,16 +239,22 @@ class ControladorArmario:
                                             self.__controlador_principal.controlador_veiculo \
                                                 .atualiza_quilometragem(placa, km_andado)
                                             print("Veículo devolvido com sucesso")
-                                            return
+                                            self.__tela_armario.show_message("Sucesso", "Veiculo devolvido com sucesso")
                                     except ValueError:
                                         print("Quilometros andados devem ser informados com números "
                                               "(usando '.' para  números não inteiros)")
+                                        self.__tela_armario.show_message("Erro", "Quilometros andados devem ser informados com números "
+                                              "(usando '.' para  números não inteiros)")
                         else:
                             print("Este funcionário não está usando nenhum veículo")
+                            self.__tela_armario.show_message("Erro",
+                                                             "Este funcionário não está usando nenhum veículo" )
                 else:
                     raise ValueError
             except ValueError:
                 print("Matricula deve ser um número inteiro")
+                self.__tela_armario.show_message("Erro", "Matricula deve ser um número inteiro")
+        self.abre_armario()
 
     @property
     def chaves_emprestadas(self):

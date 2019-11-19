@@ -20,14 +20,20 @@ class ControladorRegistro:
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
-        self.__tela_registro.open()
-        # switcher = {1: self.lista_registros,
-        #             2: self.filtra_registro,
-        #             0: self.voltar}
-        # while True:
-        #     opcao = self.__tela_registro.mostrar_opcoes()
-        #     funcao_escolhida = switcher[opcao]
-        #     funcao_escolhida()
+        registros = []
+        for chave in self.__registros:
+            registros.append("Data: " + str(self.__registros[chave].data) + '  -  ' +
+                                "Matrícula: " + str(self.__registros[chave].matricula_funcionario) + '  -  ' +
+                                "Motivo: " + str(self.__registros[chave].motivo) + '  -  ' +
+                                "Placa: " + str(self.__registros[chave].placa_veiculo) + '  -  ' +
+                                "Evento: " + str(self.__registros[chave].evento))
+
+        button, values = self.__tela_registro.open(registros)
+        options = {
+            9: self.voltar,
+            1: self.filtra_registro
+        }
+        return options[button]()
 
     def cadastrar_registro(self, registro):
         chave = self.__chave

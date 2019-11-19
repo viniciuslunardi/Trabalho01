@@ -34,7 +34,6 @@ class TelaCadastroVeiculo(AbstractTela):
             layout)
 
     def open(self, veiculo=None):
-        print(veiculo)
         self.init_components(veiculo)
         button, values = self.__window.Read()
         self.close()

@@ -53,9 +53,10 @@ class ControladorArmario:
         if len(veiculos_garagem) == 0:
             self.__tela_armario.show_message("Erro", "Não existem veículos na garagem.")
         else:
-            try:
-                matricula = int(self.__tela_armario.ask_verification("Digite o seu número de matrícula", "Info"))
-                if matricula:
+            matricula = (self.__tela_armario.ask_verification("Digite o seu número de matrícula", "Info"))
+            if matricula:
+                try:
+                    matricula = int(matricula)
                     if not self.__controlador_principal.controlador_funcionario.existe_funcionario(matricula):
                         # EMITIR REGISTRO ACESSO NEGADO
                         evento = EventoRegistro(2)
@@ -170,11 +171,8 @@ class ControladorArmario:
                             registro = Registro(data, matricula, motivo, None, evento)
                             self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                             self.__controlador_principal.controlador_registro.imprime_registro(registro)
-
-                else:
-                    raise ValueError
-            except ValueError:
-                print("Matrícula deve ser um número inteiro")
+                except ValueError:
+                    print("Matrícula deve ser um número inteiro")
         self.abre_armario()
 
 
@@ -201,10 +199,10 @@ class ControladorArmario:
             print("Todos os veículos da garagem estão disponíveis")
             self.__tela_armario.show_message("Erro", "Todos os veículos da garagem estão disponíveis")
         else:
-
-            try:
-                matricula = int(self.__tela_armario.ask_verification("Digite seu número de matrícula", "Info"))
-                if matricula:
+            matricula = (self.__tela_armario.ask_verification("Digite seu número de matrícula", "Info"))
+            if matricula:
+                try:
+                    matricula = int(matricula)
                     if not self.__controlador_principal.controlador_funcionario.existe_funcionario(matricula):
                         print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
                         self.__tela_armario.show_message("Erro", "Não existe funcionário"
@@ -222,9 +220,12 @@ class ControladorArmario:
                                     self.__tela_armario.show_message("Erro",
                                                                      "Funcionário não está utilizando veículo com placa igual a " + str(placa) )
                                 else:
-                                    try:
-                                        km_andado = float(self.__tela_armario.ask_verification("Informe o número de quilometros andados", "Info"))
-                                        if km_andado:
+                                    km_andado = (
+                                        self.__tela_armario.ask_verification("Informe o número de quilometros andados",
+                                                                             "Info"))
+                                    if km_andado:
+                                        km_andado = float(km_andado)
+                                        try:
                                             chave = veiculos[placa].placa
                                             del self.__chaves_emprestadas[chave]
                                             del funcionario.veiculo_usado[placa]
@@ -240,20 +241,19 @@ class ControladorArmario:
                                                 .atualiza_quilometragem(placa, km_andado)
                                             print("Veículo devolvido com sucesso")
                                             self.__tela_armario.show_message("Sucesso", "Veiculo devolvido com sucesso")
-                                    except ValueError:
-                                        print("Quilometros andados devem ser informados com números "
-                                              "(usando '.' para  números não inteiros)")
-                                        self.__tela_armario.show_message("Erro", "Quilometros andados devem ser informados com números "
-                                              "(usando '.' para  números não inteiros)")
+                                        except ValueError:
+                                            print("Quilometros andados devem ser informados com números "
+                                            "(usando '.' para  números não inteiros)")
+                                            self.__tela_armario.show_message("Erro", "Quilometros andados devem ser informados com números "
+                                            "(usando '.' para  números não inteiros)")
                         else:
                             print("Este funcionário não está usando nenhum veículo")
                             self.__tela_armario.show_message("Erro",
-                                                             "Este funcionário não está usando nenhum veículo" )
-                else:
-                    raise ValueError
-            except ValueError:
-                print("Matricula deve ser um número inteiro")
-                self.__tela_armario.show_message("Erro", "Matricula deve ser um número inteiro")
+                                                             "Este funcionário não está usando nenhum veículo")
+
+                except ValueError:
+                    print("Matricula deve ser um número inteiro")
+                    self.__tela_armario.show_message("Erro", "Matricula deve ser um número inteiro")
         self.abre_armario()
 
     @property

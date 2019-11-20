@@ -39,8 +39,8 @@ class ControladorFuncionario:
                    #  2: self.dar_acesso_veiculo,
                    #  3: self.veiculos_funcionario,
                    4: self.alterar_funcionario,
-                   5: self.deletar_funcionario,}
-                  # 6: self.desbloquear_funcionario}
+                   5: self.deletar_funcionario, }
+        # 6: self.desbloquear_funcionario}
 
         return options[button]()
 
@@ -174,9 +174,11 @@ class ControladorFuncionario:
                 print("Matrícula é um número inteiro")
 
     def deletar_funcionario(self):
-        try:
-            matricula = int(self.__tela_funcionario.ask_verification("Informe a matrícula do funcionário", "Matrícula"))
-            if matricula:
+        matricula = (self.__tela_funcionario.ask_verification("Informe a matrícula do funcionário", "Matrícula"))
+
+        if matricula:
+            try:
+                matricula = int(matricula)
                 if matricula in self.__funcionarios:
                     del self.__funcionarios[matricula]
                     print("Funcionário demitido com sucesso >:)")
@@ -185,19 +187,18 @@ class ControladorFuncionario:
                     print("Não existe funcionário com esse número de matrícula")
                     self.__tela_funcionario.show_message("Erro", "Não existe funcionário com matrícula "
                                                          + str(matricula) + " cadastrado")
-            else:
-                raise ValueError
-        except ValueError:
-            print("Matrícula é um número inteiro")
-            self.__tela_funcionario.show_message("Erro", "Matrícula deve ser um número inteiro")
+            except ValueError:
+                print("Matrícula é um número inteiro")
+                self.__tela_funcionario.show_message("Erro", "Matrícula deve ser um número inteiro")
 
         self.abre_funcionario()
 
     def alterar_funcionario(self):
-        try:
-            matricula_anterior = self.__tela_funcionario.ask_verification("Matrícula","Digite a matrícula do funcionário: ")
-            matricula_anterior = int(matricula_anterior)
-            if matricula_anterior:
+        matricula_anterior = self.__tela_funcionario.ask_verification("Digite a matrícula do funcionário: ",
+                                                                      "Matrícula")
+        if matricula_anterior:
+            try:
+                matricula_anterior = int(matricula_anterior)
                 if matricula_anterior in self.__funcionarios:
                     print("Informe os novos valores: ")
                     button, new_values = self.__tela_cadastro.open(self.__funcionarios[matricula_anterior])
@@ -207,7 +208,7 @@ class ControladorFuncionario:
                             if matricula in self.__funcionarios and matricula != matricula_anterior:
                                 print("Essa matrícula já está sendo utilizada por outro funcionário")
                                 self.__tela_cadastro.show_message("Erro",
-                                                                  "Essa matrícula já está sendo utilizada por outro funcionário" )
+                                                                  "Essa matrícula já está sendo utilizada por outro funcionário")
                             else:
                                 nome = new_values[1]
                                 data = new_values[2]
@@ -221,16 +222,17 @@ class ControladorFuncionario:
                                 self.__funcionarios[matricula] = self.__funcionarios.pop(matricula_anterior)
                                 print("Funcionário alterado com sucesso")
                                 self.__tela_cadastro.show_message("Sucesso", "Funcionário alterado com sucesso")
+
                         else:
                             raise ValueError
                     except ValueError:
                         print("Matrícula deve ser um número inteiro")
                         self.__tela_cadastro.show_message("Erro", "Matrícula deve ser um número inteiro")
-            else:
-                raise ValueError
-        except ValueError:
-            print("Matrícula deve ser um número inteiro")
-            self.__tela_cadastro.show_message("Erro", "Matrícula deve ser um número inteiro")
+                else:
+                    raise ValueError
+            except ValueError:
+                print("Matrícula deve ser um número inteiro")
+                self.__tela_cadastro.show_message("Erro", "Matrícula deve ser um número inteiro")
 
         self.abre_funcionario()
 

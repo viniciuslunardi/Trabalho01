@@ -103,8 +103,7 @@ class ControladorVeiculo:
         self.__veiculos[placa].quilometragem_atual = km_atual
 
     def deletar_carro(self):
-        placa = self.__tela_veiculo.ask_verification("Placa",
-                                                     "Digite o valor da placa do carro que será deletado")
+        placa = self.__tela_veiculo.ask_verification("Digite o valor da placa do carro que será deletado", "Placa")
         if placa in self.__veiculos:
             del self.__veiculos[placa]
             print("Veículo excluido com sucesso")
@@ -117,8 +116,8 @@ class ControladorVeiculo:
         self.abre_veiculo()
 
     def alterar_carro(self):
-        placa_anterior = self.__tela_veiculo.ask_verification("Placa",
-                                                     "Digite o valor da placa do carro que será alterado")
+        placa_anterior = self.__tela_veiculo.ask_verification("Digite o valor da placa do carro que será alterado",
+                                                              "Placa")
 
         if placa_anterior in self.__veiculos:
             button, new_values = self.__tela_cadastro.open(self.__veiculos[placa_anterior])

@@ -76,19 +76,21 @@ class ControladorRegistro:
 
     def filtrar_matricula(self):
         filtro = {}
-        try:
-            matricula_funcionario = int(self.__tela_filtro.ask_verification("Digite o número de matricula: ", "Info"))
-            if matricula_funcionario:
+
+        matricula_funcionario = (self.__tela_filtro.ask_verification("Digite o número de matricula: ", "Info"))
+        if matricula_funcionario:
+            try:
+                matricula_funcionario = int(matricula_funcionario)
                 for chave in self.__registros:
                     if self.__registros[chave].matricula_funcionario == matricula_funcionario:
                         filtro[chave] = self.__registros[chave]
                         print(self.__registros[chave])
                 self.abre_tela_inicial(filtro)
-            else:
-                raise ValueError
-        except ValueError:
-            print("Matrícula deve ser número inteiro")
-            self.__tela_filtro.show_message("Erro", "Matrícula deve ser número inteiro")
+            except ValueError:
+                print("Matrícula deve ser número inteiro")
+                self.__tela_filtro.show_message("Erro", "Matrícula deve ser número inteiro")
+                self.abre_registros()
+        else:
             self.abre_registros()
 
     def filtrar_placa(self):

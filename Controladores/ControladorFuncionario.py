@@ -3,6 +3,7 @@ from Telas.TelaCadastroFuncionario import TelaCadastroFuncionario
 from Entidades.Funcionario import Funcionario
 from Entidades.Funcionario import Cargo
 from Controladores.ControladorVeiculo import ControladorVeiculo
+from Entidades.src.FuncionarioDAO import FuncionarioDAO
 
 
 class ControladorFuncionario:
@@ -12,6 +13,7 @@ class ControladorFuncionario:
         self.__tela_funcionario = TelaFuncionario(self)
         self.__tela_cadastro = TelaCadastroFuncionario(self)
         self.__funcionarios = {}
+        self.__funcionarios_DAO = FuncionarioDAO()
         self.__cargo = None
         self.__controlador_veiculo = ControladorVeiculo
         self.__controlador_principal = controlador_principal
@@ -20,18 +22,21 @@ class ControladorFuncionario:
         if ControladorFuncionario.__instance is None:
             ControladorFuncionario.__instance = object.__new__(cls)
             return ControladorFuncionario.__instance
+    @property
+    def funcionarios_DAO(self):
+        return self.__funcionarios_DAO
 
     def abre_funcionario(self):
         self.abre_tela_inicial()
 
     def abre_tela_inicial(self):
         funcionarios = []
-        for matricula in self.__funcionarios:
-            funcionarios.append("Matrícula: " + str(self.__funcionarios[matricula].numero_matricula) + '  -  ' +
-                                "Nome: " + self.__funcionarios[matricula].nome + '  -  ' +
-                                "Data de Nascimento: " + self.__funcionarios[matricula].data_nascimento + '  -  ' +
-                                "Telefone: " + self.__funcionarios[matricula].telefone + '  -  ' +
-                                "Cargo: " + str(self.__funcionarios[matricula].cargo))
+        for matricula in self.__funcionarios_DAO.get_all():
+            funcionarios.append("Matrícula: " + str(matricula.numero_matricula) + '  -  ' +
+                                "Nome: " + matricula.nome + '  -  ' +
+                                "Data de Nascimento: " + matricula.data_nascimento + '  -  ' +
+                                "Telefone: " + matricula.telefone + '  -  ' +
+                                "Cargo: " + str(matricula.cargo))
 
         button, values = self.__tela_funcionario.open(funcionarios)
         options = {9: self.voltar,
@@ -47,16 +52,18 @@ class ControladorFuncionario:
     def cadastrar_funcionario(self, numero_matricula, nome, data_nascimento, telefone, cargo: Cargo):
         try:
             funcionario = Funcionario(numero_matricula, nome, data_nascimento, telefone, cargo)
-            if self.existe_funcionario(numero_matricula):
+            if self.__funcionarios_DAO.get(numero_matricula):
                 raise Exception
             else:
                 self.__funcionarios[numero_matricula] = funcionario
                 if funcionario.cargo == Cargo.DIRETORIA:
                     funcionario.veiculos = self.__controlador_principal.controlador_veiculo.veiculos
                     self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
+                    self.__funcionarios_DAO.add(numero_matricula, funcionario)
                 else:
                     self.dar_acesso_veiculo(numero_matricula)
                     self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
+                    self.__funcionarios_DAO.add(numero_matricula, funcionario)
         except Exception:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 

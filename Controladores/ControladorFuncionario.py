@@ -36,7 +36,7 @@ class ControladorFuncionario:
         button, values = self.__tela_funcionario.open(funcionarios)
         options = {9: self.voltar,
                    1: self.cadastra,
-                   #  2: self.dar_acesso_veiculo,
+                   2: self.dar_acesso_veiculo,
                    #  3: self.veiculos_funcionario,
                    4: self.alterar_funcionario,
                    5: self.deletar_funcionario, }
@@ -121,38 +121,44 @@ class ControladorFuncionario:
     def dar_acesso_veiculo(self, num_matricula=None):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
         if not num_matricula:
-            matricula = input("Digite a matricula do funcionário a ser autorizado: ")
+            matricula = self.__tela_funcionario.ask_verification("Digite a matricula do funcionário a ser autorizado", "Info")
         else:
             matricula = num_matricula
-
-        funcionario = self.__funcionarios[matricula]
-        if funcionario.cargo == Cargo.DIRETORIA:
-            print("Este funcionário já tem acesso a todos os veiculos da garagem")
-            print("Funcionário tem acesso aos seguintes veículos: ")
-            self.__tela_funcionario.show_message("Erro",
-                                                 "Este funcionário já tem acesso a todos os veiculos da garagem")
-
-        placa = self.__tela_funcionario.ask_verification("Digite a placa do veículo que este funcionário terá acesso",
-                                                         "Info")
-        if placa not in veiculos:
-            print("Não existe veículo com placa '" + str(placa) + "' na garagem")
-            self.__tela_funcionario.show_message("Erro",
-                                                 "Não existe veículo com placa '"
-                                                 + str(placa) + "' na garagem")
-            return
-        veiculo = veiculos[placa]
-        if placa not in funcionario.veiculos:
-            funcionario.veiculos[placa] = veiculo
-        else:
-            print("Funcionário já tem acesso a esse veículo")
-            self.__tela_funcionario.show_message("Erro",
-                                                 "Funcionário já tem acesso a esse veículo")
-        print("Funcionário tem acesso aos seguintes carros: ")
-        keys = []
-        for placa in funcionario.veiculos:
-            keys.append("Placa: " + str(funcionario.veiculos[placa].placa) + " Modelo: " + str(
-                funcionario.veiculos[placa].modelo))
-        self.__tela_funcionario.show_message("Carros do funcionário", str(keys))
+        if matricula:
+            try:
+                matricula = int(matricula)
+                funcionario = self.__funcionarios[matricula]
+                if funcionario.cargo == Cargo.DIRETORIA:
+                    print("Este funcionário já tem acesso a todos os veiculos da garagem")
+                    print("Funcionário tem acesso aos seguintes veículos: ")
+                    self.__tela_funcionario.show_message("Erro",
+                                                         "Este funcionário já tem acesso a todos os veiculos da garagem")
+                else:
+                    placa = self.__tela_funcionario.ask_verification("Digite a placa do veículo que este funcionário terá acesso",
+                                                                     "Info")
+                    if placa:
+                        if placa not in veiculos:
+                            print("Não existe veículo com placa '" + str(placa) + "' na garagem")
+                            self.__tela_funcionario.show_message("Erro",
+                                                                 "Não existe veículo com placa '"
+                                                                 + str(placa) + "' na garagem")
+                        else:
+                            veiculo = veiculos[placa]
+                            if placa not in funcionario.veiculos:
+                                funcionario.veiculos[placa] = veiculo
+                            else:
+                                print("Funcionário já tem acesso a esse veículo")
+                                self.__tela_funcionario.show_message("Erro",
+                                                                     "Funcionário já tem acesso a esse veículo")
+                            print("Funcionário tem acesso aos seguintes carros: ")
+                            keys = []
+                            for placa in funcionario.veiculos:
+                                keys.append("Placa: " + str(funcionario.veiculos[placa].placa) + " Modelo: " + str(
+                                    funcionario.veiculos[placa].modelo))
+                            self.__tela_funcionario.show_message("Carros do funcionário", str(keys))
+            except ValueError:
+                self.__tela_funcionario.show_message("Erro", "Matrícula do funcionário deve ser um número inteiro")
+        self.abre_tela_inicial()
 
     def veiculos_funcionario(self):
         while True:

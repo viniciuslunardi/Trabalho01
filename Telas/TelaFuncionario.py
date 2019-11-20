@@ -15,7 +15,7 @@ class TelaFuncionario(AbstractTela):
             [sg.Text("Funcionários cadastrados")],
             [sg.Listbox(values=funcionarios, size=(69, 10))],
             [sg.Submit("Cadastrar", key=1),
-          #  sg.Submit("Liberar acesso", key=2),
+             sg.Submit("Liberar acesso", key=2),
           #  sg.Submit("Verificar acesso", key=3),
              sg.Submit("Alterar", key=4),
              sg.Submit("Demitir", key=5),

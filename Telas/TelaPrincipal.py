@@ -7,7 +7,7 @@ class TelaPrincipal(AbstractTela):
         super().__init__(controlador)
         self.__window = None
         self.__controlador = controlador
-        self.init_components()
+
 
     def init_components(self):
         sg.change_look_and_feel("Reddit")
@@ -24,7 +24,9 @@ class TelaPrincipal(AbstractTela):
         print('x')
 
     def open(self):
+        self.init_components()
         buttons, values = self.__window.Read()
+        self.close()
         return buttons, values
 
     def close(self):

@@ -22,6 +22,7 @@ class ControladorFuncionario:
         if ControladorFuncionario.__instance is None:
             ControladorFuncionario.__instance = object.__new__(cls)
             return ControladorFuncionario.__instance
+
     @property
     def funcionarios_DAO(self):
         return self.__funcionarios_DAO
@@ -46,10 +47,10 @@ class ControladorFuncionario:
                    4: self.alterar_funcionario,
                    5: self.deletar_funcionario, }
         # 6: self.desbloquear_funcionario}
+        if button:
+            return options[button]()
 
-        return options[button]()
-
-    def cadastrar_funcionario(self, numero_matricula, nome, data_nascimento, telefone, cargo: Cargo):
+    def cadastrar_funcionario(self, numero_matricula, nome, data_nascimento, telefone, cargo: Cargo, msg=None):
         try:
             funcionario = Funcionario(numero_matricula, nome, data_nascimento, telefone, cargo)
             if self.__funcionarios_DAO.get(numero_matricula):
@@ -58,12 +59,15 @@ class ControladorFuncionario:
                 self.__funcionarios[numero_matricula] = funcionario
                 if funcionario.cargo == Cargo.DIRETORIA:
                     funcionario.veiculos = self.__controlador_principal.controlador_veiculo.veiculos
-                    self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
+                    if not msg:
+                        self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
                     self.__funcionarios_DAO.add(numero_matricula, funcionario)
                 else:
-                    self.dar_acesso_veiculo(numero_matricula)
-                    self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
                     self.__funcionarios_DAO.add(numero_matricula, funcionario)
+                    if not msg:
+                        self.dar_acesso_veiculo(numero_matricula)
+                        self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
+
         except Exception:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
@@ -134,35 +138,38 @@ class ControladorFuncionario:
         if matricula:
             try:
                 matricula = int(matricula)
-                funcionario = self.__funcionarios[matricula]
-                if funcionario.cargo == Cargo.DIRETORIA:
-                    print("Este funcionário já tem acesso a todos os veiculos da garagem")
-                    print("Funcionário tem acesso aos seguintes veículos: ")
-                    self.__tela_funcionario.show_message("Erro",
-                                                         "Este funcionário já tem acesso a todos os veiculos da garagem")
-                else:
-                    placa = self.__tela_funcionario.ask_verification("Digite a placa do veículo que este funcionário terá acesso",
-                                                                     "Info")
-                    if placa:
-                        if placa not in veiculos:
-                            print("Não existe veículo com placa '" + str(placa) + "' na garagem")
-                            self.__tela_funcionario.show_message("Erro",
-                                                                 "Não existe veículo com placa '"
-                                                                 + str(placa) + "' na garagem")
-                        else:
-                            veiculo = veiculos[placa]
-                            if placa not in funcionario.veiculos:
-                                funcionario.veiculos[placa] = veiculo
-                            else:
-                                print("Funcionário já tem acesso a esse veículo")
+                funcionario = self.__funcionarios_DAO.get(matricula)
+                if funcionario:
+                    if funcionario.cargo == Cargo.DIRETORIA:
+                        print("Este funcionário já tem acesso a todos os veiculos da garagem")
+                        print("Funcionário tem acesso aos seguintes veículos: ")
+                        self.__tela_funcionario.show_message("Erro",
+                                                             "Este funcionário já tem acesso a todos os veiculos da garagem")
+                    else:
+                        placa = self.__tela_funcionario.ask_verification("Digite a placa do veículo que este funcionário terá acesso",
+                                                                         "Info")
+                        if placa:
+                            if placa not in veiculos:
+                                print("Não existe veículo com placa '" + str(placa) + "' na garagem")
                                 self.__tela_funcionario.show_message("Erro",
-                                                                     "Funcionário já tem acesso a esse veículo")
-                            print("Funcionário tem acesso aos seguintes carros: ")
-                            keys = []
-                            for placa in funcionario.veiculos:
-                                keys.append("Placa: " + str(funcionario.veiculos[placa].placa) + " Modelo: " + str(
-                                    funcionario.veiculos[placa].modelo))
-                            self.__tela_funcionario.show_message("Carros do funcionário", str(keys))
+                                                                     "Não existe veículo com placa '"
+                                                                     + str(placa) + "' na garagem")
+                            else:
+                                veiculo = veiculos[placa]
+                                if placa not in funcionario.veiculos:
+                                    funcionario.veiculos[placa] = veiculo
+                                else:
+                                    print("Funcionário já tem acesso a esse veículo")
+                                    self.__tela_funcionario.show_message("Erro",
+                                                                         "Funcionário já tem acesso a esse veículo")
+                                print("Funcionário tem acesso aos seguintes carros: ")
+                                keys = []
+                                for placa in funcionario.veiculos:
+                                    keys.append("Placa: " + str(funcionario.veiculos[placa].placa) + " Modelo: " + str(
+                                        funcionario.veiculos[placa].modelo))
+                                self.__tela_funcionario.show_message("Carros do funcionário", str(keys))
+                else:
+                    self.__tela_funcionario.show_message("Erro", "Não existe funcionário cadastrado com essa matrícula")
             except ValueError:
                 self.__tela_funcionario.show_message("Erro", "Matrícula do funcionário deve ser um número inteiro")
         self.abre_tela_inicial()
@@ -188,12 +195,11 @@ class ControladorFuncionario:
 
     def deletar_funcionario(self):
         matricula = (self.__tela_funcionario.ask_verification("Informe a matrícula do funcionário", "Matrícula"))
-
         if matricula:
             try:
                 matricula = int(matricula)
-                if matricula in self.__funcionarios:
-                    del self.__funcionarios[matricula]
+                if self.__funcionarios_DAO.get(matricula):
+                    self.__funcionarios_DAO.remove(matricula)
                     print("Funcionário demitido com sucesso >:)")
                     self.__tela_funcionario.show_message("Sucesso", "Funcionário demitido com sucesso")
                 else:
@@ -212,13 +218,13 @@ class ControladorFuncionario:
         if matricula_anterior:
             try:
                 matricula_anterior = int(matricula_anterior)
-                if matricula_anterior in self.__funcionarios:
+                if self.__funcionarios_DAO.get(matricula_anterior):
                     print("Informe os novos valores: ")
-                    button, new_values = self.__tela_cadastro.open(self.__funcionarios[matricula_anterior])
+                    button, new_values = self.__tela_cadastro.open(self.__funcionarios_DAO.get(matricula_anterior))
                     try:
                         matricula = int(new_values[0])
                         if matricula:
-                            if matricula in self.__funcionarios and matricula != matricula_anterior:
+                            if self.__funcionarios_DAO.get(matricula) and matricula != matricula_anterior:
                                 print("Essa matrícula já está sendo utilizada por outro funcionário")
                                 self.__tela_cadastro.show_message("Erro",
                                                                   "Essa matrícula já está sendo utilizada por outro funcionário")
@@ -226,13 +232,10 @@ class ControladorFuncionario:
                                 nome = new_values[1]
                                 data = new_values[2]
                                 telefone = new_values[3]
-                                cargo = Cargo(self.cadastrar_cargo(new_values[4]))
-                                self.__funcionarios[matricula_anterior].numero_matricula = matricula
-                                self.__funcionarios[matricula_anterior].nome = nome
-                                self.__funcionarios[matricula_anterior].data_nascimento = data
-                                self.__funcionarios[matricula_anterior].telefone = telefone
-                                self.__funcionarios[matricula_anterior].cargo = cargo
-                                self.__funcionarios[matricula] = self.__funcionarios.pop(matricula_anterior)
+                                msg = "Altera"
+                                self.__funcionarios_DAO.remove(matricula_anterior)
+                                self.cadastrar_funcionario(matricula, nome, data, telefone,
+                                                           Cargo(self.cadastrar_cargo(new_values[4])), msg)
                                 print("Funcionário alterado com sucesso")
                                 self.__tela_cadastro.show_message("Sucesso", "Funcionário alterado com sucesso")
 

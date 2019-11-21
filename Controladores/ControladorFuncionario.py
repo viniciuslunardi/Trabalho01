@@ -129,6 +129,9 @@ class ControladorFuncionario:
     def existe_funcionario(self, numero_matricula):
         return numero_matricula in self.__funcionarios
 
+    def get_veiculos(self):
+        return self.__controlador_principal.controlador_veiculo.veiculos_DAO
+
     def dar_acesso_veiculo(self, num_matricula=None):
         veiculos = self.__controlador_principal.controlador_veiculo.veiculos
         if not num_matricula:

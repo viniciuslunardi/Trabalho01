@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 
 class DAO(ABC):
-    __instance = None
+    instance = None
 
     def __init__(self, datasource=""):
         self.__datasource = datasource
@@ -14,9 +14,9 @@ class DAO(ABC):
             self.__dump()
 
     def __new__(cls, *args, **kwargs):
-        if DAO.__instance is None:
-            DAO.__instance = object.__new__(cls)
-            return DAO.__instance
+        if DAO.instance is None:
+            DAO.instance = object.__new__(cls)
+            return DAO.instance
 
     def __dump(self):
         pickle.dump(self.__object_cache, open(self.__datasource, "wb"))

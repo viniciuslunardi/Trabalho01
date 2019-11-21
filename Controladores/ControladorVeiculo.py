@@ -1,6 +1,7 @@
 from Telas.TelaVeiculo import TelaVeiculo
 from Telas.TelaCadastroVeiculo import TelaCadastroVeiculo
 from Entidades.Veiculo import Veiculo
+from Entidades.src.VeiculoDAO import VeiculoDAO
 
 
 class ControladorVeiculo:
@@ -10,6 +11,7 @@ class ControladorVeiculo:
         self.__tela_veiculo = TelaVeiculo(self)
         self.__tela_cadastro = TelaCadastroVeiculo(self)
         self.__veiculos = {}
+        self.__veiculos_DAO = VeiculoDAO()
         self.__controlador_principal = controlador_principal
 
     def __new__(cls, *args, **kwargs):
@@ -21,17 +23,21 @@ class ControladorVeiculo:
         self.abre_tela_inicial()
 
     @property
+    def veiculos_DAO(self):
+        return self.__veiculos_DAO
+
+    @property
     def tela_veiculo(self):
         return self.__tela_veiculo
 
     def abre_tela_inicial(self):
         veiculos = []
-        for placa in self.__veiculos:
-            veiculos.append("Placa: " + self.__veiculos[placa].placa + '  -  ' +
-                            "Marca: " + self.__veiculos[placa].marca + '  -  ' +
-                            "Modelo: " + self.__veiculos[placa].modelo + '  -  ' +
-                            "Ano: " + self.__veiculos[placa].ano + '  -  ' +
-                            "KM Atual: " + str(self.__veiculos[placa].quilometragem_atual))
+        for placa in self.__veiculos_DAO.get_all():
+            veiculos.append("Placa: " + placa.placa + '  -  ' +
+                            "Marca: " + placa.marca + '  -  ' +
+                            "Modelo: " + placa.modelo + '  -  ' +
+                            "Ano: " + placa.ano + '  -  ' +
+                            "KM Atual: " + str(placa.quilometragem_atual))
 
         button, values = self.__tela_veiculo.open(veiculos)
         options = {4: self.voltar,
@@ -61,15 +67,16 @@ class ControladorVeiculo:
                                               " (utilize '.' para números não inteiros)")
         self.abre_veiculo()
 
-    def cadastrar_veiculo(self, placa, modelo, marca, ano, quilometragem_atual):
+    def cadastrar_veiculo(self, placa, modelo, marca, ano, quilometragem_atual, msg=None):
         try:
             veiculo = Veiculo(placa, modelo, marca, ano, quilometragem_atual)
-            if self.existe_veiculo(placa):
+            if self.__veiculos_DAO.get(placa):
                 raise Exception
             else:
-                self.__veiculos[placa] = veiculo
-                self.__tela_cadastro.show_message("Sucesso",
-                                                  "Veículo cadastrado com sucesso")
+                self.__veiculos_DAO.add(placa, veiculo)
+                if not msg:
+                    self.__tela_cadastro.show_message("Sucesso",
+                                                    "Veículo cadastrado com sucesso")
                 return True
         except Exception:
             print("---------------ATENÇÃO--------------- \n * Veículo já cadastrado *")
@@ -97,15 +104,15 @@ class ControladorVeiculo:
         return self.__veiculos
 
     def atualiza_quilometragem(self, placa, km_andado):
-        km_atual = float(self.__veiculos[placa].quilometragem_atual)
+        km_atual = float(self.__veiculos_DAO.get(placa).quilometragem_atual)
         float(km_atual)
         km_atual += km_andado
-        self.__veiculos[placa].quilometragem_atual = km_atual
+        self.__veiculos_DAO.get(placa).quilometragem_atual = km_atual
 
     def deletar_carro(self):
         placa = self.__tela_veiculo.ask_verification("Digite o valor da placa do carro que será deletado", "Placa")
-        if placa in self.__veiculos:
-            del self.__veiculos[placa]
+        if self.__veiculos_DAO.get(placa):
+            self.__veiculos_DAO.remove(placa)
             print("Veículo excluido com sucesso")
             self.__tela_veiculo.show_message("Sucesso",
                                              "Veículo deletado com sucesso")
@@ -119,8 +126,8 @@ class ControladorVeiculo:
         placa_anterior = self.__tela_veiculo.ask_verification("Digite o valor da placa do carro que será alterado",
                                                               "Placa")
 
-        if placa_anterior in self.__veiculos:
-            button, new_values = self.__tela_cadastro.open(self.__veiculos[placa_anterior])
+        if self.__veiculos_DAO.get(placa_anterior):
+            button, new_values = self.__tela_cadastro.open(self.__veiculos_DAO.get(placa_anterior))
             try:
                 placa = new_values[0]
                 modelo = new_values[1]
@@ -128,12 +135,9 @@ class ControladorVeiculo:
                 ano = new_values[3]
                 km = float(new_values[4])
                 if km:
-                    self.__veiculos[placa_anterior].placa = placa
-                    self.__veiculos[placa_anterior].modelo = modelo
-                    self.__veiculos[placa_anterior].marca = marca
-                    self.__veiculos[placa_anterior].ano = ano
-                    self.__veiculos[placa_anterior].quilometragem_atual = km
-                    self.__veiculos[placa] = self.__veiculos.pop(placa_anterior)
+                    msg = "Altera"
+                    self.__veiculos_DAO.remove(placa_anterior)
+                    self.cadastrar_veiculo(placa, modelo, marca, ano, km, msg)
                     print("Veículo alterado com sucesso")
                     self.__tela_cadastro.show_message("Sucesso",
                                                       "Veículo alterado com sucesso")

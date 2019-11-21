@@ -133,7 +133,7 @@ class ControladorFuncionario:
         return self.__controlador_principal.controlador_veiculo.veiculos_DAO
 
     def dar_acesso_veiculo(self, num_matricula=None):
-        veiculos = self.__controlador_principal.controlador_veiculo.veiculos
+        veiculos = self.get_veiculos()
         if not num_matricula:
             matricula = self.__tela_funcionario.ask_verification("Digite a matricula do funcionário a ser autorizado", "Info")
         else:
@@ -143,6 +143,7 @@ class ControladorFuncionario:
                 matricula = int(matricula)
                 funcionario = self.__funcionarios_DAO.get(matricula)
                 if funcionario:
+                    veiculos_atuais = funcionario.veiculos
                     if funcionario.cargo == Cargo.DIRETORIA:
                         print("Este funcionário já tem acesso a todos os veiculos da garagem")
                         print("Funcionário tem acesso aos seguintes veículos: ")
@@ -152,15 +153,17 @@ class ControladorFuncionario:
                         placa = self.__tela_funcionario.ask_verification("Digite a placa do veículo que este funcionário terá acesso",
                                                                          "Info")
                         if placa:
-                            if placa not in veiculos:
+                            if not veiculos.get(placa):
                                 print("Não existe veículo com placa '" + str(placa) + "' na garagem")
                                 self.__tela_funcionario.show_message("Erro",
                                                                      "Não existe veículo com placa '"
                                                                      + str(placa) + "' na garagem")
                             else:
-                                veiculo = veiculos[placa]
+                                veiculo_novo = veiculos.get(placa)
                                 if placa not in funcionario.veiculos:
-                                    funcionario.veiculos[placa] = veiculo
+                                    self.__funcionarios_DAO.remove(matricula)
+                                    funcionario.veiculos[placa] = veiculo_novo
+                                    self.__funcionarios_DAO.add(matricula, funcionario)
                                 else:
                                     print("Funcionário já tem acesso a esse veículo")
                                     self.__tela_funcionario.show_message("Erro",
@@ -221,7 +224,9 @@ class ControladorFuncionario:
         if matricula_anterior:
             try:
                 matricula_anterior = int(matricula_anterior)
-                if self.__funcionarios_DAO.get(matricula_anterior):
+                old = self.__funcionarios_DAO.get(matricula_anterior)
+                if old:
+                    veiculos = old.veiculos
                     print("Informe os novos valores: ")
                     button, new_values = self.__tela_cadastro.open(self.__funcionarios_DAO.get(matricula_anterior))
                     try:
@@ -237,8 +242,9 @@ class ControladorFuncionario:
                                 telefone = new_values[3]
                                 msg = "Altera"
                                 self.__funcionarios_DAO.remove(matricula_anterior)
-                                self.cadastrar_funcionario(matricula, nome, data, telefone,
-                                                           Cargo(self.cadastrar_cargo(new_values[4])), msg)
+                                new = Funcionario(matricula, nome, data, telefone,
+                                                           Cargo(self.cadastrar_cargo(new_values[4])))
+                                self.__funcionarios_DAO.add(matricula, new)
                                 print("Funcionário alterado com sucesso")
                                 self.__tela_cadastro.show_message("Sucesso", "Funcionário alterado com sucesso")
 

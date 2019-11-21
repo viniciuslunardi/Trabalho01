@@ -58,7 +58,8 @@ class ControladorFuncionario:
             else:
                 self.__funcionarios[numero_matricula] = funcionario
                 if funcionario.cargo == Cargo.DIRETORIA:
-                    funcionario.veiculos = self.__controlador_principal.controlador_veiculo.veiculos
+                    for placa in self.__controlador_principal.controlador_veiculo.veiculos_DAO.get_all():
+                        funcionario.veiculos[placa.placa] = placa
                     if not msg:
                         self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
                     self.__funcionarios_DAO.add(numero_matricula, funcionario)

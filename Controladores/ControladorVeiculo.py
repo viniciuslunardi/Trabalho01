@@ -30,6 +30,9 @@ class ControladorVeiculo:
     def tela_veiculo(self):
         return self.__tela_veiculo
 
+    def atualizar_veiculos(self):
+        return self.__veiculos_DAO.get_all()
+
     def abre_tela_inicial(self):
         veiculos = []
         for placa in self.__veiculos_DAO.get_all():

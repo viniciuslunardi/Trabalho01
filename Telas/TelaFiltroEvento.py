@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 from Telas.AbstractTela import AbstractTela
 
 
-class TelaFiltroRegistro(AbstractTela):
+class TelaFiltroEvento(AbstractTela):
     def __init__(self, controlador):
         super().__init__(controlador)
         self.__controlador = controlador
@@ -11,12 +11,9 @@ class TelaFiltroRegistro(AbstractTela):
     def init_components(self):
         sg.change_look_and_feel("Reddit")
         layout = [
-            [sg.Text("Filtrar por: ")],
-            [
-                sg.Submit("Matrícula", size=(30, 1), key=1),
-                sg.Submit("Placa", size=(30, 1), key=2),
-                sg.Submit("Evento", size=(30, 1), key=3)
-            ]
+            [sg.Text("Filtrar por tipo de Evento: ")],
+            [sg.Submit("ACESSO PERMITIDO", size=(30, 1), key=1), sg.Submit("ACESSO NEGADO", size=(30, 1), key=2)],
+            [sg.Submit("ACESSO BLOQUEADO", size=(30, 1), key=3), sg.Submit("VEÍCULO DEVOLVIDO", size=(30, 1), key=4)],
 
         ]
         self.__window = sg.Window("Filtro", font=("Helvetica", 15)).Layout(layout)

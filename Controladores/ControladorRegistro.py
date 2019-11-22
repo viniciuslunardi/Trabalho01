@@ -1,6 +1,7 @@
 from Telas.TelaRegistro import TelaRegistro
 from Telas.TelaFiltroRegistro import TelaFiltroRegistro
 from Entidades.src.RegistrosDAO import RegistroDAO
+from Telas.TelaFiltroEvento import TelaFiltroEvento
 
 
 class ControladorRegistro:
@@ -8,6 +9,7 @@ class ControladorRegistro:
 
     def __init__(self, controlador_principal):
         self.__tela_registro = TelaRegistro(self)
+        self.__tela_filtro_evento = TelaFiltroEvento(self)
         self.__registros = {}
         self.__registros_DAO = RegistroDAO()
         self.__chave = 0
@@ -72,9 +74,19 @@ class ControladorRegistro:
     def filtra_registro(self):
         button, values = self.__tela_filtro.open()
         options = {1: self.filtrar_matricula,
-                   2: self.filtrar_placa}
+                   2: self.filtrar_placa,
+                   3: self.filtrar_evento}
 
         return options[button]()
+
+    def filtrar_evento(self):
+        filtro = []
+        button, values = self.__tela_filtro_evento.open()
+        for registro in self.__registros_DAO.get_all():
+            if registro.evento.value == button:
+                filtro.append(registro)
+        self.abre_tela_inicial(filtro)
+
 
     def filtrar_matricula(self):
         filtro = []

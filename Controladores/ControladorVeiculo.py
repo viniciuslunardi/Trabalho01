@@ -2,6 +2,7 @@ from Telas.TelaVeiculo import TelaVeiculo
 from Telas.TelaCadastroVeiculo import TelaCadastroVeiculo
 from Entidades.Veiculo import Veiculo
 from Entidades.src.VeiculoDAO import VeiculoDAO
+from Exceptions import VeiculoJahExisteException
 
 
 class ControladorVeiculo:
@@ -74,7 +75,7 @@ class ControladorVeiculo:
         try:
             veiculo = Veiculo(placa, modelo, marca, ano, quilometragem_atual)
             if self.__veiculos_DAO.get(placa):
-                raise Exception
+                raise VeiculoJahExisteException
             else:
                 self.__veiculos_DAO.add(placa, veiculo)
                 if not msg:

@@ -4,6 +4,7 @@ from Entidades.Funcionario import Funcionario
 from Entidades.Funcionario import Cargo
 from Controladores.ControladorVeiculo import ControladorVeiculo
 from Entidades.src.FuncionarioDAO import FuncionarioDAO
+from Exceptions import FuncionarioJahExisteException
 
 
 class ControladorFuncionario:
@@ -54,7 +55,7 @@ class ControladorFuncionario:
         try:
             funcionario = Funcionario(numero_matricula, nome, data_nascimento, telefone, cargo)
             if self.__funcionarios_DAO.get(numero_matricula):
-                raise Exception
+                raise FuncionarioJahExisteException
             else:
                 self.__funcionarios[numero_matricula] = funcionario
                 if funcionario.cargo == Cargo.DIRETORIA:

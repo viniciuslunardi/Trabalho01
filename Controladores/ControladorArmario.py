@@ -77,7 +77,7 @@ class ControladorArmario:
                         registro = Registro(data, None, motivo, None, evento)
                         self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                         self.__controlador_principal.controlador_registro.imprime_registro(registro)
-                        self.__tela_armario.show_message("Erro", "Não existe funcionário com matrícula '"
+                        self.__tela_armario.show_message("ACESSO NEGADO", "Não existe funcionário com matrícula '"
                                                          + str(matricula) + "' cadastrado no sistema")
                         print("Não existe funcionário com matrícula '" + str(matricula) + "' cadastrado no sistema")
                     else:
@@ -96,6 +96,7 @@ class ControladorArmario:
                                     evento = EventoRegistro(2)
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Não existe veículo com esta placa cadastrado no sistema"
+                                    self.__tela_armario.show_message("ACESSO NEGADO", motivo)
                                     registro = Registro(data, matricula, motivo, None, evento)
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
@@ -105,6 +106,7 @@ class ControladorArmario:
                                     evento = EventoRegistro(2)
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Tentou acessar um veículo que não tem permissão"
+                                    self.__tela_armario.show_message("ACESSO NEGADO", motivo)
                                     registro = Registro(data, matricula, motivo, placa, evento)
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
@@ -115,23 +117,28 @@ class ControladorArmario:
                                               "não permitido irá bloquear seu acesso")
                                     funcionario.tentativas += 1
                                     if funcionario.tentativas > 2:
+                                        self.get_funcionarios().remove(funcionario.numero_matricula)
                                         evento = EventoRegistro(3)
                                         data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                         motivo = "Tentou acessar veículo que não tem permissão por 3 vezes"
+                                        self.__tela_armario.show_message("BLOQUEADO",
+                                                                         "Tentou acessar veículo que não tem permissão por 3 vezes")
                                         registro = Registro(data, matricula, motivo, placa, evento)
                                         self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                         self.__controlador_principal.controlador_registro.imprime_registro(registro)
-                                        funcionario[matricula].bloqueado = True
+                                        funcionario.bloqueado = True
+                                        self.get_funcionarios().add(funcionario.numero_matricula, funcionario)
                                 elif not self.__armario_DAO.get(placa):
                                     # EIMITIR REGISTRO ACESSO PERMITIDO
                                     evento = EventoRegistro(1)
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
-                                    motivo = "Funcionário tem acesso ao veículo que tentou retirar"
+                                    motivo = "Funcionário tem acesso ao veículo que tentou retirar."
                                     registro = Registro(data, matricula, motivo, placa, evento)
+                                    self.__tela_armario.show_message("ACESSO PERMITIDO", motivo + " "
+                                                                                                  " Retire o veículo")
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     chave = veiculos_funcionario[placa].placa
-                                    print(veiculos_funcionario[placa], "<<<<aqui")
                                     self.__armario_DAO.add(placa, veiculos_funcionario[placa])
                                     self.get_funcionarios().remove(funcionario.numero_matricula)
                                     self.__chaves_emprestadas[chave] = veiculos_funcionario[placa]
@@ -143,6 +150,7 @@ class ControladorArmario:
                                     evento = EventoRegistro(2)
                                     data = datetime.now().strftime('%d/%m/%Y %H:%M')
                                     motivo = "Tentou acessar veículo que não está disponível no momento"
+                                    self.__tela_armario.show_message("ACESSO NEGADO", motivo)
                                     registro = Registro(data, matricula, motivo, placa, evento)
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
@@ -159,13 +167,12 @@ class ControladorArmario:
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
                                     chave = veiculos_funcionario[placa[0]].placa
-                                    print(placa[0], "<<<<<")
                                    # veiculo = self.get_veiculos().get(placa[0])
                                     self.__armario_DAO.add(chave, veiculos_funcionario[placa[0]])
                                     self.get_funcionarios().remove(matricula)
                                     funcionario.veiculo_usado[chave] = veiculos_funcionario[placa[0]]
                                     self.get_funcionarios().add(funcionario.numero_matricula, funcionario)
-                                    self.__tela_armario.show_message("Acesso liberado", "Funcionário pode retirar o veículo")
+                                    self.__tela_armario.show_message("ACESSO PERMITIDO", "Funcionário pode retirar o veículo")
                                     print("Retire seu veiculo")
 
                                 else:
@@ -176,6 +183,7 @@ class ControladorArmario:
                                     registro = Registro(data, matricula, motivo, placa, evento)
                                     self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                     self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                                    self.__tela_armario.show_message("ACESSO NEGADO", motivo)
                                     print("O único veículo que este funcionário tem acesso está indisponível")
 
                             else:
@@ -185,6 +193,7 @@ class ControladorArmario:
                                 registro = Registro(data, matricula, motivo, None, evento)
                                 self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                                 self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                                self.__tela_armario.show_message("ACESSO NEGADO", motivo)
                                 print("Funcionário não tem acesso a nenhum carro")
 
 
@@ -195,6 +204,7 @@ class ControladorArmario:
                             registro = Registro(data, matricula, motivo, None, evento)
                             self.__controlador_principal.controlador_registro.cadastrar_registro(registro)
                             self.__controlador_principal.controlador_registro.imprime_registro(registro)
+                            self.__tela_armario.show_message("ACESSO NEGADO", motivo)
                 except ValueError:
                     print("Matrícula deve ser um número inteiro")
         self.abre_armario()

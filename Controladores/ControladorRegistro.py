@@ -102,6 +102,8 @@ class ControladorRegistro:
                 if registro.placa_veiculo == placa_veiculo:
                     filtro.append(registro)
             self.abre_tela_inicial(filtro)
+        else:
+            self.abre_tela_inicial()
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

@@ -13,7 +13,7 @@ class TelaFuncionario(AbstractTela):
         sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Text("Funcionários cadastrados")],
-            [sg.Listbox(values=funcionarios, size=(69, 10))],
+            [sg.Listbox(values=funcionarios, size=(100, 10))],
             [sg.Submit("Cadastrar", key=1),
              sg.Submit("Liberar acesso", key=2),
           #  sg.Submit("Verificar acesso", key=3),

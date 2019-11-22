@@ -12,7 +12,7 @@ class TelaRegistro(AbstractTela):
         sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Text("Lista de registros")],
-            [sg.Listbox(values=registros, size=(90, 10))],
+            [sg.Listbox(values=registros, size=(100, 10))],
             [sg.Submit("Filtrar registros", key=1), sg.Submit("Limpar Filtro", key=2),
              sg.Submit("Voltar", key=9)],
         ]

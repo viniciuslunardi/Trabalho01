@@ -87,7 +87,6 @@ class ControladorRegistro:
                 filtro.append(registro)
         self.abre_tela_inicial(filtro)
 
-
     def filtrar_matricula(self):
         filtro = []
 

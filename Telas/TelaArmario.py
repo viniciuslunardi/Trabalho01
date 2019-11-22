@@ -12,7 +12,7 @@ class TelaArmario(AbstractTela):
         sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Text("Veículos na garagem")],
-            [sg.Listbox(values=garagem, size=(50, 10))],
+            [sg.Listbox(values=garagem, size=(100, 10))],
             [sg.Submit("Pegar veículo", key=2),
              sg.Submit("Devolver veículo", key=3),
              sg.Submit("Veículos emprestados", key=4),

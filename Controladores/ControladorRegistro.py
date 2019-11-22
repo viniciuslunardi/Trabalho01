@@ -1,5 +1,6 @@
 from Telas.TelaRegistro import TelaRegistro
 from Telas.TelaFiltroRegistro import TelaFiltroRegistro
+from Entidades.src.RegistrosDAO import RegistroDAO
 
 
 class ControladorRegistro:
@@ -8,6 +9,7 @@ class ControladorRegistro:
     def __init__(self, controlador_principal):
         self.__tela_registro = TelaRegistro(self)
         self.__registros = {}
+        self.__registros_DAO = RegistroDAO()
         self.__chave = 0
         self.__controlador_principal = controlador_principal
         self.__tela_filtro = TelaFiltroRegistro(self)
@@ -22,21 +24,20 @@ class ControladorRegistro:
 
     def abre_tela_inicial(self, filtro=None):
         registros = []
-
         if not filtro:
-            for chave in self.__registros:
-                registros.append("Data: " + str(self.__registros[chave].data) + '  -  ' +
-                                 "Matrícula: " + str(self.__registros[chave].matricula_funcionario) + '  -  ' +
-                                 "Motivo: " + str(self.__registros[chave].motivo) + '  -  ' +
-                                 "Placa: " + str(self.__registros[chave].placa_veiculo) + '  -  ' +
-                                 "Evento: " + str(self.__registros[chave].evento))
+            for chave in self.__registros_DAO.get_all():
+                registros.append("Data: " + str(chave.data) + '  -  ' +
+                                 "Matrícula: " + str(chave.matricula_funcionario) + '  -  ' +
+                                 "Motivo: " + str(chave.motivo) + '  -  ' +
+                                 "Placa: " + str(chave.placa_veiculo) + '  -  ' +
+                                 "Evento: " + str(chave.evento))
         else:
             for chave in filtro:
-                registros.append("Data: " + str(self.__registros[chave].data) + '  -  ' +
-                                 "Matrícula: " + str(self.__registros[chave].matricula_funcionario) + '  -  ' +
-                                 "Motivo: " + str(self.__registros[chave].motivo) + '  -  ' +
-                                 "Placa: " + str(self.__registros[chave].placa_veiculo) + '  -  ' +
-                                 "Evento: " + str(self.__registros[chave].evento))
+                registros.append("Data: " + str(chave.data) + '  -  ' +
+                                 "Matrícula: " + str(chave.matricula_funcionario) + '  -  ' +
+                                 "Motivo: " + str(chave.motivo) + '  -  ' +
+                                 "Placa: " + str(chave.placa_veiculo) + '  -  ' +
+                                 "Evento: " + str(chave.evento))
 
         button, values = self.__tela_registro.open(registros)
         options = {
@@ -51,14 +52,15 @@ class ControladorRegistro:
         self.abre_registros()
 
     def cadastrar_registro(self, registro):
-        chave = self.__chave
-        self.__registros[chave] = registro
-        self.__chave += 1
+        for chave in self.__registros_DAO.get_all():
+            print(chave)
+            self.__chave += 1
+        self.__registros_DAO.add(self.__chave, registro)
 
     def lista_registros(self):
         print("---------TODOS OS REGISTROS-------")
-        for registro in self.__registros:
-            self.imprime_registro(self.__registros[registro])
+        for registro in self.__registros_DAO.get_all():
+            self.imprime_registro(registro)
 
     @property
     def registros(self):
@@ -75,16 +77,15 @@ class ControladorRegistro:
         return options[button]()
 
     def filtrar_matricula(self):
-        filtro = {}
+        filtro = []
 
         matricula_funcionario = (self.__tela_filtro.ask_verification("Digite o número de matricula: ", "Info"))
         if matricula_funcionario:
             try:
                 matricula_funcionario = int(matricula_funcionario)
-                for chave in self.__registros:
-                    if self.__registros[chave].matricula_funcionario == matricula_funcionario:
-                        filtro[chave] = self.__registros[chave]
-                        print(self.__registros[chave])
+                for registro in self.__registros_DAO.get_all():
+                    if registro.matricula_funcionario == matricula_funcionario:
+                        filtro.append(registro)
                 self.abre_tela_inicial(filtro)
             except ValueError:
                 print("Matrícula deve ser número inteiro")
@@ -94,12 +95,12 @@ class ControladorRegistro:
             self.abre_registros()
 
     def filtrar_placa(self):
-        filtro = {}
+        filtro = []
         placa_veiculo = self.__tela_filtro.ask_verification("Digite o número da placa do veículo: ", "Info")
         if placa_veiculo:
-            for chave in self.__registros:
-                if self.__registros[chave].placa_veiculo == placa_veiculo:
-                    filtro[chave] = self.__registros[chave]
+            for registro in self.__registros_DAO.get_all():
+                if registro.placa_veiculo == placa_veiculo:
+                    filtro.append(registro)
             self.abre_tela_inicial(filtro)
 
     def voltar(self):

@@ -9,11 +9,11 @@ class TelaAluno(AbstractTela):
         self.__window = None
         self.__dados_tela = {}
 
-    def init_components(self, veiculos):
+    def init_components(self, alunos):
         sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Text('Alunos cadastrados')],
-            [sg.Listbox(values=veiculos, size=(100, 10))],
+            [sg.Listbox(values=alunos, size=(100, 10))],
             [sg.Submit('Cadastrar Aluno', key=1),
              sg.Submit('Alterar Aluno', key=2),
              sg.Submit('Excluir Aluno', key=3),
@@ -21,8 +21,8 @@ class TelaAluno(AbstractTela):
         ]
         self.__window = sg.Window("Alunos", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(layout)
 
-    def open(self, veiculos):
-        self.init_components(veiculos)
+    def open(self, alunos):
+        self.init_components(alunos)
         button, values = self.__window.Read()
         self.__window.Close()
         return button, values

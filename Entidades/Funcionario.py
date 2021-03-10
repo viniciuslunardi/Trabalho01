@@ -15,8 +15,8 @@ class Funcionario:
         self.__telefone = telefone
         self.__cargo = cargo
         self.__tentativas = 0
-        self.__veiculos = {}
-        self.__veiculo_usado = {}
+        self.__alunos = {}
+        self.__aluno_usado = {}
         self.__bloqueado = False
 
     @property
@@ -52,12 +52,12 @@ class Funcionario:
         self.__telefone = telefone
 
     @property
-    def veiculos(self):
-        return self.__veiculos
+    def alunos(self):
+        return self.__alunos
 
-    @veiculos.setter
-    def veiculos(self, veiculos):
-        self.__veiculos = veiculos
+    @alunos.setter
+    def alunos(self, alunos):
+        self.__alunos = alunos
 
     @property
     def cargo(self):
@@ -68,12 +68,12 @@ class Funcionario:
         self.__cargo = cargo
 
     @property
-    def veiculo_usado(self):
-        return self.__veiculo_usado
+    def aluno_usado(self):
+        return self.__aluno_usado
 
-    @veiculo_usado.setter
-    def veiculo_usado(self, veiculo_usado):
-        self.__veiculo_usado = veiculo_usado
+    @aluno_usado.setter
+    def aluno_usado(self, aluno_usado):
+        self.__aluno_usado = aluno_usado
 
     @property
     def bloqueado(self):

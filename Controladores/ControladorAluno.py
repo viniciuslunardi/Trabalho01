@@ -1,49 +1,49 @@
 from Telas.TelaAluno import TelaAluno
 from Telas.TelaCadastroAluno import TelaCadastroAluno
-from Entidades.Veiculo import Veiculo
-from Entidades.src.VeiculoDAO import VeiculoDAO
-from Exceptions import VeiculoJahExisteException
+from Entidades.Aluno import Aluno
+from Entidades.src.AlunoDAO import AlunoDAO
+from Exceptions import AlunoJahExisteException
 
 
-class ControladorVeiculo:
+class ControladorAluno:
     __instance = None
 
     def __init__(self, controlador_principal):
-        self.__tela_veiculo = TelaAluno(self)
+        self.__tela_aluno = TelaAluno(self)
         self.__tela_cadastro = TelaCadastroAluno(self)
-        self.__veiculos = {}
-        self.__veiculos_DAO = VeiculoDAO()
+        self.__alunos = {}
+        self.__alunos_DAO = AlunoDAO()
         self.__controlador_principal = controlador_principal
 
     def __new__(cls, *args, **kwargs):
-        if ControladorVeiculo.__instance is None:
-            ControladorVeiculo.__instance = object.__new__(cls)
-            return ControladorVeiculo.__instance
+        if ControladorAluno.__instance is None:
+            ControladorAluno.__instance = object.__new__(cls)
+            return ControladorAluno.__instance
 
-    def abre_veiculo(self):
+    def abre_aluno(self):
         self.abre_tela_inicial()
 
     @property
-    def veiculos_DAO(self):
-        return self.__veiculos_DAO
+    def alunos_DAO(self):
+        return self.__alunos_DAO
 
     @property
-    def tela_veiculo(self):
-        return self.__tela_veiculo
+    def tela_aluno(self):
+        return self.__tela_aluno
 
-    def atualizar_veiculos(self):
-        return self.__veiculos_DAO.get_all()
+    def atualizar_alunos(self):
+        return self.__alunos_DAO.get_all()
 
     def abre_tela_inicial(self):
-        veiculos = []
-        for placa in self.__veiculos_DAO.get_all():
-            veiculos.append("Placa: " + placa.placa + '  -  ' +
+        alunos = []
+        for placa in self.__alunos_DAO.get_all():
+            alunos.append("Placa: " + placa.placa + '  -  ' +
                             "Marca: " + placa.marca + '  -  ' +
                             "Modelo: " + placa.modelo + '  -  ' +
                             "Ano: " + placa.ano + '  -  ' +
                             "KM Atual: " + str(placa.quilometragem_atual))
 
-        button, values = self.__tela_veiculo.open(veiculos)
+        button, values = self.__tela_aluno.open(alunos)
         options = {4: self.voltar,
                    1: self.cadastra,
                    2: self.alterar_carro,
@@ -60,7 +60,7 @@ class ControladorVeiculo:
             ano = values[3]
             km = float(values[4])
             if km:
-                self.cadastrar_veiculo(placa, modelo, marca, ano, km)
+                self.cadastrar_aluno(placa, modelo, marca, ano, km)
             else:
                 raise ValueError
         except ValueError:
@@ -69,15 +69,15 @@ class ControladorVeiculo:
             self.__tela_cadastro.show_message("Erro",
                                               "Quilometragem atual deve ser informada em números "
                                               " (utilize '.' para números não inteiros)")
-        self.abre_veiculo()
+        self.abre_aluno()
 
-    def cadastrar_veiculo(self, placa, modelo, marca, ano, quilometragem_atual, msg=None):
+    def cadastrar_aluno(self, placa, modelo, marca, ano, quilometragem_atual, msg=None):
         try:
-            veiculo = Veiculo(placa, modelo, marca, ano, quilometragem_atual)
-            if self.__veiculos_DAO.get(placa):
-                raise VeiculoJahExisteException
+            aluno = Aluno(placa, modelo, marca, ano, quilometragem_atual)
+            if self.__alunos_DAO.get(placa):
+                raise AlunoJahExisteException
             else:
-                self.__veiculos_DAO.add(placa, veiculo)
+                self.__alunos_DAO.add(placa, aluno)
                 if not msg:
                     self.__tela_cadastro.show_message("Sucesso",
                                                     "Veículo cadastrado com sucesso")
@@ -88,50 +88,50 @@ class ControladorVeiculo:
                                               "Já existe um veículo com placa " + placa + " cadastrado")
             return False
 
-    def existe_veiculo(self, placa):
-        return placa in self.__veiculos
+    def existe_aluno(self, placa):
+        return placa in self.__alunos
 
-    def lista_veiculo(self):
-        if len(self.__veiculos) > 0:
-            for placa in self.__veiculos:
-                return self.__veiculos[placa]
+    def lista_aluno(self):
+        if len(self.__alunos) > 0:
+            for placa in self.__alunos:
+                return self.__alunos[placa]
         else:
             print("Nenhum veículo cadastrado")
 
-    def mostrar_veiculos(self):
+    def mostrar_alunos(self):
         print("MODELO: PLACA: ")
-        for placa in self.__veiculos:
-            print("%s: %s:", self.__veiculos[placa].modelo, self.__veiculos[placa].placa)
+        for placa in self.__alunos:
+            print("%s: %s:", self.__alunos[placa].modelo, self.__alunos[placa].placa)
 
     @property
-    def veiculos(self):
-        return self.__veiculos
+    def alunos(self):
+        return self.__alunos
 
     def atualiza_quilometragem(self, placa, km_andado):
-        km_atual = float(self.__veiculos_DAO.get(placa).quilometragem_atual)
+        km_atual = float(self.__alunos_DAO.get(placa).quilometragem_atual)
         float(km_atual)
         km_atual += km_andado
-        self.__veiculos_DAO.get(placa).quilometragem_atual = km_atual
+        self.__alunos_DAO.get(placa).quilometragem_atual = km_atual
 
     def deletar_carro(self):
-        placa = self.__tela_veiculo.ask_verification("Digite o valor da placa do carro que será deletado", "Placa")
-        if self.__veiculos_DAO.get(placa):
-            self.__veiculos_DAO.remove(placa)
+        placa = self.__tela_aluno.ask_verification("Digite o valor da placa do carro que será deletado", "Placa")
+        if self.__alunos_DAO.get(placa):
+            self.__alunos_DAO.remove(placa)
             print("Veículo excluido com sucesso")
-            self.__tela_veiculo.show_message("Sucesso",
+            self.__tela_aluno.show_message("Sucesso",
                                              "Veículo deletado com sucesso")
         else:
             print("Não existe veículo com essa placa cadastrado no sistema")
-            self.__tela_veiculo.show_message("Erro",
+            self.__tela_aluno.show_message("Erro",
                                              "Erro ao deletar veículo")
-        self.abre_veiculo()
+        self.abre_aluno()
 
     def alterar_carro(self):
-        placa_anterior = self.__tela_veiculo.ask_verification("Digite o valor da placa do carro que será alterado",
+        placa_anterior = self.__tela_aluno.ask_verification("Digite o valor da placa do carro que será alterado",
                                                               "Placa")
 
-        if self.__veiculos_DAO.get(placa_anterior):
-            button, new_values = self.__tela_cadastro.open(self.__veiculos_DAO.get(placa_anterior))
+        if self.__alunos_DAO.get(placa_anterior):
+            button, new_values = self.__tela_cadastro.open(self.__alunos_DAO.get(placa_anterior))
             try:
                 placa = new_values[0]
                 modelo = new_values[1]
@@ -140,8 +140,8 @@ class ControladorVeiculo:
                 km = float(new_values[4])
                 if km:
                     msg = "Altera"
-                    self.__veiculos_DAO.remove(placa_anterior)
-                    self.cadastrar_veiculo(placa, modelo, marca, ano, km, msg)
+                    self.__alunos_DAO.remove(placa_anterior)
+                    self.cadastrar_aluno(placa, modelo, marca, ano, km, msg)
                     print("Veículo alterado com sucesso")
                     self.__tela_cadastro.show_message("Sucesso",
                                                       "Veículo alterado com sucesso")
@@ -156,9 +156,9 @@ class ControladorVeiculo:
                                                   " (utilize '.' para números não inteiros)")
         else:
             if placa_anterior:
-                self.__tela_veiculo.show_message("Erro", "Não existe veículo com placa " + placa_anterior +
+                self.__tela_aluno.show_message("Erro", "Não existe veículo com placa " + placa_anterior +
                                                 " na garagem")
-        self.abre_veiculo()
+        self.abre_aluno()
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

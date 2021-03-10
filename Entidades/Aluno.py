@@ -1,5 +1,5 @@
 
-class Veiculo:
+class Aluno:
     def __init__(self, placa, modelo, marca, ano, quilometragem_atual):
         self.__placa = placa
         self.__modelo = modelo

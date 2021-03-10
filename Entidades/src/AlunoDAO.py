@@ -14,9 +14,9 @@ class AlunoDAO(DAO):
             AlunoDAO.__instance = object.__new__(cls)
             return AlunoDAO.__instance
 
-    def add(self, placa, aluno: Aluno):
+    def add(self, matricula, aluno: Aluno):
         if isinstance(aluno, Aluno) and aluno is not None:
-            super().add(placa, aluno)
+            super().add(matricula, aluno)
 
     def get(self, key):
         return super().get(key)

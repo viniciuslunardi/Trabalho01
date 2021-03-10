@@ -9,27 +9,42 @@ class TelaCadastroFuncionario(AbstractTela):
         self.__window = None
 
     def init_components(self, funcionario):
-        cargos = ["Diretoria", "Comercial", "Desenvolvedor"]
-        matricula = ""
+        cargos = ["Recepcionista", "Professor", "Gerente"]
+        usuario = ""
+        senha = ""
         nome = ""
+        cpf = ""
         data_nascimento = ""
-        telefone = ""
-        cargo = ""
+        email = ""
+        conta_bancaria = ""
+        carga_horaria = ""
+        salario = ""
+        funcao = ""
 
         if funcionario:
-            matricula = funcionario.numero_matricula
+            usuario = funcionario.usuario
+            senha = funcionario.senha
+            cpf = funcionario.cpf
+            conta_bancaria = funcionario.conta_bancaria
+            carga_horaria = funcionario.carga_horaria
+            salario = funcionario.salario
             nome = funcionario.nome
             data_nascimento = funcionario.data_nascimento
-            telefone = funcionario.telefone
-            cargo = funcionario.cargo
+            email = funcionario.email
+            funcao = funcionario.funcao
 
         sg.change_look_and_feel("Reddit")
         layout = [
-            [sg.Text("Matrícula", size=(10, 1)), sg.InputText(matricula)],
+            [sg.Text("Usuario", size=(10, 1)), sg.InputText(usuario)],
+            [sg.Text("Senha", size=(10, 1)), sg.InputText(senha)],
             [sg.Text("Nome", size=(10, 1)), sg.InputText(nome)],
             [sg.Text("Data de Nascimento", size=(15, 1)), sg.InputText(data_nascimento)],
-            [sg.Text("Telefone", size=(10, 1)), sg.InputText(telefone)],
+            [sg.Text("Email", size=(10, 1)), sg.InputText(email)],
             [sg.Text("Cargo"), sg.Combo(size=(20, 1), values=cargos)],
+            [sg.Text("Cpf", size=(10, 1)), sg.InputText(cpf)],
+            [sg.Text("Conta bancária", size=(10, 1)), sg.InputText(conta_bancaria)],
+            [sg.Text("Carga horaria", size=(10, 1)), sg.InputText(carga_horaria)],
+            [sg.Text("Salário", size=(10, 1)), sg.InputText(salario)],
             [sg.Button("Salvar", size=(30, 1), key="salvar")]
         ]
 

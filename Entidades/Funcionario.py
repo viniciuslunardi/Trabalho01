@@ -1,31 +1,40 @@
 from enum import Enum
 
 
-class Cargo(Enum):
+class Funcao(Enum):
     GERENTE = 1
     PROFESSOR = 2
     RECEPCIONISTA = 3
 
 
 class Funcionario:
-    def __init__(self, numero_matricula, nome, data_nascimento, telefone, cargo: Cargo):
-        self.__numero_matricula = numero_matricula
+    def __init__(self, usuario, senha, nome, cpf, data_nascimento, email, conta_bancaria, carga_horaria, salario, funcao: Funcao):
+        self.__usuario = usuario
+        self.__senha = senha
         self.__nome = nome
+        self.__cpf = cpf
         self.__data_nascimento = data_nascimento
-        self.__telefone = telefone
-        self.__cargo = cargo
-        self.__tentativas = 0
-        self.__alunos = {}
-        self.__aluno_usado = {}
-        self.__bloqueado = False
+        self.__email = email
+        self.__conta_bancaria = conta_bancaria
+        self.__carga_horaria = carga_horaria
+        self.__salario = salario
+        self.__funcao = funcao
 
     @property
-    def numero_matricula(self):
-        return self.__numero_matricula
+    def usuario(self):
+        return self.__usuario
 
-    @numero_matricula.setter
-    def numero_matricula(self, numero_matricula):
-        self.__numero_matricula = numero_matricula
+    @usuario.setter
+    def usuario(self, usuario):
+        self.__usuario = usuario
+
+    @property
+    def senha(self):
+        return self.__senha
+
+    @senha.setter
+    def senha(self, senha):
+        self.__senha = senha
 
     @property
     def nome(self):
@@ -36,6 +45,14 @@ class Funcionario:
         self.__nome = nome
 
     @property
+    def cpf(self):
+        return self.__cpf
+
+    @cpf.setter
+    def cpf(self, cpf):
+        self.__cpf = cpf
+
+    @property
     def data_nascimento(self):
         return self.__data_nascimento
 
@@ -44,12 +61,36 @@ class Funcionario:
         self.__data_nascimento = data_nascimento
 
     @property
-    def telefone(self):
-        return self.__telefone
+    def email(self):
+        return self.__email
 
-    @telefone.setter
-    def telefone(self, telefone):
-        self.__telefone = telefone
+    @email.setter
+    def email(self, email):
+        self.__email = email
+
+    @property
+    def conta_bancaria(self):
+        return self.__conta_bancaria
+
+    @conta_bancaria.setter
+    def conta_bancaria(self, conta_bancaria):
+        self.__conta_bancaria = conta_bancaria
+
+    @property
+    def carga_horaria(self):
+        return self.__carga_horaria
+
+    @carga_horaria.setter
+    def carga_horaria(self, carga_horaria):
+        self.__carga_horaria = carga_horaria
+
+    @property
+    def salario(self):
+        return self.__salario
+
+    @salario.setter
+    def salario(self, salario):
+        self.__salario = salario
 
     @property
     def alunos(self):
@@ -60,36 +101,9 @@ class Funcionario:
         self.__alunos = alunos
 
     @property
-    def cargo(self):
-        return self.__cargo
+    def funcao(self):
+        return self.__funcao
 
-    @cargo.setter
-    def cargo(self, cargo):
-        self.__cargo = cargo
-
-    @property
-    def aluno_usado(self):
-        return self.__aluno_usado
-
-    @aluno_usado.setter
-    def aluno_usado(self, aluno_usado):
-        self.__aluno_usado = aluno_usado
-
-    @property
-    def bloqueado(self):
-        return self.__bloqueado
-
-    @bloqueado.setter
-    def bloqueado(self, bloqueado):
-        self.__bloqueado = bloqueado
-
-    @property
-    def tentativas(self):
-        return self.__tentativas
-
-    @tentativas.setter
-    def tentativas(self, tentativas):
-        self.__tentativas = tentativas
-
-    def __eq__(self, other):
-        return self.__numero_matricula == other.numero_matricula
+    @funcao.setter
+    def funcao(self, funcao):
+        self.__funcao = funcao

@@ -2,9 +2,9 @@ from enum import Enum
 
 
 class Cargo(Enum):
-    DIRETORIA = 1
-    COMERCIAL = 2
-    DESENVOLVEDOR = 3
+    GERENTE = 1
+    PROFESSOR = 2
+    RECEPCIONISTA = 3
 
 
 class Funcionario:

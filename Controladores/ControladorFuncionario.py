@@ -49,26 +49,28 @@ class ControladorFuncionario:
         if button:
             return options[button]()
 
-    def cadastrar_funcionario(self, usuario, senha, nome, cpf, data_nascimento, email, conta_bancaria, carga_horaria, salario, funcao: Funcao, msg=None):
+    def cadastrar_funcionario(self, usuario, senha, nome, cpf, data_nascimento, email,
+                              conta_bancaria, carga_horaria, salario, funcao: Funcao, msg=None):
         try:
             funcionario = Funcionario(usuario, senha, nome, cpf, data_nascimento, email, conta_bancaria, carga_horaria, salario, funcao)
             if self.__funcionarios_DAO.get(usuario):
                 raise FuncionarioJahExisteException
             else:
                 self.__funcionarios[usuario] = funcionario
-                    if not msg:
-                        self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
-                    self.__funcionarios_DAO.add(usuario, funcionario)
+                if not msg:
+                    self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
+                self.__funcionarios_DAO.add(usuario, funcionario)
 
         except Exception:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
             self.__tela_cadastro.show_message("Erro", "Funcionário já cadastrado com essa matrícula")
 
+
     def cadastra(self):
         button, values = self.__tela_cadastro.open()
         try:
-            usuario = int(values[0])
+            usuario = values[0]
             if usuario:
                 try:
                     senha = values[1]
@@ -83,7 +85,7 @@ class ControladorFuncionario:
                     if senha == "" or nome == "" or data_nascimento == "" or email == "" or usuario == "" or funcao == "" or cpf == "" or conta == "" or carga_horaria == "" or salario == "":
                         raise Exception
                     else:
-                        self.cadastrar_funcionario(usuario, senha, nome, cpf, data_nascimento, email, conta_bancaria, carga_horaria, salario, Funcao(self.cadastrar_funcao(funcao)))
+                        self.cadastrar_funcionario(usuario, senha, nome, cpf, data_nascimento, email, conta, carga_horaria, salario, Funcao(self.cadastrar_funcao(funcao)))
                 except Exception:
                     print("Todos os campos devem ser preenchidos!")
                     self.__tela_cadastro.show_message("Erro", "Todos os campos devem ser preenchidos")

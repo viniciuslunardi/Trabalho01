@@ -4,15 +4,15 @@ from Entidades.Funcionario import Funcionario
 
 
 class FuncionarioDAO(DAO):
-    instance = None
+    __instance = None
 
     def __init__(self):
         super().__init__("funcionarios.pkl")
 
     def __new__(cls, *args, **kwargs):
-        if FuncionarioDAO.instance is None:
-            FuncionarioDAO.instance = object.__new__(cls)
-            return FuncionarioDAO.instance
+        if FuncionarioDAO.__instance is None:
+            FuncionarioDAO.__instance = object.__new__(cls)
+            return FuncionarioDAO.__instance
 
     def add(self, matricula, funcionario: Funcionario):
         if isinstance(funcionario, Funcionario) and funcionario is not None:

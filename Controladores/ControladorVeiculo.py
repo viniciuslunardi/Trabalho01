@@ -1,5 +1,5 @@
-from Telas.TelaAluno import TelaVeiculo
-from Telas.TelaCadastroAluno import TelaCadastroVeiculo
+from Telas.TelaAluno import TelaAluno
+from Telas.TelaCadastroAluno import TelaCadastroAluno
 from Entidades.Veiculo import Veiculo
 from Entidades.src.VeiculoDAO import VeiculoDAO
 from Exceptions import VeiculoJahExisteException
@@ -9,8 +9,8 @@ class ControladorVeiculo:
     __instance = None
 
     def __init__(self, controlador_principal):
-        self.__tela_veiculo = TelaVeiculo(self)
-        self.__tela_cadastro = TelaCadastroVeiculo(self)
+        self.__tela_veiculo = TelaAluno(self)
+        self.__tela_cadastro = TelaCadastroAluno(self)
         self.__veiculos = {}
         self.__veiculos_DAO = VeiculoDAO()
         self.__controlador_principal = controlador_principal

@@ -70,7 +70,8 @@ class ControladorAluno:
                 raise Exception("Aluno deve possuir um nome")
 
             if venc_mensalidade:
-                if mensalidade and 0 < mensalidade < 30:
+                mensalidade = int(mensalidade)
+                if venc_mensalidade and 0 < venc_mensalidade < 30:
                     self.cadastrar_aluno(cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade,
                                          venc_mensalidade)
                 elif mensalidade:

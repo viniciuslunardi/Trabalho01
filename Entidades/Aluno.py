@@ -1,51 +1,36 @@
+from .Usuario import Usuario
 
-class Aluno:
-    def __init__(self, placa, modelo, marca, ano, quilometragem_atual):
-        self.__placa = placa
-        self.__modelo = modelo
-        self.__marca = marca
-        self.__ano = ano
-        self.__quilometragem_atual = quilometragem_atual
 
-    @property
-    def placa(self):
-        return self.__placa
-
-    @placa.setter
-    def placa(self, placa):
-        self.__placa = placa
+class Aluno(Usuario.Usuario):
+    def __init__(self, cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade, venc_mensalidade):
+        super().__init__(cpf, data_nasc, email, matricula, nome, senha, conta)
+        self.__ativo = True
+        self.__mensalidade = mensalidade
+        self.__venc_mensalidade = venc_mensalidade
 
     @property
-    def modelo(self):
-        return self.__modelo
+    def ativo(self):
+        return self.__ativo
 
-    @modelo.setter
-    def modelo(self, modelo):
-        self.__modelo = modelo
-
-    @property
-    def marca(self):
-        return self.__marca
-
-    @marca.setter
-    def marca(self, marca):
-        self.__marca = marca
+    @ativo.setter
+    def ativo(self, ativo):
+        self.__ativo = ativo
 
     @property
-    def ano(self):
-        return self.__ano
+    def mensalidade(self):
+        return self.__mensalidade
 
-    @ano.setter
-    def ano(self, ano):
-        self.__ano = ano
+    @mensalidade.setter
+    def mensalidade(self, mensalidade):
+        self.__mensalidade = mensalidade
 
     @property
-    def quilometragem_atual(self):
-        return self.__quilometragem_atual
+    def venc_mensalidade(self):
+        return self.__venc_mensalidade
 
-    @quilometragem_atual.setter
-    def quilometragem_atual(self, quilometragem_atual):
-        self.__quilometragem_atual = quilometragem_atual
+    @venc_mensalidade.setter
+    def venc_mensalidade(self, venc_mensalidade):
+        self.__venc_mensalidade = venc_mensalidade
 
     def __eq__(self, other):
-        return self.__placa == other.placa
+        return self.__matricula == other.__matricula

@@ -36,129 +36,82 @@ class ControladorAluno:
 
     def abre_tela_inicial(self):
         alunos = []
-        for placa in self.__alunos_DAO.get_all():
-            alunos.append("Placa: " + placa.placa + '  -  ' +
-                            "Marca: " + placa.marca + '  -  ' +
-                            "Modelo: " + placa.modelo + '  -  ' +
-                            "Ano: " + placa.ano + '  -  ' +
-                            "KM Atual: " + str(placa.quilometragem_atual))
+        for matricula in self.__alunos_DAO.get_all():
+            alunos.append("CPF: " + str(matricula.data_nasc) + '  -  ' +
+                          "Email: " + str(matricula.email) + '  -  ' +
+                          "Nome: " + str(matricula.nome) + '  -  ' +
+                          "Mensalidade: " + str(matricula.mensalidade) + '  -  ' +
+                          "Vencimento da mensalidade: " + str(matricula.venc_mensalidade))
 
         button, values = self.__tela_aluno.open(alunos)
         options = {4: self.voltar,
-                   1: self.cadastra,
-                   2: self.alterar_carro,
-                   3: self.deletar_carro}
+                   1: self.cadastra}
 
         return options[button]()
 
     def cadastra(self):
         button, values = self.__tela_cadastro.open()
         try:
-            placa = values[0]
-            modelo = values[1]
-            marca = values[2]
-            ano = values[3]
-            km = float(values[4])
-            if km:
-                self.cadastrar_aluno(placa, modelo, marca, ano, km)
+            nome = values[0]
+            cpf = values[1]
+            data_nasc = values[2]
+            email = values[3]
+            matricula = values[4]
+            senha = values[5]
+            mensalidade = float(values[6])
+            venc_mensalidade = int(values[7])
+            conta = None
+
+            if not matricula:
+                raise Exception("Aluno deve possuir uma matrícula única")
+            if not cpf:
+                raise Exception("Aluno deve possuir um CPF")
+            if not nome:
+                raise Exception("Aluno deve possuir um nome")
+
+            if venc_mensalidade:
+                if mensalidade and 0 < mensalidade < 30:
+                    self.cadastrar_aluno(cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade,
+                                         venc_mensalidade)
+                elif mensalidade:
+                    raise Exception("Data de vencimento da mensalidade deve ser entre 1 e 30")
+                else:
+                    raise Exception("Deve ser informado um valor de mensalidade")
+
             else:
                 raise ValueError
         except ValueError:
-            print("Quilometragem atual deve ser informada em números "
-                  " (utilize '.' para números não inteiros)")
-            self.__tela_cadastro.show_message("Erro",
-                                              "Quilometragem atual deve ser informada em números "
-                                              " (utilize '.' para números não inteiros)")
+            self.__tela_cadastro.show_message("Erro", "Mensalidade e vencimento da mensalidade devem ser informados em número "
+                                                      " (utilize '.' para números não inteiros)")
+        except Exception as e:
+            self.__tela_cadastro.show_message("Erro",e)
+
+
         self.abre_aluno()
 
-    def cadastrar_aluno(self, placa, modelo, marca, ano, quilometragem_atual, msg=None):
+    def cadastrar_aluno(self, cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade, venc_mensalidade,
+                        msg=None):
         try:
-            aluno = Aluno(placa, modelo, marca, ano, quilometragem_atual)
-            if self.__alunos_DAO.get(placa):
+            aluno = Aluno(cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade, venc_mensalidade)
+
+            if self.__alunos_DAO.get(matricula):
                 raise AlunoJahExisteException
+
             else:
-                self.__alunos_DAO.add(placa, aluno)
+                self.__alunos_DAO.add(matricula, aluno)
                 if not msg:
                     self.__tela_cadastro.show_message("Sucesso",
-                                                    "Veículo cadastrado com sucesso")
+                                                      "Aluno cadastrado com sucesso")
                 return True
         except Exception:
-            print("---------------ATENÇÃO--------------- \n * Veículo já cadastrado *")
+            print("---------------ATENÇÃO--------------- \n * Aluno já cadastrado *")
             self.__tela_cadastro.show_message("Erro",
-                                              "Já existe um veículo com placa " + placa + " cadastrado")
+                                              "Já existe um aluno com matrícula " + matricula + " cadastrada")
             return False
-
-    def existe_aluno(self, placa):
-        return placa in self.__alunos
-
-    def lista_aluno(self):
-        if len(self.__alunos) > 0:
-            for placa in self.__alunos:
-                return self.__alunos[placa]
-        else:
-            print("Nenhum veículo cadastrado")
-
-    def mostrar_alunos(self):
-        print("MODELO: PLACA: ")
-        for placa in self.__alunos:
-            print("%s: %s:", self.__alunos[placa].modelo, self.__alunos[placa].placa)
 
     @property
     def alunos(self):
         return self.__alunos
-
-    def atualiza_quilometragem(self, placa, km_andado):
-        km_atual = float(self.__alunos_DAO.get(placa).quilometragem_atual)
-        float(km_atual)
-        km_atual += km_andado
-        self.__alunos_DAO.get(placa).quilometragem_atual = km_atual
-
-    def deletar_carro(self):
-        placa = self.__tela_aluno.ask_verification("Digite o valor da placa do carro que será deletado", "Placa")
-        if self.__alunos_DAO.get(placa):
-            self.__alunos_DAO.remove(placa)
-            print("Veículo excluido com sucesso")
-            self.__tela_aluno.show_message("Sucesso",
-                                             "Veículo deletado com sucesso")
-        else:
-            print("Não existe veículo com essa placa cadastrado no sistema")
-            self.__tela_aluno.show_message("Erro",
-                                             "Erro ao deletar veículo")
-        self.abre_aluno()
-
-    def alterar_carro(self):
-        placa_anterior = self.__tela_aluno.ask_verification("Digite o valor da placa do carro que será alterado",
-                                                              "Placa")
-
-        if self.__alunos_DAO.get(placa_anterior):
-            button, new_values = self.__tela_cadastro.open(self.__alunos_DAO.get(placa_anterior))
-            try:
-                placa = new_values[0]
-                modelo = new_values[1]
-                marca = new_values[2]
-                ano = new_values[3]
-                km = float(new_values[4])
-                if km:
-                    msg = "Altera"
-                    self.__alunos_DAO.remove(placa_anterior)
-                    self.cadastrar_aluno(placa, modelo, marca, ano, km, msg)
-                    print("Veículo alterado com sucesso")
-                    self.__tela_cadastro.show_message("Sucesso",
-                                                      "Veículo alterado com sucesso")
-
-                else:
-                    raise ValueError
-            except ValueError:
-                print("Quilometragem atual deve ser informada em números "
-                      " (utilize '.' para números não inteiros)")
-                self.__tela_cadastro.show_message("Erro",
-                                                  "Quilometragem atual deve ser informada em números "
-                                                  " (utilize '.' para números não inteiros)")
-        else:
-            if placa_anterior:
-                self.__tela_aluno.show_message("Erro", "Não existe veículo com placa " + placa_anterior +
-                                                " na garagem")
-        self.abre_aluno()
 
     def voltar(self):
         self.__controlador_principal.abre_tela_inicial()

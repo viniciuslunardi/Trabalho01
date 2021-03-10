@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 from Telas.AbstractTela import AbstractTela
 
 
-class TelaVeiculo(AbstractTela):
+class TelaAluno(AbstractTela):
     def __init__(self, controlador):
         super().__init__(controlador)
         self.__controlador = controlador
@@ -12,14 +12,14 @@ class TelaVeiculo(AbstractTela):
     def init_components(self, veiculos):
         sg.change_look_and_feel("Reddit")
         layout = [
-            [sg.Text('Veículos cadastrados')],
+            [sg.Text('Alunos cadastrados')],
             [sg.Listbox(values=veiculos, size=(100, 10))],
-            [sg.Submit('Cadastrar Veículo', key=1),
-             sg.Submit('Alterar Veículo', key=2),
-             sg.Submit('Excluir Veículo', key=3),
+            [sg.Submit('Cadastrar Aluno', key=1),
+             sg.Submit('Alterar Aluno', key=2),
+             sg.Submit('Excluir Aluno', key=3),
              sg.Button('Voltar', key=4)]
         ]
-        self.__window = sg.Window("Veículos", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(layout)
+        self.__window = sg.Window("Alunos", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(layout)
 
     def open(self, veiculos):
         self.init_components(veiculos)

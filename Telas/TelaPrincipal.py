@@ -13,9 +13,7 @@ class TelaPrincipal(AbstractTela):
         sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Button("Ir para Funcionários", size=(45, 1), key=0)],
-            [sg.Button("Ir para Veículos", size=(45, 1), key=1)],
-            [sg.Button("Ir para Armário", size=(45, 1), key=2)],
-            [sg.Button("Ir para Registros", size=(45, 1), key=3)],
+            [sg.Button("Ir para Alunos", size=(45, 1), key=1)],
             # [sg.Listbox(values=('Listbox 1', "Funcionario"), size=(100, 1), key="lb_itens")]
         ]
         self.__window = sg.Window("Início", default_element_size=(300, 300), font=("Helvetica", 15)).Layout(layout)

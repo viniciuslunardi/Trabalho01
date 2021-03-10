@@ -1,5 +1,5 @@
-from Telas.TelaVeiculo import TelaVeiculo
-from Telas.TelaCadastroVeiculo import TelaCadastroVeiculo
+from Telas.TelaAluno import TelaVeiculo
+from Telas.TelaCadastroAluno import TelaCadastroVeiculo
 from Entidades.Veiculo import Veiculo
 from Entidades.src.VeiculoDAO import VeiculoDAO
 from Exceptions import VeiculoJahExisteException

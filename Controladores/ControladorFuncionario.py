@@ -1,3 +1,4 @@
+# -- coding: utf-8 --
 from Telas.TelaFuncionario import TelaFuncionario
 from Telas.TelaCadastroFuncionario import TelaCadastroFuncionario
 from Entidades.Funcionario import Funcionario
@@ -58,6 +59,7 @@ class ControladorFuncionario:
                     if not msg:
                         self.__tela_cadastro.show_message("Sucesso", "Funcionário cadastrado com sucesso")
                     self.__funcionarios_DAO.add(usuario, funcionario)
+
         except Exception:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
@@ -73,12 +75,12 @@ class ControladorFuncionario:
                     nome = values[2]
                     data_nascimento = values[3]
                     email = values[4]
-                    cargo = values[5]
+                    funcao = values[5]
                     cpf = values[6]
                     conta = values[7]
                     carga_horaria = values[8]
                     salario = values[9]
-                    if senha == "" or nome == "" or data_nascimento == "" or email == "" or usuario == "" or cargo == "" or cpf == "" or conta == "" or carga_horaria == "" or salario == "":
+                    if senha == "" or nome == "" or data_nascimento == "" or email == "" or usuario == "" or funcao == "" or cpf == "" or conta == "" or carga_horaria == "" or salario == "":
                         raise Exception
                     else:
                         self.cadastrar_funcionario(usuario, senha, nome, cpf, data_nascimento, email, conta_bancaria, carga_horaria, salario, Funcao(self.cadastrar_funcao(funcao)))

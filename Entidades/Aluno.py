@@ -2,8 +2,8 @@ from .Usuario import Usuario
 
 
 class Aluno(Usuario.Usuario):
-    def __init__(self, cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade, venc_mensalidade):
-        super().__init__(cpf, data_nasc, email, matricula, nome, senha, conta)
+    def __init__(self, cpf, data_nasc, email, matricula, nome, senha, mensalidade, venc_mensalidade):
+        super().__init__(cpf, data_nasc, email, matricula, nome, senha)
         self.__ativo = True
         self.__mensalidade = mensalidade
         self.__venc_mensalidade = venc_mensalidade

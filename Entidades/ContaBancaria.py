@@ -1,5 +1,5 @@
 
-class Conta:
+class ContaBancaria:
     def __init__(self, agencia, codigo_banco, numero, tipo):
         self.__agencia = agencia
         self.__codigo_banco = codigo_banco

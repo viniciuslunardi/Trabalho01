@@ -14,9 +14,9 @@ class FuncionarioDAO(DAO):
             FuncionarioDAO.__instance = object.__new__(cls)
             return FuncionarioDAO.__instance
 
-    def add(self, matricula, funcionario: Funcionario):
+    def add(self, codigo, funcionario: Funcionario):
         if isinstance(funcionario, Funcionario) and funcionario is not None:
-            super().add(matricula, funcionario)
+            super().add(codigo, funcionario)
 
     def get(self, key):
         return super().get(key)

@@ -23,11 +23,19 @@ class ControladorPrincipal:
     def abre_tela_login(self):
         button, values = self.__tela_login.open()
 
-        usuario = values[0]
+        codigo = values[0]
         senha = values[1]
-        if usuario and senha:
-            if self.__controlador_funcionario.funcionarios_DAO.get(usuario):
-                rec_senha = self.__controlador_funcionario.funcionarios_DAO.get(usuario).senha
+        if codigo and senha:
+            if self.__controlador_funcionario.funcionarios_DAO.get(codigo):
+                rec_senha = self.__controlador_funcionario.funcionarios_DAO.get(codigo).senha
+                if rec_senha == senha:
+                    return self.abre_tela_inicial()
+                else:
+                    self.__tela_login.show_message("Erro",
+                                                   "Senha incorreta")
+
+            elif self.__controlador_aluno.alunos_DAO.get(codigo):
+                rec_senha = self.__controlador_aluno.alunos_DAO.get(codigo).senha
                 if rec_senha == senha:
                     return self.abre_tela_inicial()
                 else:

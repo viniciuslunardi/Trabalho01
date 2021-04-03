@@ -1,13 +1,11 @@
 class Usuario:
-    def __init__(self, cpf, data_nasc, email, matricula, nome, senha, conta):
+    def __init__(self, cpf, data_nasc, email, codigo, nome, senha):
         self.__nome = nome
         self.__email = email
         self.__data_nasc = data_nasc
         self.__senha = senha
         self.__cpf = cpf
-        self.__matricula = matricula
-        self.__conta = None
-
+        self.__codigo = codigo
 
     @property
     def nome(self):
@@ -50,12 +48,12 @@ class Usuario:
         self.__cpf = cpf
 
     @property
-    def matricula(self):
-        return self.__matricula
+    def codigo(self):
+        return self.__codigo
 
-    @matricula.setter
-    def matricula(self, matricula):
-        self.__matricula = matricula
+    @codigo.setter
+    def codigo(self, codigo):
+        self.__codigo = codigo
 
     def __eq__(self, other):
-        return self.matricula == other.matricula
+        return self.codigo == other.codigo

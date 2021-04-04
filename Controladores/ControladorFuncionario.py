@@ -2,6 +2,9 @@
 from Telas.TelaFuncionario import TelaFuncionario
 from Telas.TelaCadastroFuncionario import TelaCadastroFuncionario
 from Entidades.Funcionario import Funcionario
+from Entidades.Gerente import Gerente
+from Entidades.Professor import Professor
+from Entidades.Recepcionista import Recepcionista
 from Entidades.Funcionario import Funcao
 from Controladores.ControladorAluno import ControladorAluno
 from Entidades.src.FuncionarioDAO import FuncionarioDAO
@@ -47,9 +50,19 @@ class ControladorFuncionario:
         if button:
             return options[button]()
 
-    def cadastrar_funcionario(self, codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria, salario):
+    def cadastrar_funcionario(self, codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria, salario,
+                              cargo):
         try:
-            funcionario = Funcionario(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria, salario)
+            if cargo == 'Gerente':
+                funcionario = Gerente(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                                      salario)
+            elif cargo == 'Professor':
+                funcionario = Professor(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                                        salario)
+            else:
+                funcionario = Recepcionista(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                                            salario)
+
             if self.__funcionarios_DAO.get(codigo):
                 raise FuncionarioJahExisteException
             else:
@@ -61,7 +74,6 @@ class ControladorFuncionario:
             print("-----------------ATENÇÃO----------------- \n * Funcionário já cadastrado * ")
 
             self.__tela_cadastro.show_message("Erro", "Funcionário já cadastrado com esse código")
-
 
     def cadastra(self):
         button, values = self.__tela_cadastro.open()
@@ -77,10 +89,12 @@ class ControladorFuncionario:
                 conta_bancaria = values[6]
                 carga_horaria = values[7]
                 salario = values[8]
-                if codigo == "" or senha == "" or nome == "" or cpf == "" or data_nasc == "" or email == "" or conta_bancaria == "" or carga_horaria == "" or salario == "":
+                cargo = values[9]
+                if codigo == "" or senha == "" or nome == "" or cpf == "" or data_nasc == "" or email == "" or conta_bancaria == "" or carga_horaria == "" or salario == "" or cargo == "":
                     raise Exception
                 else:
-                    self.cadastrar_funcionario(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria, salario)
+                    self.cadastrar_funcionario(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria,
+                                               carga_horaria, salario, cargo)
             except Exception:
                 print("Todos os campos devem ser preenchidos!")
                 self.__tela_cadastro.show_message("Erro", "Todos os campos devem ser preenchidos")
@@ -140,7 +154,7 @@ class ControladorFuncionario:
 
     def alterar_funcionario(self):
         usuario_anterior = self.__tela_funcionario.ask_verification("Digite o usuario: ",
-                                                                      "Usuario")
+                                                                    "Usuario")
         if usuario_anterior:
             try:
                 usuario_anterior = int(usuario_anterior)
@@ -163,7 +177,7 @@ class ControladorFuncionario:
                                 msg = "Altera"
                                 self.__funcionarios_DAO.remove(usuario_anterior)
                                 new = Funcionario(usuario, nome, data, telefone,
-                                                           Funcao(self.cadastrar_funcao(new_values[4])))
+                                                  Funcao(self.cadastrar_funcao(new_values[4])))
                                 self.__funcionarios_DAO.add(usuario, new)
                                 print("Funcionário alterado com sucesso")
                                 self.__tela_cadastro.show_message("Sucesso", "Funcionário alterado com sucesso")

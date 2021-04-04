@@ -24,7 +24,7 @@ class ControladorPrincipal:
     def abre_tela_login(self):
         button, values = self.__tela_login.open()
 
-        if button is not 2:
+        if button != 2:
             codigo = values[0]
             senha = values[1]
             if codigo and senha:

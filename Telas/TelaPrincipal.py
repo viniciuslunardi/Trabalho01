@@ -13,7 +13,7 @@ class TelaPrincipal(AbstractTela):
         sg.change_look_and_feel("Reddit")
         #TODO cada usuario deve ter uma tela diferente aqui, de acordo com sua funcao de funcionario ou seu aluno
         #TODO por agora, temos uma tela apenas de funcionário que vai ser vista apenas pelo gerente (vai poder acessar todos os dados do s8istema
-        # TODO temos q adicionar a flag "key" pros botões que ainda não fazem nada
+        #TODO temos q adicionar a flag "key" pros botões que ainda não fazem nada
         layout = [
             [sg.Column(
                 [

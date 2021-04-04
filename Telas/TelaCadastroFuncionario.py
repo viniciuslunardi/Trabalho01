@@ -9,6 +9,7 @@ class TelaCadastroFuncionario(AbstractTela):
         self.__window = None
 
     def init_components(self, funcionario):
+        cargos = ["Gerente", "Professor", "Recepcionista"]
         codigo = ""
         senha = ""
         nome = ""
@@ -41,6 +42,7 @@ class TelaCadastroFuncionario(AbstractTela):
             [sg.Text("Conta bancária", size=(15, 1)), sg.InputText(conta_bancaria)],
             [sg.Text("Carga horaria", size=(15, 1)), sg.InputText(carga_horaria)],
             [sg.Text("Salário", size=(15, 1)), sg.InputText(salario)],
+            [sg.Text("Cargo"), sg.Combo(size=(15, 1), values=cargos)],
             [sg.Button("Salvar", size=(30, 1), key="salvar")]
         ]
 

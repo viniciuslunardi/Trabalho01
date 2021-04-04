@@ -1,4 +1,5 @@
 from enum import Enum
+from abc import ABC
 from .Usuario import Usuario
 
 
@@ -8,7 +9,7 @@ class Funcao(Enum):
     RECEPCIONISTA = 3
 
 
-class Funcionario(Usuario.Usuario):
+class Funcionario(ABC, Usuario.Usuario):
     def __init__(self, codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria, salario):
         super().__init__(cpf, data_nasc, email, codigo, nome, senha)
         self.__conta_bancaria = conta_bancaria

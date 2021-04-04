@@ -11,11 +11,27 @@ class TelaPrincipal(AbstractTela):
 
     def init_components(self):
         sg.change_look_and_feel("Reddit")
+        #TODO cada usuario deve ter uma tela diferente aqui, de acordo com sua funcao de funcionario ou seu aluno
+        #TODO por agora, temos uma tela apenas de funcionário que vai ser vista apenas pelo gerente (vai poder acessar todos os dados do s8istema
+        # TODO temos q adicionar a flag "key" pros botões que ainda não fazem nada
         layout = [
-            [sg.Button("Ir para Funcionários", size=(45, 1), key=0)],
-            [sg.Button("Ir para Alunos", size=(45, 1), key=1)],
+            [sg.Column(
+                [
+                    [sg.Text("GymSystem", size=(10, 1), font=("Helvetica", 35), justification='center')],
+                    [sg.Button("Perfil", size=(33, 1))],
+                    [sg.Button("Cadastrar Aluno", size=(33, 1), key=3),
+                     sg.Button("Cadastrar Funcionário", size=(33, 1), key=2),
+                     sg.Button("Cadastrar Conta", size=(33, 1))],
+                    [sg.Button("Relatório de alunos", size=(33, 1), key=1),
+                     sg.Button("Relatório de funcionários", size=(33, 1), key=0),
+                     sg.Button("Relatório de alunos inadimplentes", size=(33, 1))],
+                    [sg.Button("Contabilidade", size=(33, 1)),
+                     sg.Button("Auditoria", size=(33, 1)),
+                     sg.Button("Relatório de contas", size=(33, 1))],
+                ], element_justification='center')]
+
         ]
-        self.__window = sg.Window("Início", default_element_size=(300, 300), font=("Helvetica", 15)).Layout(layout)
+        self.__window = sg.Window("Início", default_element_size=(300, 300), font=("Helvetica", 15), grab_anywhere=True).Layout(layout)
 
     def mostrar_opcoes(self):
         print('x')

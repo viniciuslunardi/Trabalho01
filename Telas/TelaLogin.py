@@ -14,10 +14,12 @@ class TelaLogin(AbstractTela):
         login = ""
         senha = ""
         layout = [
-            [sg.Text("GymSystem", size=(10, 1), font=("Helvetica", 35), justification='center')],
-            [sg.Text("Login", size=(5, 1)), sg.InputText(login)],
-            [sg.Text("Senha", size=(5, 1)), sg.InputText(senha, password_char='*')],
-            [sg.Button("Entrar", size=(45, 1), key=1)],
+            [sg.Column([
+                [sg.Text("GymSystem", size=(10, 1), font=("Helvetica", 35), justification='center')],
+                [sg.Text("Login", size=(5, 1)), sg.InputText(login)],
+                [sg.Text("Senha", size=(5, 1)), sg.InputText(senha, password_char='*')],
+                [sg.Button("Entrar", size=(25, 1), key=1), sg.Button("Limpar", size=(25, 1), key=2)],
+            ], element_justification='center')]
         ]
         self.__window = sg.Window("Login", default_element_size=(50, 50), font=("Helvetica", 15)).Layout(layout)
 

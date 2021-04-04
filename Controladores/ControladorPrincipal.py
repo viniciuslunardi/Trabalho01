@@ -11,6 +11,7 @@ class ControladorPrincipal:
         self.__tela_login = TelaLogin(self)
         self.__controlador_funcionario = ControladorFuncionario(self)
         self.__controlador_aluno = ControladorAluno(self)
+        self.__user_session = None
 
     def __new__(cls, *args, **kwargs):
         if ControladorPrincipal.__instance is None:
@@ -23,28 +24,31 @@ class ControladorPrincipal:
     def abre_tela_login(self):
         button, values = self.__tela_login.open()
 
-        codigo = values[0]
-        senha = values[1]
-        if codigo and senha:
-            if self.__controlador_funcionario.funcionarios_DAO.get(codigo):
-                rec_senha = self.__controlador_funcionario.funcionarios_DAO.get(codigo).senha
-                if rec_senha == senha:
-                    return self.abre_tela_inicial()
-                else:
-                    self.__tela_login.show_message("Erro",
-                                                   "Senha incorreta")
+        if button is not 2:
+            codigo = values[0]
+            senha = values[1]
+            if codigo and senha:
+                if self.__controlador_funcionario.funcionarios_DAO.get(codigo):
+                    rec_senha = self.__controlador_funcionario.funcionarios_DAO.get(codigo).senha
+                    if rec_senha == senha:
+                        self.__user_session = self.__controlador_funcionario.funcionarios_DAO.get(codigo)
+                        return self.abre_tela_inicial()
+                    else:
+                        self.__tela_login.show_message("Erro",
+                                                       "Senha incorreta")
 
-            elif self.__controlador_aluno.alunos_DAO.get(codigo):
-                rec_senha = self.__controlador_aluno.alunos_DAO.get(codigo).senha
-                if rec_senha == senha:
-                    return self.abre_tela_inicial()
+                elif self.__controlador_aluno.alunos_DAO.get(codigo):
+                    rec_senha = self.__controlador_aluno.alunos_DAO.get(codigo).senha
+                    if rec_senha == senha:
+                        self.__user_session = self.__controlador_aluno.alunos_DAO.get(codigo)
+                        return self.abre_tela_inicial()
+                    else:
+                        self.__tela_login.show_message("Erro",
+                                                       "Senha incorreta")
                 else:
+                    print("Não existe usuario com esse login cadastrado no sistema")
                     self.__tela_login.show_message("Erro",
-                                                   "Senha incorreta")
-            else:
-                print("Não existe usuario com esse login cadastrado no sistema")
-                self.__tela_login.show_message("Erro",
-                                               "Não existe usuario com esse login cadastrado no sistema")
+                                                   "Não existe usuario com esse login cadastrado no sistema")
         return self.abre_tela_login()
 
 
@@ -57,9 +61,15 @@ class ControladorPrincipal:
         return self.__controlador_aluno
 
     def abre_tela_inicial(self):
-        options = {0: self.funcionario, 1: self.aluno}
+        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu}
         button, values = self.__tela_principal.open()
         return options[button]()
+
+    def cadastra_func(self):
+        self.__controlador_funcionario.cadastra()
+
+    def cadastra_alu(self):
+        self.__controlador_aluno.cadastra()
 
     def funcionario(self):
         self.__controlador_funcionario.abre_funcionario()

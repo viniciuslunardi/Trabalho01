@@ -14,9 +14,8 @@ class TelaFuncionario(AbstractTela):
         layout = [
             [sg.Text("Funcionários cadastrados")],
             [sg.Listbox(values=funcionarios, size=(100, 10))],
-            [sg.Submit("Cadastrar", key=1),
-             sg.Submit("Alterar", key=4),
-             sg.Submit("Demitir", key=5),
+            [sg.Submit("Alterar", key=4),
+             sg.Submit("Excluir", key=5),
              sg.Submit("Voltar", key=9)],
         ]
         self.__window = sg.Window("Funcionários", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(

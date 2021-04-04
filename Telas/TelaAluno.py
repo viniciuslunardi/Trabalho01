@@ -14,8 +14,7 @@ class TelaAluno(AbstractTela):
         layout = [
             [sg.Text('Alunos cadastrados')],
             [sg.Listbox(values=alunos, size=(150, 10))],
-            [sg.Submit('Cadastrar Aluno', key=1),
-             sg.Button('Voltar', key=4)]
+            [sg.Button('Voltar', key=4)]
         ]
         self.__window = sg.Window("Alunos", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(layout)
 

@@ -88,7 +88,7 @@ class ControladorAluno:
             self.__tela_cadastro.show_message("Erro",e)
 
 
-        self.abre_aluno()
+        self.voltar()
 
     def cadastrar_aluno(self, cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade, venc_mensalidade,
                         msg=None):

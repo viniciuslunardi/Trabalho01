@@ -42,7 +42,6 @@ class ControladorFuncionario:
 
         button, values = self.__tela_funcionario.open(funcionarios)
         options = {9: self.voltar,
-                   1: self.cadastra,
                    4: self.alterar_funcionario,
                    5: self.deletar_funcionario, }
         if button:
@@ -86,7 +85,7 @@ class ControladorFuncionario:
                 print("Todos os campos devem ser preenchidos!")
                 self.__tela_cadastro.show_message("Erro", "Todos os campos devem ser preenchidos")
 
-        self.abre_funcionario()
+        self.voltar()
 
     def cadastrar_funcao(self, funcao):
         if funcao == "Gerente":

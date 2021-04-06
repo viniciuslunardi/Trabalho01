@@ -112,21 +112,20 @@ class ControladorFuncionario:
         return usuario in self.__funcionarios
 
     def deletar_funcionario(self):
-        usuario = (self.__tela_funcionario.ask_verification("Informe o usuario", "Usuario"))
-        if usuario:
+        codigo_usuario = (self.__tela_funcionario.ask_verification("Informe o codigo do usuario", "Codigo"))
+        if codigo_usuario:
             try:
-                usuario = int(usuario)
-                if self.__funcionarios_DAO.get(usuario):
-                    self.__funcionarios_DAO.remove(usuario)
-                    print("Funcionário demitido com sucesso >:)")
-                    self.__tela_funcionario.show_message("Sucesso", "Funcionário demitido com sucesso")
+                codigo_usuario = codigo_usuario
+                if self.__funcionarios_DAO.get(codigo_usuario):
+                    self.__funcionarios_DAO.remove(codigo_usuario)
+                    print("Funcionário deletado com sucesso >:)")
+                    self.__tela_funcionario.show_message("Sucesso", "Funcionário deletado com sucesso")
                 else:
-                    print("Não existe esse usuário")
-                    self.__tela_funcionario.show_message("Erro", "Não existe funcionário com matrícula "
-                                                         + str(usuario) + " cadastrado")
-            except ValueError:
-                print("Matrícula é um número inteiro")
-                self.__tela_funcionario.show_message("Erro", "Matrícula deve ser um número inteiro")
+                    print("Não existe esse codigo de usuario")
+                    self.__tela_funcionario.show_message("Erro", "Não existe funcionário com esse codigo "
+                                                         + codigo_usuario + " cadastrado")
+            except Exception as e:
+                print("error", e)
 
         self.abre_funcionario()
 
@@ -139,6 +138,7 @@ class ControladorFuncionario:
                 old = self.__funcionarios_DAO.get(codigo_usuario_anterior)
                 if old:
                     print("Informe os novos valores: ")
+                    # todo: bug estranhao q troca os valor tudo
                     button, new_values = self.__tela_cadastro.open(self.__funcionarios_DAO.get(codigo_usuario_anterior))
                     try:
                         codigo = new_values[0]
@@ -174,6 +174,8 @@ class ControladorFuncionario:
                                 self.__tela_cadastro.show_message("Sucesso", "Funcionário alterado com sucesso")
                     except Exception as e:
                         print("error", e)
+                else:
+                    self.__tela_cadastro.show_message("Erro", "Funcionario nao encontrado")
             except Exception as e:
                 print("error", e)
 

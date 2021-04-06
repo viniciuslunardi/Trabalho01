@@ -108,37 +108,8 @@ class ControladorFuncionario:
             self.__tela_cadastro.show_message("Erro", "codigo nao pode ser vazio")
         self.voltar()
 
-    def cadastrar_funcao(self, funcao):
-        if funcao == "Gerente":
-            funcao = 1
-        elif funcao == "Professor":
-            funcao = 2
-        else:
-            funcao = 3
-        return funcao
-
-    def lista_funcionario(self):
-        if len(self.__funcionarios) > 0:
-            for funcionario in self.__funcionarios:
-                funcao = self.__funcionarios[funcionario].funcao
-                if funcao == funcao.RECEPCIONISTA:
-                    funcao = "Recepcionista"
-                elif funcao == funcao.GERENTE:
-                    funcao = "Gerente"
-                else:
-                    funcao = "Professor"
-                print("NOME: ", str(self.__funcionarios[funcionario].nome),
-                      "TELEFONE: ", str(self.__funcionarios[funcionario].telefone),
-                      "FUNÇÃO: ", funcao)
-                print("")
-        else:
-            print("Nenhum funcionário cadastrado")
-
     def existe_funcionario(self, usuario):
         return usuario in self.__funcionarios
-
-    def get_alunos(self):
-        return self.__controlador_principal.controlador_aluno.alunos_DAO
 
     def deletar_funcionario(self):
         usuario = (self.__tela_funcionario.ask_verification("Informe o usuario", "Usuario"))
@@ -160,45 +131,51 @@ class ControladorFuncionario:
         self.abre_funcionario()
 
     def alterar_funcionario(self):
-        usuario_anterior = self.__tela_funcionario.ask_verification("Digite o usuario: ",
-                                                                    "Usuario")
-        if usuario_anterior:
+        codigo_usuario_anterior = self.__tela_funcionario.ask_verification("Digite o codigo do funcionario: ",
+                                                                    "codigo")
+        if codigo_usuario_anterior:
             try:
-                usuario_anterior = int(usuario_anterior)
-                old = self.__funcionarios_DAO.get(usuario_anterior)
+                codigo_usuario_anterior = codigo_usuario_anterior
+                old = self.__funcionarios_DAO.get(codigo_usuario_anterior)
                 if old:
-                    alunos = old.alunos
                     print("Informe os novos valores: ")
-                    button, new_values = self.__tela_cadastro.open(self.__funcionarios_DAO.get(usuario_anterior))
+                    button, new_values = self.__tela_cadastro.open(self.__funcionarios_DAO.get(codigo_usuario_anterior))
                     try:
-                        usuario = int(new_values[0])
-                        if usuario:
-                            if self.__funcionarios_DAO.get(usuario) and usuario != usuario_anterior:
-                                print("Essa matrícula já está sendo utilizada por outro funcionário")
+                        codigo = new_values[0]
+                        if codigo:
+                            if self.__funcionarios_DAO.get(codigo) and codigo != codigo_usuario_anterior:
                                 self.__tela_cadastro.show_message("Erro",
-                                                                  "Essa matrícula já está sendo utilizada por outro funcionário")
+                                                                  "Esse codigo já está sendo utilizada por outro funcionário")
                             else:
                                 nome = new_values[1]
-                                data = new_values[2]
-                                telefone = new_values[3]
-                                msg = "Altera"
-                                self.__funcionarios_DAO.remove(usuario_anterior)
-                                new = Funcionario(usuario, nome, data, telefone,
-                                                  Funcao(self.cadastrar_funcao(new_values[4])))
-                                self.__funcionarios_DAO.add(usuario, new)
-                                print("Funcionário alterado com sucesso")
-                                self.__tela_cadastro.show_message("Sucesso", "Funcionário alterado com sucesso")
+                                senha = new_values[1]
+                                nome = new_values[2]
+                                cpf = new_values[3]
+                                data_nasc = new_values[4]
+                                email = new_values[5]
+                                conta_bancaria = new_values[6]
+                                cargo = new_values[9]
+                                carga_horaria = int(new_values[7])
+                                salario = int(new_values[8])
 
-                        else:
-                            raise ValueError
-                    except ValueError:
-                        print("Usuário deve ser um número inteiro")
-                        self.__tela_cadastro.show_message("Erro", "Usuário deve ser um número inteiro")
-                else:
-                    raise ValueError
-            except ValueError:
-                print("Usuário deve ser um número inteiro")
-                self.__tela_cadastro.show_message("Erro", "Usuário deve ser um número inteiro")
+                                msg = "Altera"
+                                if cargo == 'Gerente':
+                                    new = Gerente(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                                      salario)
+                                elif cargo == 'Professor':
+                                    new = Professor(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                                      salario)
+                                else:
+                                    new = Gerente(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                                      salario)
+                                
+                                self.__funcionarios_DAO.remove(codigo_usuario_anterior)
+                                self.__funcionarios_DAO.add(codigo, new)
+                                self.__tela_cadastro.show_message("Sucesso", "Funcionário alterado com sucesso")
+                    except Exception as e:
+                        print("error", e)
+            except Exception as e:
+                print("error", e)
 
         self.abre_funcionario()
 

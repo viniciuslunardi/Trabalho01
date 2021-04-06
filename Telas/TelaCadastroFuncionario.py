@@ -21,14 +21,14 @@ class TelaCadastroFuncionario(AbstractTela):
         salario = ""
 
         if funcionario:
-            codigo = funcionario.usuario
+            codigo = funcionario.codigo
             senha = funcionario.senha
             cpf = funcionario.cpf
             conta_bancaria = funcionario.conta_bancaria
             carga_horaria = funcionario.carga_horaria
             salario = funcionario.salario
             nome = funcionario.nome
-            data_nascimento = funcionario.data_nascimento
+            data_nascimento = funcionario.data_nasc
             email = funcionario.email
 
         sg.change_look_and_feel("Reddit")

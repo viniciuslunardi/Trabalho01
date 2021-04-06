@@ -5,7 +5,6 @@ from Entidades.Funcionario import Funcionario
 from Entidades.Gerente import Gerente
 from Entidades.Professor import Professor
 from Entidades.Recepcionista import Recepcionista
-from Entidades.Funcionario import Funcao
 from Controladores.ControladorAluno import ControladorAluno
 from Entidades.src.FuncionarioDAO import FuncionarioDAO
 from Exceptions import FuncionarioJahExisteException
@@ -19,7 +18,6 @@ class ControladorFuncionario:
         self.__tela_cadastro = TelaCadastroFuncionario(self)
         self.__funcionarios = {}
         self.__funcionarios_DAO = FuncionarioDAO()
-        self.__funcao = None
         self.__controlador_aluno = ControladorAluno
         self.__controlador_principal = controlador_principal
 
@@ -38,10 +36,10 @@ class ControladorFuncionario:
     def abre_tela_inicial(self):
         funcionarios = []
         for usuario in self.__funcionarios_DAO.get_all():
-            funcionarios.append("Usuário: " + str(usuario.codigo) + '  -  ' +
+            funcionarios.append("Codigo do usuário: " + usuario.codigo + '  -  ' +
                                 "Nome: " + usuario.nome + '  -  ' +
                                 "Data de Nascimento: " + usuario.data_nasc + '  -  ' +
-                                "Telefone: " + usuario.email)
+                                "Email: " + usuario.email)
 
         button, values = self.__tela_funcionario.open(funcionarios)
         options = {9: self.voltar,
@@ -50,18 +48,18 @@ class ControladorFuncionario:
         if button:
             return options[button]()
 
-    def cadastrar_funcionario(self, codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria, salario,
+    def cadastrar_funcionario(self, codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria, salario,
                               cargo):
         try:
             if cargo == 'Gerente':
-                funcionario = Gerente(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                funcionario = Gerente(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                       salario)
                 
             elif cargo == 'Professor':
-                funcionario = Professor(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                funcionario = Professor(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                         salario)
             else:
-                funcionario = Recepcionista(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                funcionario = Recepcionista(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                             salario)
 
             if self.__funcionarios_DAO.get(codigo):
@@ -89,15 +87,15 @@ class ControladorFuncionario:
                 cpf = values[3]
                 data_nasc = values[4]
                 email = values[5]
-                conta_bancaria = values[6]
+                pix = values[6]
                 cargo = values[9]
                 carga_horaria = int(values[7])
                 salario = int(values[8])
 
-                if not senha or not cpf or not nome or not email or not data_nasc or not conta_bancaria or not cargo or not carga_horaria or not salario:
+                if not senha or not cpf or not nome or not email or not data_nasc or not pix or not cargo or not carga_horaria or not salario:
                     raise Exception()
                 else:
-                    self.cadastrar_funcionario(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria,
+                    self.cadastrar_funcionario(codigo, senha, nome, cpf, data_nasc, email, pix,
                                                carga_horaria, salario, cargo)
             except ValueError:
                     self.__tela_cadastro.show_message("Erro", "Salario e carga horaria sao numeros inteiros")
@@ -153,20 +151,20 @@ class ControladorFuncionario:
                                 cpf = new_values[3]
                                 data_nasc = new_values[4]
                                 email = new_values[5]
-                                conta_bancaria = new_values[6]
+                                pix = new_values[6]
                                 cargo = new_values[9]
                                 carga_horaria = int(new_values[7])
                                 salario = int(new_values[8])
 
                                 msg = "Altera"
                                 if cargo == 'Gerente':
-                                    new = Gerente(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                                    new = Gerente(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                       salario)
                                 elif cargo == 'Professor':
-                                    new = Professor(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                                    new = Professor(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                       salario)
                                 else:
-                                    new = Gerente(codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria,
+                                    new = Gerente(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                       salario)
                                 
                                 self.__funcionarios_DAO.remove(codigo_usuario_anterior)

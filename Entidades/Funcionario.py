@@ -3,12 +3,6 @@ from abc import ABC
 from .Usuario import Usuario
 
 
-class Funcao(Enum):
-    GERENTE = 1
-    PROFESSOR = 2
-    RECEPCIONISTA = 3
-
-
 class Funcionario(ABC, Usuario.Usuario):
     def __init__(self, codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria, salario):
         super().__init__(cpf, data_nasc, email, codigo, nome, senha)

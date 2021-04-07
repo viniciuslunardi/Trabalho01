@@ -113,7 +113,6 @@ class ControladorFuncionario:
         codigo_usuario = (self.__tela_funcionario.ask_verification("Informe o codigo do usuario", "Codigo"))
         if codigo_usuario:
             try:
-                codigo_usuario = codigo_usuario
                 if self.__funcionarios_DAO.get(codigo_usuario):
                     self.__funcionarios_DAO.remove(codigo_usuario)
                     print("Funcionário deletado com sucesso >:)")
@@ -132,7 +131,6 @@ class ControladorFuncionario:
                                                                     "codigo")
         if codigo_usuario_anterior:
             try:
-                codigo_usuario_anterior = codigo_usuario_anterior
                 old = self.__funcionarios_DAO.get(codigo_usuario_anterior)
                 if old:
                     print("Informe os novos valores: ")
@@ -164,7 +162,7 @@ class ControladorFuncionario:
                                     new = Professor(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                       salario)
                                 else:
-                                    new = Gerente(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
+                                    new = Recepcionista(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                       salario)
                                 
                                 self.__funcionarios_DAO.remove(codigo_usuario_anterior)

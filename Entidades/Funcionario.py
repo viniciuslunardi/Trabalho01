@@ -4,19 +4,19 @@ from .Usuario import Usuario
 
 
 class Funcionario(ABC, Usuario.Usuario):
-    def __init__(self, codigo, senha, nome, cpf, data_nasc, email, conta_bancaria, carga_horaria, salario):
+    def __init__(self, codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria, salario):
         super().__init__(cpf, data_nasc, email, codigo, nome, senha)
-        self.__conta_bancaria = conta_bancaria
+        self.__pix = pix
         self.__carga_horaria = carga_horaria
         self.__salario = salario
 
     @property
-    def conta_bancaria(self):
-        return self.__conta_bancaria
+    def pix(self):
+        return self.__pix
 
-    @conta_bancaria.setter
-    def conta_bancaria(self, conta_bancaria):
-        self.__conta_bancaria = conta_bancaria
+    @pix.setter
+    def pix(self, pix):
+        self.__pix = pix
 
     @property
     def carga_horaria(self):

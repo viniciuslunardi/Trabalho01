@@ -5,7 +5,7 @@ from .Usuario import Usuario
 
 class Funcionario(ABC, Usuario.Usuario):
     def __init__(self, codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria, salario):
-        super().__init__(cpf, data_nasc, email, codigo, nome, senha)
+        super().__init__(codigo, senha, nome, cpf, data_nasc, email)
         self.__pix = pix
         self.__carga_horaria = carga_horaria
         self.__salario = salario

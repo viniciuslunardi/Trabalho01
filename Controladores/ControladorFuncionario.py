@@ -84,13 +84,13 @@ class ControladorFuncionario:
             try:
                 senha = values[1]
                 nome = values[2]
-                cpf = values[3]
-                data_nasc = values[4]
-                email = values[5]
+                data_nasc = values[3]
+                email = values[4]
+                cpf = values[5]
                 pix = values[6]
-                cargo = values[9]
                 carga_horaria = int(values[7])
                 salario = int(values[8])
+                cargo = values[9]
 
                 if not senha or not cpf or not nome or not email or not data_nasc or not pix or not cargo or not carga_horaria or not salario:
                     raise Exception()
@@ -135,7 +135,7 @@ class ControladorFuncionario:
                 if old:
                     print("Informe os novos valores: ")
                     # todo: bug estranhao q troca os valor tudo
-                    button, new_values = self.__tela_cadastro.open(self.__funcionarios_DAO.get(codigo_usuario_anterior))
+                    button, new_values = self.__tela_cadastro.open(old)
                     try:
                         codigo = new_values[0]
                         if codigo:
@@ -143,16 +143,16 @@ class ControladorFuncionario:
                                 self.__tela_cadastro.show_message("Erro",
                                                                   "Esse codigo já está sendo utilizada por outro funcionário")
                             else:
-                                nome = new_values[1]
+                                
                                 senha = new_values[1]
                                 nome = new_values[2]
-                                cpf = new_values[3]
-                                data_nasc = new_values[4]
-                                email = new_values[5]
+                                data_nasc = new_values[3]
+                                email = new_values[4]
+                                cpf = new_values[5]
                                 pix = new_values[6]
-                                cargo = new_values[9]
                                 carga_horaria = int(new_values[7])
                                 salario = int(new_values[8])
+                                cargo = new_values[9]
 
                                 msg = "Altera"
                                 if cargo == 'Gerente':

@@ -2,6 +2,7 @@ from Telas.TelaPrincipal import TelaPrincipal
 from Telas.TelaLogin import TelaLogin
 from Controladores.ControladorFuncionario import ControladorFuncionario
 from Controladores.ControladorAluno import ControladorAluno
+from Controladores.ControladorConta import ControladorConta
 
 class ControladorPrincipal:
     __instance = None
@@ -11,6 +12,7 @@ class ControladorPrincipal:
         self.__tela_login = TelaLogin(self)
         self.__controlador_funcionario = ControladorFuncionario(self)
         self.__controlador_aluno = ControladorAluno(self)
+        self.__controlador_conta = ControladorConta(self)
         self.__user_session = None
 
     def __new__(cls, *args, **kwargs):
@@ -61,9 +63,12 @@ class ControladorPrincipal:
         return self.__controlador_aluno
 
     def abre_tela_inicial(self):
-        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu}
+        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.cadastra_conta, 888: self.contas}
         button, values = self.__tela_principal.open()
         return options[button]()
+
+    def cadastra_conta(self):
+        self.__controlador_conta.cadastra()
 
     def cadastra_func(self):
         self.__controlador_funcionario.cadastra()
@@ -76,3 +81,7 @@ class ControladorPrincipal:
 
     def aluno(self):
         self.__controlador_aluno.abre_aluno()
+
+    def contas(self):
+        self.__controlador_conta.abre_contas()
+

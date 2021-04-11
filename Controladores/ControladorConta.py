@@ -152,15 +152,16 @@ class ControladorConta:
                 try:
                     identificador = int(identificador)
                     if self.__contas_DAO.get(identificador):
-                        conta = self.__contas[identificador]
+                        conta = self.__contas_DAO.get(identificador)
                         if conta.paga:
                             self.__tela_contas.show_message("Erro", "Essa conta já foi marca como paga.")
                         else:
                             conta.paga = True
                             self.__contas[identificador] = conta
                             self.__contas_DAO.remove(identificador)
-                            self.__contas_DAO.add(identificador, conta)
+                            self.__contas_DAO.add(identificador, self.__contas[identificador])
                             self.__tela_contas.show_message("Sucesso", "Conta paga com sucesso")
+                            self.abre_contas()
                     else:
                         self.__tela_contas.show_message("Erro", "Não existe uma conta com o identificador '" + str(
                             identificador) + "' cadastrada.")

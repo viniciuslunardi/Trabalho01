@@ -17,7 +17,6 @@ class TelaCadastroAluno(AbstractTela):
         email = ""
         nome = ""
         senha = ""
-        mensalidade = ""
         venc_mensalidade = ""
         if alunos:
             cpf = alunos.cpf
@@ -28,7 +27,6 @@ class TelaCadastroAluno(AbstractTela):
             nome = alunos.nome
             senha = alunos.senha
             email = alunos.email
-            mensalidade = alunos.mensalidade
             venc_mensalidade = alunos.venc_mensalidade
         sg.change_look_and_feel("Reddit")
         layout = [
@@ -38,7 +36,6 @@ class TelaCadastroAluno(AbstractTela):
             [sg.Text("Email*", size=(15, 1)), sg.InputText(email)],
             [sg.Text("Código*", size=(15, 1)), sg.InputText(matricula)],
             [sg.Text("Senha*", size=(15, 1)), sg.InputText(senha)],
-            [sg.Text("Mensalidade", size=(15, 1)), sg.InputText(mensalidade)],
             [sg.Text("Venc. mensalidade*", size=(15, 1)), sg.InputText(venc_mensalidade)],
             [sg.Button("Salvar", size=(30, 1), key="salvar",)]
         ]

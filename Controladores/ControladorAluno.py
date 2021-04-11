@@ -4,6 +4,8 @@ from Entidades.Aluno import Aluno
 from Entidades.src.AlunoDAO import AlunoDAO
 from Entidades.Mensalidade import Mensalidade
 from Exceptions import AlunoJahExisteException
+import datetime
+import random
 import re
 
 
@@ -67,8 +69,7 @@ class ControladorAluno:
             "email": values[5],
             "codigo": values[6],
             "senha": values[7],
-            "mensalidade": values[8],
-            "venc_mensalidade": values[9],
+            "venc_mensalidade": values[8],
         }
 
         return options[button](values)
@@ -117,14 +118,6 @@ class ControladorAluno:
         except Exception:
             raise Exception('Dia de vencimento da mensalidade inválido')
 
-    def valida_mensalidade(self, mensalidade):
-        try:
-            if not (0 <= float(mensalidade)):
-                raise Exception
-            return True
-        except Exception:
-            raise Exception('Mensalidade inválida')
-
     def valida_aluno(self, values):
         # try:
         self.valida_cpf_aluno(values['cpf'])
@@ -132,7 +125,6 @@ class ControladorAluno:
         self.valida_data_nasc(values['data_nasc'])
         self.valida_email(values['email'])
         self.valida_venc_mensalidade(values['venc_mensalidade'])
-        self.valida_mensalidade(values['mensalidade'])
 
         if not values['codigo']:
             raise Exception("Aluno deve possuir um código único")
@@ -143,7 +135,7 @@ class ControladorAluno:
 
         if values['venc_mensalidade']:
             self.cadastrar_aluno(values['cpf'], values['data_nasc'], values['email'], values['codigo'], values['nome'],
-                                 values['senha'], values['mensalidade'], values['venc_mensalidade'])
+                                 values['senha'], values['venc_mensalidade'])
 
         else:
             raise ValueError
@@ -167,21 +159,17 @@ class ControladorAluno:
                 raise Exception("Aluno deve possuir um nome")
 
             if values['venc_mensalidade']:
-                mensalidade = int(values['mensalidade'])
 
                 if values["venc_mensalidade"] and 0 < values["venc_mensalidade"] < 30:
                     self.cadastrar_aluno(values)
                 elif mensalidade:
                     raise Exception("Data de vencimento da mensalidade deve ser entre 1 e 30")
-                else:
-                    raise Exception("Deve ser informado um valor de mensalidade")
-
             else:
                 raise ValueError
 
         except ValueError:
             self.__tela_cadastro.show_message("Erro",
-                                              "Mensalidade e vencimento da mensalidade devem ser informados em número "
+                                              "Vencimento da mensalidade deve ser informados em número "
                                               " (utilize '.' para números não inteiros)")
         except Exception as e:
             self.__tela_cadastro.show_message("Erro", e)
@@ -196,10 +184,22 @@ class ControladorAluno:
         except Exception:
             return False
 
-    def cadastrar_aluno(self, cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade,
+    def cadastrar_aluno(self, cpf, data_nasc, email, codigo, nome, senha, venc_mensalidade,
                         msg=None):
         try:
-            aluno = Aluno(cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade)
+            # mensalidades hardcode
+            random_int_dia =  random.randint(1, 30)
+            random_int_mes =  random.randint(1, 12)
+            random_int_ano =  random.randint(2019, 2021)
+            vencimento = datetime.datetime(random_int_ano, random_int_mes,random_int_dia)
+
+            random_pago = random.randint(0,1)
+            random_valor = random.randint(50, 300)
+            mensalidades = []
+            new_mensalidade = Mensalidade("descricao hardcoded", bool(random_pago),random_valor, vencimento)
+            mensalidades.append(new_mensalidade)
+            
+            aluno = Aluno(cpf, data_nasc, email, codigo, nome, senha, mensalidades, venc_mensalidade)
 
             if self.__alunos_DAO.get(codigo):
                 raise AlunoJahExisteException

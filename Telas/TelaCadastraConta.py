@@ -12,20 +12,24 @@ class TelaCadastraConta(AbstractTela):
         paga = ["Não", "Sim"]
         identificador = ""
         nome = ""
-        data_venc = ""
+        dia_venc = ""
+        mes_venc = ""
+        ano_venc = ""
         descricao = ""
         valor = ""
         if contas:
             identificador = contas.identificador
             nome = contas.nome
-            data_venc = contas.data_venc
+            dia_venc = contas.dia_venc.split('/')[0]
+            mes_venc = contas.mes_venc.split('/')[1]
+            ano_venc = contas.ano_venc.split('/')[2]
             descricao = contas.descricao
             valor = contas.valor
         sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Text("Identificador", size=(15, 1)), sg.InputText(identificador)],
             [sg.Text("Nome", size=(15, 1)), sg.InputText(nome)],
-            [sg.Text("Data de vencimento", size=(15, 1)), sg.InputText(data_venc)],
+            [sg.Text("Data de Vencimento", size=(15, 1)), sg.InputText(dia_venc, size=(2, 1)), sg.Text("/", size=(0, 1)),sg.InputText(mes_venc, size=(2, 1)), sg.Text("/", size=(0, 1)), sg.InputText(ano_venc, size=(4, 1))],
             [sg.Text("Valor (R$)", size=(15, 1)), sg.InputText(valor)],
             [sg.Text("Descrição", size=(15, 1)), sg.InputText(descricao)],
             [sg.Text("Paga"), sg.Combo(size=(15, 1), values=paga)],

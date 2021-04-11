@@ -84,10 +84,14 @@ class ControladorConta:
             if identificador:
                 try:
                     nome = values[1]
-                    data_venc = values[2]
-                    valor = values[3]
-                    descricao = values[4]
-                    paga = values[5]
+                    try:
+                        self.valida_data_venc(values[2], values[3], values[4])
+                    except:
+                        return self.voltar()
+                    data_venc = str(values[2] + '/' + values[3] + '/' + values[4])
+                    valor = values[5]
+                    descricao = values[6]
+                    paga = values[7]
                     if identificador == "" or nome == "" or data_venc == "" or valor == "" or descricao == "" or paga == "":
                         raise Exception
                     else:
@@ -157,6 +161,16 @@ class ControladorConta:
         else:
             self.__tela_contas.show_message("Erro", "Você não tem permissão para marcar uma conta como paga.")
         self.abre_contas()
+
+    def valida_data_venc(self, dia, mes, ano):
+        try:
+            if (1 <= int(dia) <= 31) and (1 <= int(mes) <= 12) and (1900 <= int(ano) <= 2021):
+                return True
+            else:
+                raise Exception
+        except Exception as err:
+            self.__tela_contas.show_message("Erro", 'Data de vencimento inválida.')
+            raise Exception('Data de vencimento inválida.')
 
     @property
     def contas(self):

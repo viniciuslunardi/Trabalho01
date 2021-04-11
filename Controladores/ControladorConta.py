@@ -39,11 +39,11 @@ class ControladorConta:
             if conta.paga:
                 text = 'Sim'
             contas.append("Idenfifcador: " + str(conta.identificador) + '  -  ' +
-                                "Nome: " + conta.nome + '  -  ' +
-                                "Data de Vencimento: " + conta.data_venc + '  -  ' +
-                                "Valor (R$): " + str(conta.valor) + '  -  ' +
-                                "Descrição: " + conta.descricao + '  -  ' +
-                                "Paga: " + text)
+                          "Nome: " + conta.nome + '  -  ' +
+                          "Data de Vencimento: " + conta.data_venc + '  -  ' +
+                          "Valor (R$): " + str(conta.valor) + '  -  ' +
+                          "Descrição: " + conta.descricao + '  -  ' +
+                          "Paga: " + text)
 
         button, values = self.__tela_contas.open(contas)
         options = {4: self.voltar, 9: self.deletar_conta, 10: self.pagar_conta}
@@ -76,11 +76,20 @@ class ControladorConta:
             self.__tela_cadastro.show_message("Erro",
                                               "Identificador deve ser um valor numérico inteiro.")
 
-    def cadastra(self):
+    def cadastra(self, pre_val=None):
         user = self.__controlador_principal.user_session
         if isinstance(user, Gerente) or isinstance(user, Recepcionista) and user is not None:
-            button, values = self.__tela_cadastro.open()
+            button, values = self.__tela_cadastro.open(pre_val)
+
             identificador = values[0]
+
+            if button == 'buscar':
+                return self.buscar_conta(identificador)
+            elif button == 'voltar':
+                return self.voltar()
+            elif button == 'excluir':
+                return self.deletar_conta(identificador)
+
             if identificador:
                 try:
                     nome = values[1]
@@ -107,10 +116,13 @@ class ControladorConta:
             self.__tela_contas.show_message("Erro", "Você não tem permissão para adicionar uma conta.")
         self.voltar()
 
-    def deletar_conta(self):
+    def deletar_conta(self, prev_id=None):
         user = self.__controlador_principal.user_session
         if isinstance(user, Gerente) and user is not None:
-            identificador = (self.__tela_contas.ask_verification("Informe o identificador da conta", "Identificador"))
+            if not prev_id:
+                identificador = (self.__tela_contas.ask_verification("Informe o identificador da conta", "Identificador"))
+            else:
+                identificador = prev_id
 
             if identificador:
                 try:
@@ -119,10 +131,11 @@ class ControladorConta:
                         self.__contas_DAO.remove(identificador)
                         self.__tela_contas.show_message("Sucesso", "Conta removida com sucesso")
                     else:
-                        self.__tela_contas.show_message("Erro", "Não existe uma conta com o identificador '" + str(identificador) + "' cadastrada.")
+                        self.__tela_contas.show_message("Erro", "Não existe uma conta com o identificador '" + str(
+                            identificador) + "' cadastrada.")
                 except ValueError:
                     self.__tela_cadastro.show_message("Erro",
-                                                  "Identificador deve ser um valor numérico inteiro.")
+                                                      "Identificador deve ser um valor numérico inteiro.")
             else:
                 self.__tela_cadastro.show_message("Erro",
                                                   "Identificador deve ser informado.")
@@ -155,12 +168,19 @@ class ControladorConta:
                     self.__tela_cadastro.show_message("Erro",
                                                       "Identificador deve ser um valor numérico inteiro.")
             else:
-                self.__tela_cadastro.show_message("Erro",
-                                                  "Identificador deve ser informado.")
+                if identificador == "":
+                    self.__tela_cadastro.show_message("Erro",
+                                                      "Identificador deve ser informado.")
+                else:
+                    self.abre_contas()
+                    return
 
         else:
             self.__tela_contas.show_message("Erro", "Você não tem permissão para marcar uma conta como paga.")
-        self.abre_contas()
+            self.abre_contas()
+            return
+
+        self.pagar_conta()
 
     def valida_data_venc(self, dia, mes, ano):
         try:
@@ -171,6 +191,19 @@ class ControladorConta:
         except Exception as err:
             self.__tela_contas.show_message("Erro", 'Data de vencimento inválida.')
             raise Exception('Data de vencimento inválida.')
+
+    def buscar_conta(self, identificador):
+        try:
+            if identificador and not self.__contas_DAO.get(int(identificador)):
+                self.__tela_cadastro.show_message("Conta não encontrada",
+                                                  "Não foi encontrada uma conta com o identificador informado")
+                self.cadastra()
+            else:
+                return self.cadastra(self.__contas_DAO.get(int(identificador)))
+        except Exception:
+            self.__tela_cadastro.show_message("Conta não encontrada",
+                                              "Não foi encontrada uma conta com o identificador informado")
+            self.cadastra()
 
     @property
     def contas(self):

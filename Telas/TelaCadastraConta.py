@@ -17,23 +17,36 @@ class TelaCadastraConta(AbstractTela):
         ano_venc = ""
         descricao = ""
         valor = ""
+        exclude = False
+        new = True
+        pagou = 'Não'
         if contas:
+            exclude = True
+            new = False
             identificador = contas.identificador
             nome = contas.nome
-            dia_venc = contas.dia_venc.split('/')[0]
-            mes_venc = contas.mes_venc.split('/')[1]
-            ano_venc = contas.ano_venc.split('/')[2]
+            dia_venc = contas.data_venc.split('/')[0]
+            mes_venc = contas.data_venc.split('/')[1]
+            ano_venc = contas.data_venc.split('/')[2]
             descricao = contas.descricao
             valor = contas.valor
+            if contas.paga:
+                pagou = "Sim"
         sg.change_look_and_feel("Reddit")
         layout = [
-            [sg.Text("Identificador", size=(15, 1)), sg.InputText(identificador)],
-            [sg.Text("Nome", size=(15, 1)), sg.InputText(nome)],
-            [sg.Text("Data de Vencimento", size=(15, 1)), sg.InputText(dia_venc, size=(2, 1)), sg.Text("/", size=(0, 1)),sg.InputText(mes_venc, size=(2, 1)), sg.Text("/", size=(0, 1)), sg.InputText(ano_venc, size=(4, 1))],
-            [sg.Text("Valor (R$)", size=(15, 1)), sg.InputText(valor)],
-            [sg.Text("Descrição", size=(15, 1)), sg.InputText(descricao)],
-            [sg.Text("Paga"), sg.Combo(size=(15, 1), values=paga)],
-            [sg.Button("Salvar", size=(30, 1), key="salvar"), sg.Button("Voltar", size=(30, 1), key="voltar")]
+            [sg.Text("Identificador:", size=(15, 1)), sg.InputText(identificador, disabled=exclude),
+             sg.Button("Buscar", size=(6, 1), key="buscar")],
+            [sg.Text("Nome:", size=(15, 1)), sg.InputText(nome, disabled=exclude)],
+            [sg.Text("Data de Venc.:", size=(15, 1)), sg.InputText(dia_venc, size=(2, 1), disabled=exclude),
+             sg.Text("/", size=(0, 1)), sg.InputText(mes_venc, size=(2, 1), disabled=exclude),
+             sg.Text("/", size=(0, 1)), sg.InputText(ano_venc, size=(4, 1), disabled=exclude)],
+            [sg.Text("Valor (R$):", size=(15, 1)), sg.InputText(valor, disabled=exclude)],
+            [sg.Text("Descrição:", size=(15, 1)), sg.InputText(descricao, disabled=exclude)],
+            [sg.Text("Paga:", visible=new), sg.Combo(size=(15, 1), values=paga, visible=new), sg.Text("Paga:"),
+             sg.Text(pagou, size=(15, 1), visible=exclude)],
+            [sg.Button("Salvar", size=(15, 1), key="salvar", button_color='green', visible=new),
+             sg.Button("Voltar", size=(15, 1), key="voltar"),
+             sg.Button("Excluir", size=(15, 1), key="excluir", visible=exclude, button_color="red")]
         ]
 
         self.__window = sg.Window("Cadastro de Conta", default_element_size=(50, 0), font=("Helvetica", 15)).Layout(

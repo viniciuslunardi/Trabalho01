@@ -84,4 +84,4 @@ class ControladorPrincipal:
         self.__controlador_aluno.abre_aluno()
 
     def open_alunos_inadimplentes(self):
-        self.__controlador_gerente.listar_alunos_inadimplentes()
+        self.__controlador_gerente.abre_tela()

@@ -2,6 +2,7 @@ from Telas.TelaAluno import TelaAluno
 from Telas.TelaCadastroAluno import TelaCadastroAluno
 from Entidades.Aluno import Aluno
 from Entidades.src.AlunoDAO import AlunoDAO
+from Entidades.Mensalidade import Mensalidade
 from Exceptions import AlunoJahExisteException
 import re
 
@@ -47,7 +48,7 @@ class ControladorAluno:
         # button, values = self.__tela_aluno.open(alunos)
         # options = {4: self.voltar,
         #            1: self.cadastra,
-        #            22: self.teste}
+        #            5: self.add_mensalidade}
         #
         # return options[button]()
         return False
@@ -214,6 +215,14 @@ class ControladorAluno:
             self.__tela_cadastro.show_message("Erro",
                                               "Já existe um aluno com codigo " + codigo + " cadastrada")
             return False
+
+    # def add_mensalidade(self, descricao, pago, valor, vencimento):
+        # cpf = self.__tela_funcionario.ask_verification("Digite o cpf do aluno: ",
+        #                                                             "cpf")
+        # aluno = self.__alunos_DAO.get(cpf)
+        # new_mensalidade = Mensalidade(descricao, pago, valor, vencimento)
+        # aluno.mensalidades.append(new_mensalidade)
+
 
     @property
     def alunos(self):

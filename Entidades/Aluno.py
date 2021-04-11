@@ -5,7 +5,7 @@ class Aluno(Usuario.Usuario):
     def __init__(self, cpf, data_nasc, email, codigo, nome, senha, mensalidades, venc_mensalidade):
         super().__init__(cpf, data_nasc, email, codigo, nome, senha)
         self.__ativo = True
-        self.mensalidades = mensalidades
+        self.__mensalidades = mensalidades
         self.__venc_mensalidade = int(venc_mensalidade)
 
     @property
@@ -20,7 +20,7 @@ class Aluno(Usuario.Usuario):
     def mensalidades(self):
         return self.__mensalidades
 
-    @mensalidade.setter
+    @mensalidades.setter
     def mensalidades(self, mensalidades):
         self.__mensalidades = mensalidades
 

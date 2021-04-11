@@ -3,6 +3,7 @@ from Telas.TelaLogin import TelaLogin
 from Controladores.ControladorFuncionario import ControladorFuncionario
 from Controladores.ControladorAluno import ControladorAluno
 
+
 class ControladorPrincipal:
     __instance = None
 
@@ -50,7 +51,6 @@ class ControladorPrincipal:
                     self.__tela_login.show_message("Erro",
                                                    "Não existe usuario com esse login cadastrado no sistema")
         return self.abre_tela_login()
-
 
     @property
     def controlador_funcionario(self):

@@ -1,7 +1,7 @@
 class Mensalidade():
     def __init__(self, descricao, pago, valor, vencimento):
         self.__descricao = descricao
-        self.__pago = False
+        self.__pago = pago
         self.__valor = valor
         self.__vencimento = vencimento
 

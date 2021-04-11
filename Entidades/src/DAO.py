@@ -46,7 +46,7 @@ class DAO(ABC):
             alunos = self.__object_cache.values()
             for aluno in alunos:
                 if aluno.cpf == key:
-                    return True
+                    return aluno
         except KeyError:
             pass
 

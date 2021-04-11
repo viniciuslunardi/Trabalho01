@@ -20,6 +20,10 @@ class ControladorPrincipal:
             ControladorPrincipal.__instance = object.__new__(cls)
             return ControladorPrincipal.__instance
 
+    @property
+    def user_session(self):
+        return self.__user_session
+
     def inicia(self):
         self.abre_tela_login()
 

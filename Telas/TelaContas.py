@@ -14,7 +14,7 @@ class TelaContas(AbstractTela):
         layout = [
             [sg.Text('Contas cadastradas')],
             [sg.Listbox(values=contas, size=(150, 10))],
-            [sg.Button('Voltar', key=4), sg.Button('Excluir conta', key=9)]
+            [sg.Button('Voltar', key=4), sg.Button('Marcar conta como paga', key=10), sg.Button('Excluir conta', key=9)]
         ]
         self.__window = sg.Window("Contas", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(layout)
 

@@ -69,7 +69,7 @@ class ControladorPrincipal:
         self.__controlador_funcionario.cadastra()
 
     def cadastra_alu(self):
-        self.__controlador_aluno.cadastra()
+        self.__controlador_aluno.abre_tela_cadastro_aluno()
 
     def funcionario(self):
         self.__controlador_funcionario.abre_funcionario()

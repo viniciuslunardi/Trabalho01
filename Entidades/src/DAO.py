@@ -41,6 +41,15 @@ class DAO(ABC):
         except KeyError:
             pass
 
+    def getByCpf(self, key):
+        try:
+            alunos = self.__object_cache.values()
+            for aluno in alunos:
+                if aluno.cpf == key:
+                    return True
+        except KeyError:
+            pass
+
     def get_all(self):
         return self.__object_cache.values()
 

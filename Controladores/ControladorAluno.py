@@ -3,6 +3,7 @@ from Telas.TelaCadastroAluno import TelaCadastroAluno
 from Entidades.Aluno import Aluno
 from Entidades.src.AlunoDAO import AlunoDAO
 from Exceptions import AlunoJahExisteException
+import re
 
 
 class ControladorAluno:
@@ -35,45 +36,140 @@ class ControladorAluno:
         return self.__alunos_DAO.get_all()
 
     def abre_tela_inicial(self):
-        alunos = []
-        for matricula in self.__alunos_DAO.get_all():
-            alunos.append("CPF: " + str(matricula.data_nasc) + '  -  ' +
-                          "Email: " + str(matricula.email) + '  -  ' +
-                          "Nome: " + str(matricula.nome) + '  -  ' +
-                          "Mensalidade: " + str(matricula.mensalidade) + '  -  ' +
-                          "Vencimento da mensalidade: " + str(matricula.venc_mensalidade))
+        # alunos = []
+        # for codigo in self.__alunos_DAO.get_all():
+        #     alunos.append("CPF: " + str(codigo.data_nasc) + '  -  ' +
+        #                   "Email: " + str(codigo.email) + '  -  ' +
+        #                   "Nome: " + str(codigo.nome) + '  -  ' +
+        #                   "Mensalidade: " + str(codigo.mensalidade) + '  -  ' +
+        #                   "Vencimento da mensalidade: " + str(codigo.venc_mensalidade))
+        #
+        # button, values = self.__tela_aluno.open(alunos)
+        # options = {4: self.voltar,
+        #            1: self.cadastra,
+        #            22: self.teste}
+        #
+        # return options[button]()
+        return False
 
-        button, values = self.__tela_aluno.open(alunos)
-        options = {4: self.voltar,
-                   1: self.cadastra}
-
-        return options[button]()
-
-    def cadastra(self):
+    def abre_tela_cadastro_aluno(self):
         button, values = self.__tela_cadastro.open()
-        try:
-            nome = values[0]
-            cpf = values[1]
-            data_nasc = values[2]
-            email = values[3]
-            matricula = values[4]
-            senha = values[5]
-            mensalidade = float(values[6])
-            venc_mensalidade = int(values[7])
-            conta = None
 
-            if not matricula:
-                raise Exception("Aluno deve possuir uma matrícula única")
-            if not cpf:
+        options = {4: self.voltar,
+                   'salvar': self.pre_cadastro_aluno,
+                   'buscar': self.busca_aluno}
+
+        values = {
+            "cpf": values[0],
+            "nome": values[1],
+            "data_nasc": values[2] + '/' + values[3] + '/' + values[4],
+            "email": values[5],
+            "codigo": values[6],
+            "senha": values[7],
+            "mensalidade": values[8],
+            "venc_mensalidade": values[9],
+        }
+
+        return options[button](values)
+
+    def valida_cpf_aluno(self, cpf):
+        try:
+            if len(cpf) != 11 or not cpf.isdigit():
+                raise Exception('CPF inválido')
+            aluno_cpf_utilizado = self.__alunos_DAO.get(cpf)
+            if aluno_cpf_utilizado:
+                raise Exception('Já existe um aluno com este CPF cadastrado no sistema')
+        except Exception as err:
+            raise Exception(err or 'CPF inválido')
+
+    def valida_codigo_aluno(self, codigo):
+        try:
+            aluno_codigo_utilizado = self.__alunos_DAO.get(codigo)
+            if aluno_codigo_utilizado:
+                raise Exception('Código já utilizado por outro usuário')
+        except Exception as err:
+            raise Exception(err or 'Código inválido')
+
+    def valida_data_nasc(self, data_nasc):
+        try:
+            [dia, mes, ano] = data_nasc.split('/')
+            if (1 <= int(dia) <= 31) and (1 <= int(mes) <= 12) and (1900 <= int(ano) < 2021):
+                return True
+            else:
+                raise Exception
+        except Exception as err:
+            raise Exception('Código inválido')
+
+    def valida_email(self, email):
+        try:
+            if not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", email):
+                raise Exception('Email inválido')
+            return True
+        except Exception as err:
+            raise Exception(err or 'Email inválido')
+
+    def valida_venc_mensalidade(self, venc_mensalidade):
+        try:
+            if not (0 < int(venc_mensalidade) < 31):
+                raise Exception
+            return True
+        except Exception:
+            raise Exception('Dia de vencimento da mensalidade inválido')
+
+    def valida_mensalidade(self, mensalidade):
+        try:
+            if not (0 <= float(mensalidade)):
+                raise Exception
+            return True
+        except Exception:
+            raise Exception('Mensalidade inválida')
+
+    def valida_aluno(self, values):
+        # try:
+        self.valida_cpf_aluno(values['cpf'])
+        self.valida_codigo_aluno(values['codigo'])
+        self.valida_data_nasc(values['data_nasc'])
+        self.valida_email(values['email'])
+        self.valida_venc_mensalidade(values['venc_mensalidade'])
+        self.valida_mensalidade(values['mensalidade'])
+
+        if not values['codigo']:
+            raise Exception("Aluno deve possuir um código único")
+        if not values['cpf']:
+            raise Exception("Aluno deve possuir um CPF")
+        if not values['nome']:
+            raise Exception("Aluno deve possuir um nome")
+
+        if values['venc_mensalidade']:
+            self.cadastrar_aluno(values['cpf'], values['data_nasc'], values['email'], values['codigo'], values['nome'],
+                                 values['senha'], values['mensalidade'], values['venc_mensalidade'])
+
+        else:
+            raise ValueError
+
+    # except ValueError:
+    #     self.__tela_cadastro.show_message("Erro",
+    #                                       "Mensalidade e vencimento da mensalidade devem ser informados em número "
+    #                                       " (utilize '.' para números não inteiros)")
+    # except Exception as e:
+    #     self.__tela_cadastro.show_message("Erro", e)
+
+    def pre_cadastro_aluno(self, values):
+        try:
+            self.valida_aluno(values)
+
+            if not values['codigo']:
+                raise Exception("Aluno deve possuir um código único")
+            if not values['cpf']:
                 raise Exception("Aluno deve possuir um CPF")
-            if not nome:
+            if not values['nome']:
                 raise Exception("Aluno deve possuir um nome")
 
-            if venc_mensalidade:
-                mensalidade = int(mensalidade)
-                if venc_mensalidade and 0 < venc_mensalidade < 30:
-                    self.cadastrar_aluno(cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade,
-                                         venc_mensalidade)
+            if values['venc_mensalidade']:
+                mensalidade = int(values['mensalidade'])
+
+                if values["venc_mensalidade"] and 0 < values["venc_mensalidade"] < 30:
+                    self.cadastrar_aluno(values)
                 elif mensalidade:
                     raise Exception("Data de vencimento da mensalidade deve ser entre 1 e 30")
                 else:
@@ -81,25 +177,34 @@ class ControladorAluno:
 
             else:
                 raise ValueError
+
         except ValueError:
-            self.__tela_cadastro.show_message("Erro", "Mensalidade e vencimento da mensalidade devem ser informados em número "
-                                                      " (utilize '.' para números não inteiros)")
+            self.__tela_cadastro.show_message("Erro",
+                                              "Mensalidade e vencimento da mensalidade devem ser informados em número "
+                                              " (utilize '.' para números não inteiros)")
         except Exception as e:
-            self.__tela_cadastro.show_message("Erro",e)
+            self.__tela_cadastro.show_message("Erro", e)
 
+    def busca_aluno(self, values):
+        try:
+            cpf = values['cpf']
+            if not self.__alunos_DAO.getByCpf(cpf):
+                self.__tela_cadastro.show_message("Aluno não encontrado",
+                                                  "Não foi encontrado um aluno com o CPF informado")
+            return True
+        except Exception:
+            return False
 
-        self.voltar()
-
-    def cadastrar_aluno(self, cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade, venc_mensalidade,
+    def cadastrar_aluno(self, cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade,
                         msg=None):
         try:
-            aluno = Aluno(cpf, data_nasc, email, matricula, nome, senha, conta, mensalidade, venc_mensalidade)
+            aluno = Aluno(cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade)
 
-            if self.__alunos_DAO.get(matricula):
+            if self.__alunos_DAO.get(codigo):
                 raise AlunoJahExisteException
 
             else:
-                self.__alunos_DAO.add(matricula, aluno)
+                self.__alunos_DAO.add(codigo, aluno)
                 if not msg:
                     self.__tela_cadastro.show_message("Sucesso",
                                                       "Aluno cadastrado com sucesso")
@@ -107,7 +212,7 @@ class ControladorAluno:
         except Exception:
             print("---------------ATENÇÃO--------------- \n * Aluno já cadastrado *")
             self.__tela_cadastro.show_message("Erro",
-                                              "Já existe um aluno com matrícula " + matricula + " cadastrada")
+                                              "Já existe um aluno com codigo " + codigo + " cadastrada")
             return False
 
     @property

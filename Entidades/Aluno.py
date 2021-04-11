@@ -1,12 +1,15 @@
 from .Usuario import Usuario
-
+from .Mensalidade import Mensalidade
 
 class Aluno(Usuario.Usuario):
-    def __init__(self, cpf, data_nasc, email, matricula, nome, senha, mensalidade, venc_mensalidade):
-        super().__init__(cpf, data_nasc, email, matricula, nome, senha)
+    def __init__(self, cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade):
+        super().__init__(cpf, data_nasc, email, codigo, nome, senha)
         self.__ativo = True
-        self.__mensalidade = mensalidade
-        self.__venc_mensalidade = venc_mensalidade
+        if mensalidade:
+            self.__mensalidade = int(mensalidade)
+        else:
+            self.__mensalidade = 0
+        self.__venc_mensalidade = int(venc_mensalidade)
 
     @property
     def ativo(self):
@@ -33,4 +36,4 @@ class Aluno(Usuario.Usuario):
         self.__venc_mensalidade = venc_mensalidade
 
     def __eq__(self, other):
-        return self.__matricula == other.__matricula
+        return self.__codigo == other.__codigo

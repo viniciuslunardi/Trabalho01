@@ -21,5 +21,8 @@ class AlunoDAO(DAO):
     def get(self, key):
         return super().get(key)
 
+    def getByCpf(self, key):
+        return super().getByCpf(key)
+
     def remove(self, key):
         return super().remove(key)

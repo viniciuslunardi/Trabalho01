@@ -58,6 +58,7 @@ class ControladorConta:
             except ValueError:
                 self.__tela_cadastro.show_message("Erro",
                                                   "Valor da conta deve ser numérico. (Utilize '.' para números não inteiros")
+                self.cadastra()
             try:
                 if self.__contas_DAO.get(identificador):
                     raise ContaJahExisteException
@@ -96,7 +97,7 @@ class ControladorConta:
                     try:
                         self.valida_data_venc(values[2], values[3], values[4])
                     except:
-                        return self.voltar()
+                        return self.cadastra()
                     data_venc = str(values[2] + '/' + values[3] + '/' + values[4])
                     valor = values[5]
                     descricao = values[6]
@@ -114,7 +115,7 @@ class ControladorConta:
                     self.__tela_cadastro.show_message("Erro", "Todos os campos devem ser preenchidos")
         else:
             self.__tela_contas.show_message("Erro", "Você não tem permissão para adicionar uma conta.")
-        self.voltar()
+        self.cadastra()
 
     def deletar_conta(self, prev_id=None):
         user = self.__controlador_principal.user_session

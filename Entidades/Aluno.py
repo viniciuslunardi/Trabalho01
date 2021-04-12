@@ -34,10 +34,10 @@ class Aluno(Usuario.Usuario):
 
     def tem_mensalidade_atrasada(self):
         for mensalidade in self.mensalidades:
-            if mensalidade.verifica_atraso:
-                return true
+            if mensalidade.verifica_atraso():
+                return True
             else:
-                return false
+                return False
 
     def __eq__(self, other):
         return self.__codigo == other.__codigo

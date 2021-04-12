@@ -1,5 +1,6 @@
 from Telas.TelaAluno import TelaAluno
 from Telas.TelaCadastroAluno import TelaCadastroAluno
+from Telas.TelaAlunosInadimplentes import TelaAlunosInadimplentes
 from Entidades.Aluno import Aluno
 from Entidades.src.AlunoDAO import AlunoDAO
 from Entidades.Mensalidade import Mensalidade
@@ -15,6 +16,7 @@ class ControladorAluno:
     def __init__(self, controlador_principal):
         self.__tela_aluno = TelaAluno(self)
         self.__tela_cadastro = TelaCadastroAluno(self)
+        self.__tela_alunos_inadimpletes = TelaAlunosInadimplentes(self)
         self.__alunos = {}
         self.__alunos_DAO = AlunoDAO()
         self.__controlador_principal = controlador_principal
@@ -223,6 +225,19 @@ class ControladorAluno:
         # new_mensalidade = Mensalidade(descricao, pago, valor, vencimento)
         # aluno.mensalidades.append(new_mensalidade)
 
+    def listar_alunos_inadimplentes(self):
+        todos_os_alunos = self.__alunos_DAO.get_all()
+        alunos_inadimplentes = []
+        for aluno in todos_os_alunos:
+            if aluno.tem_mensalidade_atrasada():
+                alunos_inadimplentes.append("Nome: " + str(aluno.senha) + '  -  ' +
+                          "Email: " + str(aluno.nome) + '  -  ' +
+                          "cpf: " + str(aluno.codigo))
+
+        button, values = self.__tela_alunos_inadimpletes.open(alunos_inadimplentes)
+        options = {4: self.voltar} 
+
+        return options[button]()
 
     @property
     def alunos(self):

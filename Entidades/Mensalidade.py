@@ -1,4 +1,4 @@
-from datetime import date
+import datetime
 
 class Mensalidade():
     def __init__(self, descricao, pago, valor, vencimento):
@@ -48,9 +48,10 @@ class Mensalidade():
         self.vencimento = vencimento
 
     def verifica_atraso(self):
-        if self.__pago == false:
-            data_atual = date.today()
-            if __vencimento < data_atual and data_atual - __vencimento > 30:
+        if self.__pago == False:
+            data_atual = datetime.datetime.today()
+            diferenca = data_atual - self.__vencimento
+            if diferenca.days > 30:
                 return True
             else:
                 return False

@@ -2,7 +2,6 @@ from Telas.TelaPrincipal import TelaPrincipal
 from Telas.TelaLogin import TelaLogin
 from Controladores.ControladorFuncionario import ControladorFuncionario
 from Controladores.ControladorAluno import ControladorAluno
-from Controladores.ContraladorGerente import ControladorGerente
 
 class ControladorPrincipal:
     __instance = None
@@ -12,7 +11,6 @@ class ControladorPrincipal:
         self.__tela_login = TelaLogin(self)
         self.__controlador_funcionario = ControladorFuncionario(self)
         self.__controlador_aluno = ControladorAluno(self)
-        self.__controlador_gerente = ControladorGerente(self)
         self.__user_session = None
 
     def __new__(cls, *args, **kwargs):
@@ -84,4 +82,4 @@ class ControladorPrincipal:
         self.__controlador_aluno.abre_aluno()
 
     def open_alunos_inadimplentes(self):
-        self.__controlador_gerente.abre_tela()
+        self.__controlador_aluno.listar_alunos_inadimplentes()

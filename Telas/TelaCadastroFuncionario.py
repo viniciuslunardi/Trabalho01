@@ -33,16 +33,16 @@ class TelaCadastroFuncionario(AbstractTela):
 
         sg.change_look_and_feel("Reddit")
         layout = [
-            [sg.Text("Código", size=(15, 1)), sg.InputText(codigo)],
-            [sg.Text("Senha", size=(15, 1)), sg.InputText(senha)],
-            [sg.Text("Nome", size=(15, 1)), sg.InputText(nome)],
-            [sg.Text("Data de Nascimento", size=(15, 1)), sg.InputText(data_nascimento)],
-            [sg.Text("Email", size=(15, 1)), sg.InputText(email)],
-            [sg.Text("CPF", size=(15, 1)), sg.InputText(cpf)],
-            [sg.Text("Pix", size=(15, 1)), sg.InputText(pix)],
-            [sg.Text("Carga horaria", size=(15, 1)), sg.InputText(carga_horaria)],
-            [sg.Text("Salário", size=(15, 1)), sg.InputText(salario)],
-            [sg.Text("Cargo"), sg.Combo(size=(15, 1), values=cargos)],
+            [sg.Text("Código*", size=(15, 1)), sg.InputText(codigo)],
+            [sg.Text("Senha*", size=(15, 1)), sg.InputText(senha)],
+            [sg.Text("Nome*", size=(15, 1)), sg.InputText(nome)],
+            [sg.Text("Data de Nascimento*", size=(15, 1)), sg.InputText(data_nascimento)],
+            [sg.Text("Email*", size=(15, 1)), sg.InputText(email)],
+            [sg.Text("CPF*", size=(15, 1)), sg.InputText(cpf)],
+            [sg.Text("Pix*", size=(15, 1)), sg.InputText(pix)],
+            [sg.Text("Carga horaria*", size=(15, 1)), sg.InputText(carga_horaria)],
+            [sg.Text("Salário*", size=(15, 1)), sg.InputText(salario)],
+            [sg.Text("Cargo*"), sg.Combo(size=(15, 1), values=cargos)],
             [sg.Button("Salvar", size=(30, 1), key="salvar")]
         ]
 

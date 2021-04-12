@@ -41,21 +41,20 @@ class ControladorAluno:
         return self.__alunos_DAO.get_all()
 
     def abre_tela_inicial(self):
-        # alunos = []
-        # for codigo in self.__alunos_DAO.get_all():
-        #     alunos.append("CPF: " + str(codigo.data_nasc) + '  -  ' +
-        #                   "Email: " + str(codigo.email) + '  -  ' +
-        #                   "Nome: " + str(codigo.nome) + '  -  ' +
-        #                   "Mensalidade: " + str(codigo.mensalidade) + '  -  ' +
-        #                   "Vencimento da mensalidade: " + str(codigo.venc_mensalidade))
-        #
-        # button, values = self.__tela_aluno.open(alunos)
+        alunos = []
+        for codigo in self.__alunos_DAO.get_all():
+            alunos.append("CPF: " + str(codigo.cpf) + '  -  ' +
+                          "Email: " + str(codigo.email) + '  -  ' +
+                          "Nome: " + str(codigo.nome) + '  -  ' +
+                          "Vencimento da mensalidade: Todo dia " + str(codigo.venc_mensalidade))
+        
+        button, values = self.__tela_aluno.open(alunos)
+        options = {4: self.voltar}
         # options = {4: self.voltar,
         #            1: self.cadastra,
         #            5: self.add_mensalidade}
         #
-        # return options[button]()
-        return False
+        return options[button]()
 
     def abre_tela_cadastro_aluno(self):
         button, values = self.__tela_cadastro.open()
@@ -102,7 +101,7 @@ class ControladorAluno:
             else:
                 raise Exception
         except Exception as err:
-            raise Exception('Código inválido')
+            raise Exception('Nasc inválido')
 
     def valida_email(self, email):
         try:
@@ -141,6 +140,7 @@ class ControladorAluno:
 
         else:
             raise ValueError
+        self.voltar()
 
     # except ValueError:
     #     self.__tela_cadastro.show_message("Erro",
@@ -161,10 +161,7 @@ class ControladorAluno:
                 raise Exception("Aluno deve possuir um nome")
 
             if values['venc_mensalidade']:
-
-                if values["venc_mensalidade"] and 0 < values["venc_mensalidade"] < 30:
-                    self.cadastrar_aluno(values)
-                elif mensalidade:
+                if int(values["venc_mensalidade"]) > 30 or int(values["venc_mensalidade"]) < 1:
                     raise Exception("Data de vencimento da mensalidade deve ser entre 1 e 30")
             else:
                 raise ValueError
@@ -174,7 +171,7 @@ class ControladorAluno:
                                               "Vencimento da mensalidade deve ser informados em número "
                                               " (utilize '.' para números não inteiros)")
         except Exception as e:
-            self.__tela_cadastro.show_message("Erro", e)
+            print(e)
 
     def busca_aluno(self, values):
         try:
@@ -201,7 +198,7 @@ class ControladorAluno:
             new_mensalidade = Mensalidade("descricao hardcoded", bool(random_pago),random_valor, vencimento)
             mensalidades.append(new_mensalidade)
             
-            aluno = Aluno(cpf, data_nasc, email, codigo, nome, senha, mensalidades, venc_mensalidade)
+            aluno = Aluno(codigo, senha, nome, cpf, data_nasc, email, mensalidades, venc_mensalidade)
 
             if self.__alunos_DAO.get(codigo):
                 raise AlunoJahExisteException
@@ -230,9 +227,9 @@ class ControladorAluno:
         alunos_inadimplentes = []
         for aluno in todos_os_alunos:
             if aluno.tem_mensalidade_atrasada():
-                alunos_inadimplentes.append("Nome: " + str(aluno.senha) + '  -  ' +
-                          "Email: " + str(aluno.nome) + '  -  ' +
-                          "cpf: " + str(aluno.codigo))
+                alunos_inadimplentes.append("Nome: " + str(aluno.nome) + '  -  ' +
+                          "Email: " + str(aluno.email) + '  -  ' +
+                          "cpf: " + str(aluno.cpf))
 
         button, values = self.__tela_alunos_inadimpletes.open(alunos_inadimplentes)
         options = {4: self.voltar} 

@@ -138,7 +138,7 @@ class ControladorAluno:
         self.valida_email(values['email'])
         if values['venc_mensalidade']:
             self.valida_venc_mensalidade(values['venc_mensalidade'])
-        if values['venc_mensalidade']:
+        if values['mensalidade']:
             self.valida_mensalidade(values['mensalidade'])
 
         if not values['codigo']:

@@ -83,7 +83,7 @@ class ControladorAluno:
         try:
             if len(cpf) != 11 or not cpf.isdigit():
                 raise Exception('CPF inválido')
-            aluno_cpf_utilizado = self.__alunos_DAO.get(cpf)
+            aluno_cpf_utilizado = self.__alunos_DAO.getByCpf(cpf)
             if aluno_cpf_utilizado:
                 raise Exception('Já existe um aluno com este CPF cadastrado no sistema')
         except Exception as err:

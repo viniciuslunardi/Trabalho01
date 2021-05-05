@@ -60,8 +60,12 @@ class ControladorPrincipal:
     def controlador_aluno(self):
         return self.__controlador_aluno
 
+    @property
+    def controlador_gerente(self):
+        return self.__controlador_gerente
+
     def abre_tela_inicial(self):
-        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu}
+        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.open_alunos_inadimplentes}
         button, values = self.__tela_principal.open()
         return options[button]()
 
@@ -76,3 +80,6 @@ class ControladorPrincipal:
 
     def aluno(self):
         self.__controlador_aluno.abre_aluno()
+
+    def open_alunos_inadimplentes(self):
+        self.__controlador_aluno.listar_alunos_inadimplentes()

@@ -1,3 +1,5 @@
+import datetime
+
 class Mensalidade():
     def __init__(self, descricao, pago, valor, vencimento):
         self.__descricao = descricao
@@ -44,6 +46,17 @@ class Mensalidade():
     @vencimento.setter
     def vencimento(self, vencimento):
         self.vencimento = vencimento
+
+    def verifica_atraso(self):
+        if self.__pago == False:
+            data_atual = datetime.datetime.today()
+            diferenca = data_atual - self.__vencimento
+            if diferenca.days > 30:
+                return True
+            else:
+                return False
+        else:
+            return False
 
     def __eq__(self, other):
         return self.__matricula == other.__matricula

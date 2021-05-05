@@ -7,6 +7,7 @@ class Aluno(Usuario.Usuario):
     def __init__(self, cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade):
         super().__init__(cpf, data_nasc, email, codigo, nome, senha)
         self.__ativo = True
+
         if mensalidade:
             current_month = datetime.now().strftime('%m')
             current_year_full = datetime.now().strftime('%Y')
@@ -27,6 +28,12 @@ class Aluno(Usuario.Usuario):
         else:
             self.__venc_mensalidade = 1
 
+        # if mensalidade:
+        #     self.__mensalidade = int(mensalidade)
+        # else:
+        #     self.__mensalidade = 0
+        # self.__venc_mensalidade = int(venc_mensalidade)
+
     @property
     def ativo(self):
         return self.__ativo
@@ -36,12 +43,12 @@ class Aluno(Usuario.Usuario):
         self.__ativo = ativo
 
     @property
-    def mensalidade(self):
-        return self.__mensalidade
+    def mensalidades(self):
+        return self.__mensalidades
 
-    @mensalidade.setter
-    def mensalidade(self, mensalidade):
-        self.__mensalidade = mensalidade
+    @mensalidades.setter
+    def mensalidades(self, mensalidades):
+        self.__mensalidades = mensalidades
 
     @property
     def venc_mensalidade(self):
@@ -50,6 +57,13 @@ class Aluno(Usuario.Usuario):
     @venc_mensalidade.setter
     def venc_mensalidade(self, venc_mensalidade):
         self.__venc_mensalidade = venc_mensalidade
+
+    def tem_mensalidade_atrasada(self):
+        for mensalidade in self.mensalidades:
+            if mensalidade.verifica_atraso():
+                return True
+            else:
+                return False
 
     def __eq__(self, other):
         return self.__codigo == other.__codigo

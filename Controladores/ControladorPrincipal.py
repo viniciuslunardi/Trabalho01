@@ -71,8 +71,8 @@ class ControladorPrincipal:
         return self.__controlador_gerente
 
     def abre_tela_inicial(self):
-        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.open_alunos_inadimplentes}
-        # options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.cadastra_conta, 888: self.contas}
+        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.open_alunos_inadimplentes, 5: self.cadastra_conta, 888: self.contas}
+
         button, values = self.__tela_principal.open()
         return options[button]()
 

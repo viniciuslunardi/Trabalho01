@@ -21,7 +21,7 @@ class TelaPrincipal(AbstractTela):
                     [sg.Button("Perfil", size=(33, 1))],
                     [sg.Button("Gerenciar Aluno", size=(33, 1), key=3),
                      sg.Button("Cadastrar Funcionário", size=(33, 1), key=2),
-                     sg.Button("Cadastrar Conta", size=(33, 1), key=4)],
+                     sg.Button("Cadastrar Conta", size=(33, 1), key=5)],
                     [sg.Button("Relatório de alunos", size=(33, 1), key=1),
                      sg.Button("Relatório de funcionários", size=(33, 1), key=0),
                      sg.Button("Relatório de alunos inadimplentes", size=(33, 1), key=4)],

@@ -5,7 +5,7 @@ from datetime import datetime
 
 class Aluno(Usuario.Usuario):
     def __init__(self, cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade):
-        super().__init__(cpf, data_nasc, email, codigo, nome, senha)
+        super().__init__(codigo, senha, nome, cpf, data_nasc, email)
         self.__ativo = True
 
         if mensalidade:
@@ -19,20 +19,16 @@ class Aluno(Usuario.Usuario):
                 venc_month = str(int(current_month) + 1)
                 venc_year = str(current_year_full)
 
-            self.__mensalidade = [Mensalidade("Primeira mensalidade", False, int(mensalidade),
+            self.__mensalidades = [Mensalidade("Primeira mensalidade", False, int(mensalidade),
                                              vencimento=venc_mensalidade + "/" + venc_month + "/" + venc_year)]
+            self.__valor_mensalidade = int(mensalidade)
         else:
-            self.__mensalidade = []
+            self.__mensalidades = []
         if venc_mensalidade:
             self.__venc_mensalidade = int(venc_mensalidade)
         else:
             self.__venc_mensalidade = 1
 
-        # if mensalidade:
-        #     self.__mensalidade = int(mensalidade)
-        # else:
-        #     self.__mensalidade = 0
-        # self.__venc_mensalidade = int(venc_mensalidade)
 
     @property
     def ativo(self):
@@ -41,6 +37,14 @@ class Aluno(Usuario.Usuario):
     @ativo.setter
     def ativo(self, ativo):
         self.__ativo = ativo
+
+    @property
+    def valor_mensalidade(self):
+        return self.__valor_mensalidade
+
+    @valor_mensalidade.setter
+    def valor_mensalidade(self, valor_mensalidade):
+        self.__valor_mensalidade = valor_mensalidade
 
     @property
     def mensalidades(self):

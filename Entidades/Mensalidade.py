@@ -50,7 +50,8 @@ class Mensalidade():
     def verifica_atraso(self):
         if self.__pago == False:
             data_atual = datetime.datetime.today()
-            diferenca = data_atual - self.__vencimento
+            [dia, mes, ano] = self.__vencimento.split('/')
+            diferenca = data_atual - datetime.datetime(int(ano), int(mes), int(dia))
             if diferenca.days > 30:
                 return True
             else:

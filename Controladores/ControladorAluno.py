@@ -4,7 +4,7 @@ from Telas.TelaAlunosInadimplentes import TelaAlunosInadimplentes
 from Entidades.Aluno import Aluno
 from Entidades.src.AlunoDAO import AlunoDAO
 from Entidades.Mensalidade import Mensalidade
-from Exceptions import AlunoJahExisteException
+
 import re
 
 
@@ -48,10 +48,7 @@ class ControladorAluno:
 
         button, values = self.__tela_aluno.open(alunos)
         options = {4: self.voltar}
-        # options = {4: self.voltar,
-        #            1: self.cadastra,
-        #            5: self.add_mensalidade}
-        #
+
         return options[button]()
 
     def abre_tela_cadastro_aluno(self, pre_values=None, excluir_visible=False, disable_all_fields=False):
@@ -168,13 +165,13 @@ class ControladorAluno:
             aluno = self.__alunos_DAO.getByCpf(cpf)
             if aluno:
 
-                if aluno.mensalidade and aluno.mensalidade[0] and aluno.mensalidade[0].valor:
-                    mensalidade = str(aluno.mensalidade[0].valor)
+                if aluno.valor_mensalidade:
+                    valor_mensalidade = str(aluno.valor_mensalidade)
                 else:
-                    mensalidade = ''
+                    valor_mensalidade = ''
 
                 new_values = [aluno.cpf, aluno.nome, aluno.data_nasc, aluno.email, aluno.codigo, aluno.senha,
-                              mensalidade, aluno.venc_mensalidade or '']
+                              valor_mensalidade, aluno.venc_mensalidade or '']
 
                 self.__tela_cadastro.close()
                 self.abre_tela_cadastro_aluno(new_values, True, disable_all_fields=True)
@@ -201,7 +198,7 @@ class ControladorAluno:
             cpf = values['cpf']
             aluno_found = self.__alunos_DAO.getByCpf(cpf)
             if aluno_found:
-                if aluno_found.mensalidade and len(aluno_found.mensalidade) > 0:
+                if aluno_found.mensalidades and len(aluno_found.mensalidades) > 0:
                     self.__tela_cadastro.show_message("Erro", "Aluno possui mensalidades em aberto")
                     self.voltar()
                 else:
@@ -214,11 +211,11 @@ class ControladorAluno:
                 self.abre_tela_cadastro_aluno(list(values.values()))
 
     # def add_mensalidade(self, descricao, pago, valor, vencimento):
-        # cpf = self.__tela_funcionario.ask_verification("Digite o cpf do aluno: ",
-        #                                                             "cpf")
-        # aluno = self.__alunos_DAO.get(cpf)
-        # new_mensalidade = Mensalidade(descricao, pago, valor, vencimento)
-        # aluno.mensalidades.append(new_mensalidade)
+    # cpf = self.__tela_funcionario.ask_verification("Digite o cpf do aluno: ",
+    #                                                             "cpf")
+    # aluno = self.__alunos_DAO.get(cpf)
+    # new_mensalidade = Mensalidade(descricao, pago, valor, vencimento)
+    # aluno.mensalidades.append(new_mensalidade)
 
     def listar_alunos_inadimplentes(self):
         todos_os_alunos = self.__alunos_DAO.get_all()
@@ -226,8 +223,8 @@ class ControladorAluno:
         for aluno in todos_os_alunos:
             if aluno.tem_mensalidade_atrasada():
                 alunos_inadimplentes.append("Nome: " + str(aluno.nome) + '  -  ' +
-                          "Email: " + str(aluno.email) + '  -  ' +
-                          "cpf: " + str(aluno.cpf))
+                                            "Email: " + str(aluno.email) + '  -  ' +
+                                            "cpf: " + str(aluno.cpf))
 
         button, values = self.__tela_alunos_inadimpletes.open(alunos_inadimplentes)
         options = {4: self.voltar}

@@ -2,7 +2,7 @@ from Telas.TelaPrincipal import TelaPrincipal
 from Telas.TelaLogin import TelaLogin
 from Controladores.ControladorFuncionario import ControladorFuncionario
 from Controladores.ControladorAluno import ControladorAluno
-
+from Controladores.ControladorConta import ControladorConta
 
 class ControladorPrincipal:
     __instance = None
@@ -12,12 +12,17 @@ class ControladorPrincipal:
         self.__tela_login = TelaLogin(self)
         self.__controlador_funcionario = ControladorFuncionario(self)
         self.__controlador_aluno = ControladorAluno(self)
+        self.__controlador_conta = ControladorConta(self)
         self.__user_session = None
 
     def __new__(cls, *args, **kwargs):
         if ControladorPrincipal.__instance is None:
             ControladorPrincipal.__instance = object.__new__(cls)
             return ControladorPrincipal.__instance
+
+    @property
+    def user_session(self):
+        return self.__user_session
 
     def inicia(self):
         self.abre_tela_login()
@@ -52,6 +57,7 @@ class ControladorPrincipal:
                                                    "Não existe usuario com esse login cadastrado no sistema")
         return self.abre_tela_login()
 
+
     @property
     def controlador_funcionario(self):
         return self.__controlador_funcionario
@@ -66,8 +72,12 @@ class ControladorPrincipal:
 
     def abre_tela_inicial(self):
         options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.open_alunos_inadimplentes}
+        # options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.cadastra_conta, 888: self.contas}
         button, values = self.__tela_principal.open()
         return options[button]()
+
+    def cadastra_conta(self):
+        self.__controlador_conta.cadastra()
 
     def cadastra_func(self):
         self.__controlador_funcionario.cadastra()
@@ -83,3 +93,6 @@ class ControladorPrincipal:
 
     def open_alunos_inadimplentes(self):
         self.__controlador_aluno.listar_alunos_inadimplentes()
+
+    def contas(self):
+        self.__controlador_conta.abre_contas()

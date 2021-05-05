@@ -23,5 +23,5 @@ class AbstractTela(ABC):
         sg.Popup(title, message, font=("Helvetica", 15))
 
     def ask_verification(self, title, message):
-        text = sg.PopupGetText(title, message, font=("Helvetica", 15))
+        text = sg.PopupGetText(title, message, font=("Helvetica", 25))
         return text

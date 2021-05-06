@@ -1,22 +1,23 @@
 from enum import Enum
 from abc import ABC
 from .Usuario import Usuario
+from .ContaBancaria import ContaBancaria
 
 
 class Funcionario(ABC, Usuario.Usuario):
-    def __init__(self, codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria, salario):
+    def __init__(self, codigo, senha, nome, cpf, data_nasc, email, agencia, codigo_banco, numero, tipo, carga_horaria, salario):
         super().__init__(codigo, senha, nome, cpf, data_nasc, email)
-        self.__pix = pix
+        self.__conta_bancaria = ContaBancaria(agencia, codigo_banco, numero, tipo)
         self.__carga_horaria = carga_horaria
         self.__salario = salario
 
     @property
-    def pix(self):
-        return self.__pix
+    def conta_bancaria(self):
+        return self.__conta_bancaria
 
-    @pix.setter
-    def pix(self, pix):
-        self.__pix = pix
+    @conta_bancaria.setter
+    def conta_bancaria(self, conta_bancaria):
+        self.__conta_bancaria = conta_bancaria
 
     @property
     def carga_horaria(self):

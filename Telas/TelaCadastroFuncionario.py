@@ -16,7 +16,10 @@ class TelaCadastroFuncionario(AbstractTela):
         cpf = ""
         data_nascimento = ""
         email = ""
-        pix = ""
+        agencia = ""
+        codigo_banco = ""
+        numero = ""
+        tipo = ""
         carga_horaria = ""
         salario = ""
 
@@ -24,7 +27,10 @@ class TelaCadastroFuncionario(AbstractTela):
             codigo = funcionario.codigo
             senha = funcionario.senha
             cpf = funcionario.cpf
-            pix = funcionario.pix
+            agencia = funcionario.agencia
+            codigo_banco = funcionario.codigo_banco
+            numero = funcionario.numero
+            tipo = funcionario.tipo
             carga_horaria = funcionario.carga_horaria
             salario = funcionario.salario
             nome = funcionario.nome
@@ -36,10 +42,13 @@ class TelaCadastroFuncionario(AbstractTela):
             [sg.Text("Código*", size=(15, 1)), sg.InputText(codigo)],
             [sg.Text("Senha*", size=(15, 1)), sg.InputText(senha)],
             [sg.Text("Nome*", size=(15, 1)), sg.InputText(nome)],
-            [sg.Text("Data de Nascimento*", size=(15, 1)), sg.InputText(data_nascimento)],
+            [sg.Text("Data nasc.*", size=(15, 1)), sg.InputText(data_nascimento)],
             [sg.Text("Email*", size=(15, 1)), sg.InputText(email)],
             [sg.Text("CPF*", size=(15, 1)), sg.InputText(cpf)],
-            [sg.Text("Pix*", size=(15, 1)), sg.InputText(pix)],
+            [sg.Text("Agencia banc.*", size=(15, 1)), sg.InputText(agencia)],
+            [sg.Text("Código do Banco*", size=(15, 1)), sg.InputText(codigo_banco)],
+            [sg.Text("Numero conta*", size=(15, 1)), sg.InputText(numero)],
+            [sg.Text("Tipo de conta*", size=(15, 1)), sg.InputText(tipo)],
             [sg.Text("Carga horaria*", size=(15, 1)), sg.InputText(carga_horaria)],
             [sg.Text("Salário*", size=(15, 1)), sg.InputText(salario)],
             [sg.Text("Cargo*"), sg.Combo(size=(15, 1), values=cargos)],

@@ -44,7 +44,8 @@ class ControladorFuncionario:
         button, values = self.__tela_funcionario.open(funcionarios)
         options = {9: self.voltar,
                    4: self.alterar_funcionario,
-                   5: self.deletar_funcionario, }
+                   5: self.deletar_funcionario, 
+                   10: self.add_pagamento, }
         if button:
             return options[button]()
 
@@ -176,6 +177,9 @@ class ControladorFuncionario:
                 print("error", e)
 
         self.abre_funcionario()
+
+    def add_pagamento(self):
+        print("test")
 
     @property
     def funcionarios(self):

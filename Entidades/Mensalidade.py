@@ -1,11 +1,20 @@
 import datetime
 
 class Mensalidade():
-    def __init__(self, descricao, pago, valor, vencimento):
+    def __init__(self, identificador, descricao, pago, valor, vencimento):
+        self.__identificador = identificador
         self.__descricao = descricao
         self.__pago = pago
         self.__valor = valor
         self.__vencimento = vencimento
+
+    @property
+    def identificador(self):
+        return self.__identificador
+
+    @identificador.setter
+    def identificador(self, identificador):
+        self.__identificador = identificador
 
     @property
     def descricao(self):

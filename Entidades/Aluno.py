@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class Aluno(Usuario.Usuario):
-    def __init__(self, cpf, data_nasc, email, codigo, nome, senha, mensalidades, venc_mensalidade):
+    def __init__(self, cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade):
         super().__init__(codigo, senha, nome, cpf, data_nasc, email)
         self.__ativo = True
 
@@ -18,8 +18,7 @@ class Aluno(Usuario.Usuario):
             else:
                 venc_month = str(int(current_month) + 1)
                 venc_year = str(current_year_full)
-
-            self.__mensalidades = [Mensalidade("Primeira mensalidade", False, int(mensalidade),
+            self.__mensalidades = [Mensalidade(1,"Primeira mensalidade", False, int(mensalidade),
                                              vencimento=venc_mensalidade + "/" + venc_month + "/" + venc_year)]
             self.__valor_mensalidade = int(mensalidade)
         else:

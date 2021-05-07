@@ -4,6 +4,8 @@ from Telas.TelaAlunosInadimplentes import TelaAlunosInadimplentes
 from Entidades.Aluno import Aluno
 from Entidades.src.AlunoDAO import AlunoDAO
 from Entidades.Mensalidade import Mensalidade
+from Entidades.Gerente import Gerente
+from Entidades.Recepcionista import Recepcionista
 
 import re
 
@@ -47,7 +49,7 @@ class ControladorAluno:
                           "Vencimento da mensalidade: Todo dia " + str(codigo.venc_mensalidade))
 
         button, values = self.__tela_aluno.open(alunos)
-        options = {4: self.voltar}
+        options = {4: self.voltar, 11: self.pagar_mensalidade}
 
         return options[button]()
 
@@ -231,6 +233,53 @@ class ControladorAluno:
 
         return options[button]()
 
+    def pagar_mensalidade(self):
+        user = self.__controlador_principal.user_session
+        if isinstance(user, Gerente) or isinstance(user, Recepcionista) and user is not None:
+            codigo_aluno = (self.__tela_aluno.ask_verification("Informe o codigo do aluno", "codigo"))
+
+            if codigo_aluno:
+                try:
+                    usuario = self.__alunos_DAO.get(codigo_aluno)
+                    if usuario:
+                        identificador = (self.__tela_aluno.ask_verification("Informe o identificador da conta", "identificador"))
+                        mensalidade_to_pay = None
+                        for mensalidade in usuario.mensalidades:
+                            if mensalidade.identificador == identificador:
+                                mensalidade_to_pay = mensalidade
+                        if mensalidade_to_pay:
+                            print(usuario.mensalidades.index(mensalidade_to_pay))
+                            if mensalidade_to_pay.pago:
+                                self.__tela_aluno.show_message("Erro", "Essa mensalidade já foi marca como paga.")
+                            else:
+                                mensalidade_to_pay.pago = True
+                                # if usuario.mensalidades.index(mensalidade_to_pay):
+                                print(usuario.mensalidades.index(mensalidade_to_pay))
+                                # self.__contas[identificador] = conta
+                                # self.__alunos_DAO.remove(codigo_aluno)
+                                # self.__alunos_DAO.add()
+                                # self.__contas_DAO.remove(identificador)
+                                # self.__contas_DAO.add(identificador, self.__contas[identificador])
+                                # self.__tela_aluno.show_message("Sucesso", "Mensalidade marcada como paga com sucesso")
+                                self.voltar()
+                        else:
+                            self.__tela_aluno.show_message("Erro", "Não existe uma mensalidade com o identificador '" + str(
+                                identificador) + "' cadastrada.")
+                            
+                    else:
+                        self.__tela_aluno.show_message("Erro", "Não existe aluno(a) com esse codigo '" + str(
+                            identificador) + "' cadastrado(a).")
+                except ValueError:
+                    self.__tela_cadastro.show_message("Erro",
+                                                      "Codigo deve ser um valor numérico inteiro.")
+            else:
+                if identificador == "":
+                    self.__tela_cadastro.show_message("Erro",
+                                                      "Identificador deve ser informado.")
+                else:
+                    self.voltar()
+                    return
+        self.voltar()
     @property
     def alunos(self):
         return self.__alunos

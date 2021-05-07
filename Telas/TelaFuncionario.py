@@ -1,5 +1,7 @@
 from Telas.AbstractTela import AbstractTela
 import PySimpleGUI as sg
+from Controladores.ControladorAluno import ControladorAluno
+
 
 class TelaFuncionario(AbstractTela):
     def __init__(self, controlador):

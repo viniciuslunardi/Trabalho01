@@ -196,6 +196,7 @@ class ControladorFuncionario:
                     self.__tela_add_pagamento.show_message("Erro", "Funcionario nao encontrado")
             except Exception as e:
                 print("error", e)
+            self.voltar()
     
     def add_pagamento(self, values, usuario, codigo_usuario):
         try:
@@ -212,6 +213,7 @@ class ControladorFuncionario:
                 self.__tela_cadastro.show_message("Sucesso", "Pagamento adicionado")
         except Exception as e:
             print("error", e)
+        self.voltar()
         
     @property
     def funcionarios(self):

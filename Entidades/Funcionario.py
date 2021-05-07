@@ -4,11 +4,12 @@ from .Usuario import Usuario
 
 
 class Funcionario(ABC, Usuario.Usuario):
-    def __init__(self, codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria, salario):
+    def __init__(self, codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria, salario, pagamentos):
         super().__init__(codigo, senha, nome, cpf, data_nasc, email)
         self.__pix = pix
         self.__carga_horaria = carga_horaria
         self.__salario = salario
+        self.__pagamentos = pagamentos
 
     @property
     def pix(self):
@@ -33,3 +34,11 @@ class Funcionario(ABC, Usuario.Usuario):
     @salario.setter
     def salario(self, salario):
         self.__salario = salario
+
+    @property
+    def pagamentos(self):
+        return self.__pagamentos
+
+    @pagamentos.setter
+    def pagamentos(self, pagamentos):
+        self.__pagamentos = pagamentos

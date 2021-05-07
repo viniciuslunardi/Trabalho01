@@ -25,8 +25,8 @@ class TelaMarcaPagamentoFuncionario(AbstractTela):
              sg.Text("/", size=(0, 1)), sg.InputText(ano_venc, size=(4, 1), disabled=exclude)],
             [sg.Text("Valor (R$):", size=(15, 1)), sg.InputText(valor, disabled=exclude)],
             [sg.Text("Descrição:", size=(15, 1)), sg.InputText(descricao, disabled=exclude)],
-            [sg.Button("Salvar", size=(15, 1), key="salvar", button_color='green', visible=new),
-             sg.Button("Voltar", size=(15, 1), key="voltar")]
+            [sg.Button("Salvar", size=(15, 1), key=5, button_color='green', visible=new),
+             sg.Button("Voltar", size=(15, 1), key=4)]
         ]
 
         self.__window = sg.Window("Marcacao de pagamentos dos funcionários", default_element_size=(50, 0), font=("Helvetica", 15)).Layout(

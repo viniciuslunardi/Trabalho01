@@ -6,6 +6,7 @@ from Entidades.Funcionario import Funcionario
 from Entidades.Gerente import Gerente
 from Entidades.Professor import Professor
 from Entidades.Recepcionista import Recepcionista
+from Entidades.PagamentoFuncionarios import PagamentoFuncionario
 from Controladores.ControladorAluno import ControladorAluno
 from Entidades.src.FuncionarioDAO import FuncionarioDAO
 from Exceptions import FuncionarioJahExisteException
@@ -47,23 +48,23 @@ class ControladorFuncionario:
         options = {9: self.voltar,
                    4: self.alterar_funcionario,
                    5: self.deletar_funcionario, 
-                   10: self.add_pagamento, }
+                   10: self.open_add_pagamento_screen, }
         if button:
             return options[button]()
 
     def cadastrar_funcionario(self, codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria, salario,
-                              cargo):
+                              cargo, pagamentos):
         try:
             if cargo == 'Gerente':
                 funcionario = Gerente(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
-                                      salario)
+                                      salario, pagamentos)
                 
             elif cargo == 'Professor':
                 funcionario = Professor(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
-                                        salario)
+                                        salario, pagamentos)
             else:
                 funcionario = Recepcionista(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
-                                            salario)
+                                            salario, pagamentos)
 
             if self.__funcionarios_DAO.get(codigo):
                 raise FuncionarioJahExisteException
@@ -98,8 +99,9 @@ class ControladorFuncionario:
                 if not senha or not cpf or not nome or not email or not data_nasc or not pix or not cargo or not carga_horaria or not salario:
                     raise Exception()
                 else:
+                    pagamentos = []
                     self.cadastrar_funcionario(codigo, senha, nome, cpf, data_nasc, email, pix,
-                                               carga_horaria, salario, cargo)
+                                               carga_horaria, salario, cargo, pagamentos)
             except ValueError:
                     self.__tela_cadastro.show_message("Erro", "Salario e carga horaria sao numeros inteiros")
             except Exception:
@@ -137,7 +139,6 @@ class ControladorFuncionario:
                 old = self.__funcionarios_DAO.get(codigo_usuario_anterior)
                 if old:
                     print("Informe os novos valores: ")
-                    # todo: bug estranhao q troca os valor tudo
                     button, new_values = self.__tela_cadastro.open(old)
                     try:
                         codigo = new_values[0]
@@ -180,9 +181,38 @@ class ControladorFuncionario:
 
         self.abre_funcionario()
 
-    def add_pagamento(self):
-        self.__tela_add_pagamento.open()
+    def open_add_pagamento_screen(self):
+        codigo_usuario = self.__tela_add_pagamento.ask_verification("Digite o codigo do funcionario: ",
+                                                                    "codigo")
+        if codigo_usuario:                                                           
+            try:
+                usuario = self.__funcionarios_DAO.get(codigo_usuario)
+                if usuario:
+                    button, values = self.__tela_add_pagamento.open()
+                    options = {4: self.voltar, 5: self.add_pagamento(values, usuario, codigo_usuario)}
+                    if button:
+                        options[button]()
+                else:
+                    self.__tela_add_pagamento.show_message("Erro", "Funcionario nao encontrado")
+            except Exception as e:
+                print("error", e)
+    
+    def add_pagamento(self, values, usuario, codigo_usuario):
+        try:
+            codigo = values[0]
+            if codigo:
+                data_pag = str(values[1] + '/' + values[2] + '/' + values[3])
+                valor = values[4]
+                descricao = values[5]
+                new = PagamentoFuncionario(codigo, data_pag, valor, descricao)
+                usuario.pagamentos.append(new)
 
+                self.__funcionarios_DAO.remove(codigo_usuario)
+                self.__funcionarios_DAO.add(codigo_usuario, usuario)
+                self.__tela_cadastro.show_message("Sucesso", "Pagamento adicionado")
+        except Exception as e:
+            print("error", e)
+        
     @property
     def funcionarios(self):
         return self.__funcionarios

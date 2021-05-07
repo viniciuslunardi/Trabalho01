@@ -1,6 +1,7 @@
 # -- coding: utf-8 --
 from Telas.TelaFuncionario import TelaFuncionario
 from Telas.TelaCadastroFuncionario import TelaCadastroFuncionario
+from Telas.TelaPagamentoFuncionarios import TelaMarcaPagamentoFuncionario
 from Entidades.Funcionario import Funcionario
 from Entidades.Gerente import Gerente
 from Entidades.Professor import Professor
@@ -16,6 +17,7 @@ class ControladorFuncionario:
     def __init__(self, controlador_principal):
         self.__tela_funcionario = TelaFuncionario(self)
         self.__tela_cadastro = TelaCadastroFuncionario(self)
+        self.__tela_add_pagamento = TelaMarcaPagamentoFuncionario(self)
         self.__funcionarios = {}
         self.__funcionarios_DAO = FuncionarioDAO()
         self.__controlador_aluno = ControladorAluno
@@ -179,7 +181,7 @@ class ControladorFuncionario:
         self.abre_funcionario()
 
     def add_pagamento(self):
-        print("test")
+        self.__tela_add_pagamento.open()
 
     @property
     def funcionarios(self):

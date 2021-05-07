@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class Aluno(Usuario.Usuario):
-    def __init__(self, cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade):
+    def __init__(self, cpf, data_nasc, email, codigo, nome, senha, mensalidades, venc_mensalidade):
         super().__init__(codigo, senha, nome, cpf, data_nasc, email)
         self.__ativo = True
 

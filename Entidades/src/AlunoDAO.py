@@ -12,7 +12,8 @@ class AlunoDAO(DAO):
     def __new__(cls, *args, **kwargs):
         if AlunoDAO.__instance is None:
             AlunoDAO.__instance = object.__new__(cls)
-            return AlunoDAO.__instance
+
+        return AlunoDAO.__instance
 
     def add(self, matricula, aluno: Aluno):
         if isinstance(aluno, Aluno) and aluno is not None:
@@ -20,6 +21,9 @@ class AlunoDAO(DAO):
 
     def get(self, key):
         return super().get(key)
+
+    def get_all(self):
+        return super().get_all()
 
     def getByCpf(self, key):
         return super().getByCpf(key)

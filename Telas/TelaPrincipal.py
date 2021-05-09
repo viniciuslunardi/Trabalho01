@@ -19,7 +19,7 @@ class TelaPrincipal(AbstractTela):
                 [
                     [sg.Text("GymSystem", size=(10, 1), font=("Helvetica", 35), justification='center')],
                     [sg.Button("Cadastrar Funcionário", size=(33, 1), key=2)],
-                    [sg.Button("Gerenciar Aluno", size=(33, 1), key=3),
+                    [sg.Button("Cadastrar Aluno", size=(33, 1), key=3),
                      sg.Button("Cadastrar Conta", size=(33, 1), key=5),
                      sg.Button("Relatório de contas", size=(33, 1), key=888)],
                     [sg.Button("Relatório de alunos", size=(33, 1), key=1),

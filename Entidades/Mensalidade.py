@@ -68,5 +68,3 @@ class Mensalidade():
         else:
             return False
 
-    def __eq__(self, other):
-        return self.__matricula == other.__matricula

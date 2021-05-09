@@ -59,8 +59,3 @@ class TelaCadastroAluno(AbstractTela):
     def show_message(self, title, message):
         sg.Popup(title, message, font=("Helvetica", 15), keep_on_top=True)
 
-    def disable_all_fields(self):
-        self.__window['Excluir'].update()
-
-    def set_excluir_visibility(self, visible):
-        self.__window['Excluir'].update(visible=visible)

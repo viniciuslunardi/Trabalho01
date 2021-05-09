@@ -56,17 +56,35 @@ class ControladorFuncionario:
 
     def abre_salarios(self):
         salarios = []
-        for usuario in self.__funcionarios_DAO.get_all():
-            try:
-                if usuario.pagamentos:
-                    for pagamento in usuario.pagamentos:
-                        salarios.append("Funcionário: " + usuario.codigo + '  -  ' +
-                                        "Data do pagamento: " + pagamento.data_pagamento + '  -  ' +
-                                        "Descrição: " + pagamento.descricao + '  -  ' +
-                                        "Valor: " + pagamento.valor + '  -  ' +
-                                        "Identificador: " + pagamento.identificador)
-            except:
-                ValueError('Error')
+        user = self.__controlador_principal.user_session
+        if isinstance(user, Gerente) and user is not None:
+            for usuario in self.__funcionarios_DAO.get_all():
+                try:
+                    if usuario.pagamentos:
+                        for pagamento in usuario.pagamentos:
+                            salarios.append("Funcionário: " + usuario.codigo + '  -  ' +
+                                            "Data do pagamento: " + pagamento.data_pagamento + '  -  ' +
+                                            "Descrição: " + pagamento.descricao + '  -  ' +
+                                            "Valor: " + pagamento.valor + '  -  ' +
+                                            "Identificador: " + pagamento.identificador)
+                except:
+                    ValueError('Error')
+        elif isinstance(user, Professor) and user is not None:
+            usuario = self.__funcionarios_DAO.get(user.codigo)
+            if usuario:
+                try:
+                    if usuario.pagamentos:
+                        for pagamento in usuario.pagamentos:
+                            salarios.append("Funcionário: " + usuario.codigo + '  -  ' +
+                                            "Data do pagamento: " + pagamento.data_pagamento + '  -  ' +
+                                            "Descrição: " + pagamento.descricao + '  -  ' +
+                                            "Valor: " + pagamento.valor + '  -  ' +
+                                            "Identificador: " + pagamento.identificador)
+                except:
+                    salarios.append('Nenhum pagamento registrado ainda.')
+                    ValueError('Error')
+        else:
+            self.__tela_funcionario.show_message("Erro", "Você não tem permissão para verificar o relatório de salários.")
 
         button, values = self.__tela_salarios.open(salarios)
         options = {4: self.voltar}

@@ -7,6 +7,7 @@ from Controladores.ControladorConta import ControladorConta
 from Controladores.ControladorMensalidade import ControladorMensalidade
 from Entidades.Gerente import Gerente
 from Entidades.Recepcionista import Recepcionista
+from Entidades.Aluno import Aluno
 from Entidades.Mensalidade import Mensalidade
 
 
@@ -22,6 +23,10 @@ class ControladorPrincipal:
         self.__tela_contabilidade = TelaContabilidade(self)
         self.__controlador_mensalidade = ControladorMensalidade(self)
         self.__user_session = None
+        self.__entidade_aluno = Aluno
+        self.__entidade_gerente = Gerente
+        self.__entidade_recepcionista = Recepcionista
+
 
     def __new__(cls, *args, **kwargs):
         if ControladorPrincipal.__instance is None:
@@ -31,6 +36,18 @@ class ControladorPrincipal:
     @property
     def user_session(self):
         return self.__user_session
+
+    @property
+    def entidade_aluno(self):
+        return self.__entidade_aluno
+
+    @property
+    def entidade_gerente(self):
+        return self.__entidade_gerente
+
+    @property
+    def entidade_recepcionista(self):
+        return self.__entidade_recepcionista
 
     def inicia(self):
         self.abre_tela_login()
@@ -65,7 +82,6 @@ class ControladorPrincipal:
                                                    "Não existe usuario com esse login cadastrado no sistema")
         return self.abre_tela_login()
 
-
     @property
     def controlador_funcionario(self):
         return self.__controlador_funcionario
@@ -83,7 +99,9 @@ class ControladorPrincipal:
         return self.__controlador_gerente
 
     def abre_tela_inicial(self):
-        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.open_alunos_inadimplentes, 5: self.cadastra_conta, 6: self.cadastra_mensalidade, 888: self.contas, 78: self.salarios, 66: self.contabilidade}
+        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu,
+                   4: self.open_alunos_inadimplentes, 5: self.cadastra_conta, 6: self.cadastra_mensalidade,
+                   888: self.contas, 78: self.salarios, 66: self.contabilidade}
 
         button, values = self.__tela_principal.open()
         return options[button]()
@@ -95,16 +113,33 @@ class ControladorPrincipal:
         self.__controlador_funcionario.cadastra()
 
     def cadastra_alu(self):
-        self.__controlador_aluno.abre_tela_cadastro_aluno()
+        user = self.__user_session
+        if isinstance(user, Gerente) or isinstance(user, Recepcionista) and user is not None:
+            self.__controlador_aluno.abre_tela_cadastro_aluno()
+        else:
+            self.__tela_principal.show_message("Erro", "Você não tem permissão para cadastrar alunos.")
+            return self.voltar()
 
     def cadastra_mensalidade(self):
-        self.__controlador_mensalidade.abre_mensalidade()
+        user = self.__user_session
+        if isinstance(user, Gerente) or isinstance(user, Recepcionista) or isinstance(user, Aluno) and user is not None:
+            self.__controlador_mensalidade.abre_mensalidade()
+        else:
+            self.__tela_principal.show_message("Erro",
+                                               "Você não tem permissão para obter gerenciar mensalidades.")
+            return self.voltar()
 
     def funcionario(self):
         self.__controlador_funcionario.abre_funcionario()
 
     def aluno(self):
-        self.__controlador_aluno.abre_aluno()
+        user = self.__user_session
+        if isinstance(user, Gerente) and user is not None:
+            self.__controlador_aluno.abre_aluno()
+        else:
+            self.__tela_principal.show_message("Erro",
+                                               "Você não tem permissão para obter a lista de alunos.")
+            return self.voltar()
 
     def open_alunos_inadimplentes(self):
         self.__controlador_aluno.listar_alunos_inadimplentes()
@@ -142,7 +177,7 @@ class ControladorPrincipal:
                 if not conta.paga:
                     fluxo_caixa.append("Tipo: Conta - SAÍDA - " +
                                        "Valor: " + str(conta.valor) + '  -  '
-                                       "Nome: " + str(conta.nome))
+                                                                      "Nome: " + str(conta.nome))
 
         else:
             self.__tela_principal.show_message("Erro",

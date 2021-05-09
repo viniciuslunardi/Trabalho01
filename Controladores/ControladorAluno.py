@@ -151,8 +151,7 @@ class ControladorAluno:
         try:
             self.valida_aluno(values)
             self.cadastrar_aluno(values['cpf'], values['data_nasc'], values['email'], values['codigo'],
-                                 values['nome'],
-                                 values['senha'], values['mensalidade'], values['venc_mensalidade'])
+                                 values['nome'], values['senha'], values['mensalidade'], values['venc_mensalidade'])
             self.voltar()
 
         except Exception as e:
@@ -214,12 +213,6 @@ class ControladorAluno:
                 self.__tela_cadastro.close()
                 self.abre_tela_cadastro_aluno(list(values.values()))
 
-    # def add_mensalidade(self, descricao, pago, valor, vencimento):
-    # cpf = self.__tela_funcionario.ask_verification("Digite o cpf do aluno: ",
-    #                                                             "cpf")
-    # aluno = self.__alunos_DAO.get(cpf)
-    # new_mensalidade = Mensalidade(descricao, pago, valor, vencimento)
-    # aluno.mensalidades.append(new_mensalidade)
 
     def listar_alunos_inadimplentes(self):
         todos_os_alunos = self.__alunos_DAO.get_all()
@@ -287,6 +280,7 @@ class ControladorAluno:
         return self.__alunos
 
     def voltar(self):
+        self.__tela_cadastro.close()
         self.__controlador_principal.abre_tela_inicial()
 
     def voltar_lista(self):

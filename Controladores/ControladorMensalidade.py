@@ -36,8 +36,15 @@ class ControladorMensalidade:
         return self.__alunos_DAO.get_all()
 
     def abre_tela_inicial(self):
+        user = self.__controlador_principal.user_session
+        alunos = []
+        if isinstance(user, self.__controlador_principal.entidade_aluno):
+            alunos = [self.__alunos_DAO.get(user.codigo)]
+        else:
+            alunos = self.__alunos_DAO.get_all()
+
         mensalidades = []
-        for aluno in self.__alunos_DAO.get_all():
+        for aluno in alunos:
             for mensalidade in aluno.mensalidades:
                 pago = "Não"
                 if mensalidade.pago:
@@ -58,26 +65,31 @@ class ControladorMensalidade:
         return options[button]()
 
     def abre_tela_cadastro_mensalidade(self, mensalidade=None):
-        button, values = self.__tela_cadastro.open(mensalidade)
+        user = self.__controlador_principal.user_session
+        if isinstance(user, self.__controlador_principal.entidade_gerente) or isinstance(user, self.__controlador_principal.entidade_recepcionista) and user is not None:
+            button, values = self.__tela_cadastro.open(mensalidade)
 
-        options = {'voltar': self.voltar_lista,
-                   'salvar': self.pre_cadastro_mensalidade}
+            options = {'voltar': self.voltar_lista,
+                       'salvar': self.pre_cadastro_mensalidade}
 
-        values = {
-            "cpf": values[0],
-            "descricao": values[1],
-            "mes_venc": values[2],
-            "ano_venc": values[3],
-            "identificador": values[4]
-        }
+            values = {
+                "cpf": values[0],
+                "descricao": values[1],
+                "mes_venc": values[2],
+                "ano_venc": values[3],
+                "identificador": values[4]
+            }
 
-        if not button:
-            button = 'voltar'
+            if not button:
+                button = 'voltar'
 
-        if button != 'voltar':
-            return options[button](values)
+            if button != 'voltar':
+                return options[button](values)
+            else:
+                return options[button]()
         else:
-            return options[button]()
+            self.tela_mensalidades.show_message("Erro", "Você não tem permissão para cadastrar mensalidades.")
+            return self.voltar()
 
     def valida_data_vencimento(self, mes, ano):
         try:

@@ -34,15 +34,15 @@ class TelaCadastraConta(AbstractTela):
                 pagou = "Sim"
         sg.change_look_and_feel("Reddit")
         layout = [
-            [sg.Text("Identificador:", size=(15, 1)), sg.InputText(identificador, disabled=exclude),
-             sg.Button("Buscar", size=(6, 1), key="buscar")],
-            [sg.Text("Nome:", size=(15, 1)), sg.InputText(nome, disabled=exclude)],
-            [sg.Text("Data de Venc.:", size=(15, 1)), sg.InputText(dia_venc, size=(2, 1), disabled=exclude),
+            [sg.Text("Identificador*:", size=(15, 1)), sg.InputText(identificador, disabled=exclude),
+             sg.Button("Buscar*", size=(6, 1), key="buscar")],
+            [sg.Text("Nome*:", size=(15, 1)), sg.InputText(nome, disabled=exclude)],
+            [sg.Text("Data de Venc.*:", size=(15, 1)), sg.InputText(dia_venc, size=(2, 1), disabled=exclude),
              sg.Text("/", size=(0, 1)), sg.InputText(mes_venc, size=(2, 1), disabled=exclude),
              sg.Text("/", size=(0, 1)), sg.InputText(ano_venc, size=(4, 1), disabled=exclude)],
-            [sg.Text("Valor (R$):", size=(15, 1)), sg.InputText(valor, disabled=exclude)],
-            [sg.Text("Descrição:", size=(15, 1)), sg.InputText(descricao, disabled=exclude)],
-            [sg.Text("Paga:", visible=new), sg.Combo(size=(15, 1), values=paga, visible=new), sg.Text("Paga:"),
+            [sg.Text("Valor (R$)*:", size=(15, 1)), sg.InputText(valor, disabled=exclude)],
+            [sg.Text("Descrição*:", size=(15, 1)), sg.InputText(descricao, disabled=exclude)],
+            [sg.Text("Paga*:", visible=new), sg.Combo(size=(15, 1), values=paga, visible=new), sg.Text("Paga:"),
              sg.Text(pagou, size=(15, 1), visible=exclude)],
             [sg.Button("Salvar", size=(15, 1), key="salvar", button_color='green', visible=new),
              sg.Button("Voltar", size=(15, 1), key="voltar"),

@@ -77,7 +77,7 @@ class ControladorPrincipal:
         return self.__controlador_gerente
 
     def abre_tela_inicial(self):
-        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.open_alunos_inadimplentes, 5: self.cadastra_conta, 6: self.cadastra_mensalidade, 888: self.contas}
+        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.open_alunos_inadimplentes, 5: self.cadastra_conta, 6: self.cadastra_mensalidade, 888: self.contas, 78: self.salarios}
 
         button, values = self.__tela_principal.open()
         return options[button]()
@@ -105,3 +105,7 @@ class ControladorPrincipal:
 
     def contas(self):
         self.__controlador_conta.abre_contas()
+
+    def salarios(self):
+        self.__controlador_funcionario.abre_salarios()
+

@@ -3,6 +3,7 @@ from Telas.TelaFuncionario import TelaFuncionario
 from Telas.TelaCadastroFuncionario import TelaCadastroFuncionario
 from Telas.TelaPagamentoFuncionarios import TelaMarcaPagamentoFuncionario
 from Entidades.Funcionario import Funcionario
+from Telas.TelaSalarios import TelaSalarios
 from Entidades.Gerente import Gerente
 from Entidades.Professor import Professor
 from Entidades.Recepcionista import Recepcionista
@@ -23,6 +24,7 @@ class ControladorFuncionario:
         self.__funcionarios_DAO = FuncionarioDAO()
         self.__controlador_aluno = ControladorAluno
         self.__controlador_principal = controlador_principal
+        self.__tela_salarios = TelaSalarios(self)
 
     def __new__(cls, *args, **kwargs):
         if ControladorFuncionario.__instance is None:
@@ -47,8 +49,27 @@ class ControladorFuncionario:
         button, values = self.__tela_funcionario.open(funcionarios)
         options = {9: self.voltar,
                    4: self.alterar_funcionario,
-                   5: self.deletar_funcionario, 
+                   5: self.deletar_funcionario,
                    10: self.open_add_pagamento_screen, }
+        if button:
+            return options[button]()
+
+    def abre_salarios(self):
+        salarios = []
+        for usuario in self.__funcionarios_DAO.get_all():
+            try:
+                if usuario.pagamentos:
+                    for pagamento in usuario.pagamentos:
+                        salarios.append("Funcionário: " + usuario.codigo + '  -  ' +
+                                        "Data do pagamento: " + pagamento.data_pagamento + '  -  ' +
+                                        "Descrição: " + pagamento.descricao + '  -  ' +
+                                        "Valor: " + pagamento.valor + '  -  ' +
+                                        "Identificador: " + pagamento.identificador)
+            except:
+                ValueError('Error')
+
+        button, values = self.__tela_salarios.open(salarios)
+        options = {4: self.voltar}
         if button:
             return options[button]()
 

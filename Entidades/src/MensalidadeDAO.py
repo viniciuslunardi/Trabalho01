@@ -14,9 +14,9 @@ class MensalidadeDAO(DAO):
             MensalidadeDAO.__instance = object.__new__(cls)
             return MensalidadeDAO.__instance
 
-    def add(self, matricula, mensalidade: Mensalidade):
+    def add(self, identificador, mensalidade: Mensalidade):
         if isinstance(mensalidade, Mensalidade) and mensalidade is not None:
-            super().add(matricula, mensalidade)
+            super().add(identificador, mensalidade)
 
     def get(self, key):
         return super().get(key)

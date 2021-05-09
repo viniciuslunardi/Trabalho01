@@ -61,11 +61,11 @@ class Aluno(Usuario.Usuario):
         self.__venc_mensalidade = venc_mensalidade
 
     def tem_mensalidade_atrasada(self):
+        atrasadas = []
         for mensalidade in self.mensalidades:
             if mensalidade.verifica_atraso():
-                return True
-            else:
-                return False
+                atrasadas.append(mensalidade)
+        return atrasadas
 
     def __eq__(self, other):
         return self.__codigo == other.__codigo

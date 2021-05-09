@@ -213,12 +213,12 @@ class ControladorAluno:
                 self.__tela_cadastro.close()
                 self.abre_tela_cadastro_aluno(list(values.values()))
 
-
     def listar_alunos_inadimplentes(self):
         todos_os_alunos = self.__alunos_DAO.get_all()
         alunos_inadimplentes = []
         for aluno in todos_os_alunos:
-            if aluno.tem_mensalidade_atrasada():
+            atrasadas = aluno.tem_mensalidade_atrasada()
+            if len(atrasadas) > 0:
                 alunos_inadimplentes.append("Nome: " + str(aluno.nome) + '  -  ' +
                                             "Email: " + str(aluno.email) + '  -  ' +
                                             "cpf: " + str(aluno.cpf))

@@ -174,7 +174,7 @@ class ControladorPrincipal:
                                        "Identificador: " + str(mensalidade.identificador))
 
             for conta in self.__controlador_conta.contas_DAO.get_all():
-                if not conta.paga:
+                if conta.paga:
                     fluxo_caixa.append("Tipo: Conta - SAÍDA - " +
                                        "Valor: " + str(conta.valor) + '  -  '
                                                                       "Nome: " + str(conta.nome))

@@ -244,23 +244,21 @@ class ControladorAluno:
                     if usuario:
                         identificador = (self.__tela_aluno.ask_verification("Informe o identificador da conta", "identificador"))
                         mensalidade_to_pay = None
+                        identificador = int(identificador)
                         for mensalidade in usuario.mensalidades:
                             if mensalidade.identificador == identificador:
                                 mensalidade_to_pay = mensalidade
+                                usuario.mensalidades.remove(mensalidade)
                         if mensalidade_to_pay:
-                            print(usuario.mensalidades.index(mensalidade_to_pay))
                             if mensalidade_to_pay.pago:
                                 self.__tela_aluno.show_message("Erro", "Essa mensalidade já foi marca como paga.")
                             else:
                                 mensalidade_to_pay.pago = True
-                                # if usuario.mensalidades.index(mensalidade_to_pay):
-                                print(usuario.mensalidades.index(mensalidade_to_pay))
-                                # self.__contas[identificador] = conta
-                                # self.__alunos_DAO.remove(codigo_aluno)
-                                # self.__alunos_DAO.add()
-                                # self.__contas_DAO.remove(identificador)
-                                # self.__contas_DAO.add(identificador, self.__contas[identificador])
-                                # self.__tela_aluno.show_message("Sucesso", "Mensalidade marcada como paga com sucesso")
+                                usuario.mensalidades.append(mensalidade_to_pay)
+                                new_user = usuario
+                                self.__alunos_DAO.remove(codigo_aluno)
+                                self.__alunos_DAO.add(codigo_aluno, new_user)
+                                self.__tela_aluno.show_message("Sucesso", "Mensalidade marcada como paga com sucesso")
                                 self.voltar()
                         else:
                             self.__tela_aluno.show_message("Erro", "Não existe uma mensalidade com o identificador '" + str(

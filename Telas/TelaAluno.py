@@ -15,7 +15,7 @@ class TelaAluno(AbstractTela):
             [sg.Text('Alunos cadastrados')],
             [sg.Listbox(values=alunos, size=(150, 10))],
             [sg.Button('Voltar', key=4),
-            sg.Button('Add mensalidade', key=5),
+            #sg.Button('Add mensalidade', key=5),
             sg.Button('Marcar pagamento de mensalidade', key=11)]
         ]
         self.__window = sg.Window("Alunos", default_element_size=(150, 300), font=("Helvetica", 15)).Layout(layout)

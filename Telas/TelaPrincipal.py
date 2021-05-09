@@ -25,7 +25,7 @@ class TelaPrincipal(AbstractTela):
                     [sg.Button("Relatório de alunos", size=(33, 1), key=1),
                      sg.Button("Relatório de funcionários", size=(33, 1), key=0),
                      sg.Button("Relatório de alunos inadimplentes", size=(33, 1), key=4)],
-                    [sg.Button("Fluxo de caixa", size=(33, 1)),
+                    [sg.Button("Fluxo de caixa", size=(33, 1), key=66),
                      sg.Button("Mensalidades", size=(33, 1), key=6),
                      sg.Button("Salários", size=(33, 1), key=78),
                      ],

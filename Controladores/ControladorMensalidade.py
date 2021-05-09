@@ -68,6 +68,7 @@ class ControladorMensalidade:
             "descricao": values[1],
             "mes_venc": values[2],
             "ano_venc": values[3],
+            "identificador": values[4]
         }
 
         if not button:
@@ -103,7 +104,7 @@ class ControladorMensalidade:
                 self.__tela_cadastro.close()
                 self.abre_tela_cadastro_mensalidade(list(values.values()))
 
-            self.cadastrar_mensalidade(values['descricao'], False, aluno.valor_mensalidade, str(aluno.venc_mensalidade)
+            self.cadastrar_mensalidade(values['identificador'], values['descricao'], False, aluno.valor_mensalidade, str(aluno.venc_mensalidade)
                                        + '/' + values['mes_venc'] + '/' + values['ano_venc'],aluno)
 
             self.voltar_lista()
@@ -113,13 +114,18 @@ class ControladorMensalidade:
             self.__tela_cadastro.close()
             self.abre_tela_cadastro_mensalidade(list(values.values()))
 
-    def cadastrar_mensalidade(self, descricao, pago, valor, vencimento, aluno):
-        mensalidade = Mensalidade(descricao, pago, valor, vencimento)
+    def cadastrar_mensalidade(self, identificador, descricao, pago, valor, vencimento, aluno):
+        mensalidade = Mensalidade(identificador, descricao, pago, valor, vencimento)
 
         self.__alunos_DAO.remove(aluno.codigo)
+        self.__mensalidades_DAO.add(identificador, mensalidade)
         aluno.mensalidades.append(mensalidade)
         self.__alunos_DAO.add(aluno.codigo, aluno)
         self.__tela_cadastro.show_message("Sucesso", "Mensalidade cadastrada com sucesso")
+
+    @property
+    def mensalidades_DAO(self):
+        return self.__mensalidades_DAO
 
     def voltar(self):
         self.__tela_mensalidades.close()

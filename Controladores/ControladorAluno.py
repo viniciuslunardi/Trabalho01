@@ -3,7 +3,6 @@ from Telas.TelaCadastroAluno import TelaCadastroAluno
 from Telas.TelaAlunosInadimplentes import TelaAlunosInadimplentes
 from Entidades.Aluno import Aluno
 from Entidades.src.AlunoDAO import AlunoDAO
-from Entidades.Mensalidade import Mensalidade
 from Entidades.Gerente import Gerente
 from Entidades.Recepcionista import Recepcionista
 
@@ -20,6 +19,7 @@ class ControladorAluno:
         self.__alunos = {}
         self.__alunos_DAO = AlunoDAO()
         self.__controlador_principal = controlador_principal
+
 
     def __new__(cls, *args, **kwargs):
         if ControladorAluno.__instance is None:
@@ -191,6 +191,8 @@ class ControladorAluno:
         aluno = Aluno(cpf, data_nasc, email, codigo, nome, senha, mensalidade, venc_mensalidade)
 
         self.__alunos_DAO.add(codigo, aluno)
+        new_mensalidade = aluno.mensalidades[0]
+        self.__controlador_principal.controlador_mensalidade.mensalidades_DAO.add(new_mensalidade.identificador, new_mensalidade)
         self.__tela_cadastro.show_message("Sucesso",
                                           "Aluno cadastrado com sucesso")
         return True
@@ -242,7 +244,7 @@ class ControladorAluno:
                 try:
                     usuario = self.__alunos_DAO.get(codigo_aluno)
                     if usuario:
-                        identificador = (self.__tela_aluno.ask_verification("Informe o identificador da conta", "identificador"))
+                        identificador = (self.__tela_aluno.ask_verification("Informe o identificador da mensalidade", "identificador"))
                         mensalidade_to_pay = None
                         identificador = int(identificador)
                         for mensalidade in usuario.mensalidades:
@@ -266,18 +268,19 @@ class ControladorAluno:
                             
                     else:
                         self.__tela_aluno.show_message("Erro", "Não existe aluno(a) com esse codigo '" + str(
-                            identificador) + "' cadastrado(a).")
+                            codigo_aluno) + "' cadastrado(a).")
                 except ValueError:
                     self.__tela_cadastro.show_message("Erro",
                                                       "Codigo deve ser um valor numérico inteiro.")
             else:
-                if identificador == "":
+                if codigo_aluno == "":
                     self.__tela_cadastro.show_message("Erro",
                                                       "Identificador deve ser informado.")
                 else:
                     self.voltar()
                     return
         self.voltar()
+
     @property
     def alunos(self):
         return self.__alunos

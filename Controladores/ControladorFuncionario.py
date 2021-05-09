@@ -69,7 +69,7 @@ class ControladorFuncionario:
                                             "Identificador: " + pagamento.identificador)
                 except:
                     ValueError('Error')
-        elif isinstance(user, Professor) and user is not None:
+        elif isinstance(user, Professor) or isinstance(user, Recepcionista) and user is not None:
             usuario = self.__funcionarios_DAO.get(user.codigo)
             if usuario:
                 try:
@@ -84,7 +84,8 @@ class ControladorFuncionario:
                     salarios.append('Nenhum pagamento registrado ainda.')
                     ValueError('Error')
         else:
-            self.__tela_funcionario.show_message("Erro", "Você não tem permissão para verificar o relatório de salários.")
+            self.__tela_funcionario.show_message("Erro",
+                                                 "Você não tem permissão para verificar o relatório de salários.")
 
         button, values = self.__tela_salarios.open(salarios)
         options = {4: self.voltar}
@@ -97,7 +98,7 @@ class ControladorFuncionario:
             if cargo == 'Gerente':
                 funcionario = Gerente(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                       salario, pagamentos)
-                
+
             elif cargo == 'Professor':
                 funcionario = Professor(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
                                         salario, pagamentos)
@@ -142,7 +143,7 @@ class ControladorFuncionario:
                     self.cadastrar_funcionario(codigo, senha, nome, cpf, data_nasc, email, pix,
                                                carga_horaria, salario, cargo, pagamentos)
             except ValueError:
-                    self.__tela_cadastro.show_message("Erro", "Salario e carga horaria sao numeros inteiros")
+                self.__tela_cadastro.show_message("Erro", "Salario e carga horaria sao numeros inteiros")
             except Exception:
                 print("Todos os campos devem ser preenchidos!")
                 self.__tela_cadastro.show_message("Erro", "Todos os campos devem ser preenchidos")
@@ -172,7 +173,7 @@ class ControladorFuncionario:
 
     def alterar_funcionario(self):
         codigo_usuario_anterior = self.__tela_funcionario.ask_verification("Digite o codigo do funcionario: ",
-                                                                    "codigo")
+                                                                           "codigo")
         if codigo_usuario_anterior:
             try:
                 old = self.__funcionarios_DAO.get(codigo_usuario_anterior)
@@ -186,7 +187,7 @@ class ControladorFuncionario:
                                 self.__tela_cadastro.show_message("Erro",
                                                                   "Esse codigo já está sendo utilizada por outro funcionário")
                             else:
-                                
+
                                 senha = new_values[1]
                                 nome = new_values[2]
                                 data_nasc = new_values[3]
@@ -200,14 +201,14 @@ class ControladorFuncionario:
                                 msg = "Altera"
                                 if cargo == 'Gerente':
                                     new = Gerente(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
-                                      salario)
+                                                  salario)
                                 elif cargo == 'Professor':
                                     new = Professor(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
-                                      salario)
+                                                    salario)
                                 else:
                                     new = Recepcionista(codigo, senha, nome, cpf, data_nasc, email, pix, carga_horaria,
-                                      salario)
-                                
+                                                        salario)
+
                                 self.__funcionarios_DAO.remove(codigo_usuario_anterior)
                                 self.__funcionarios_DAO.add(codigo, new)
                                 self.__tela_cadastro.show_message("Sucesso", "Funcionário alterado com sucesso")
@@ -223,7 +224,7 @@ class ControladorFuncionario:
     def open_add_pagamento_screen(self):
         codigo_usuario = self.__tela_add_pagamento.ask_verification("Digite o codigo do funcionario: ",
                                                                     "codigo")
-        if codigo_usuario:                                                           
+        if codigo_usuario:
             try:
                 usuario = self.__funcionarios_DAO.get(codigo_usuario)
                 if usuario:
@@ -236,7 +237,7 @@ class ControladorFuncionario:
             except Exception as e:
                 print("error", e)
             self.voltar()
-    
+
     def add_pagamento(self, values, usuario, codigo_usuario):
         try:
             codigo = values[0]
@@ -253,7 +254,7 @@ class ControladorFuncionario:
         except Exception as e:
             print("error", e)
         self.voltar()
-        
+
     @property
     def funcionarios(self):
         return self.__funcionarios

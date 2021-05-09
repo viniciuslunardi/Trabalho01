@@ -11,20 +11,20 @@ class TelaCadastroMensalidade(AbstractTela):
     def init_components(self, mensalidade):
         cpf = ""
         descricao = ""
-        valor = ""
-        vencimento = ""
+        mes_venc = ""
+        ano_venc = ""
         if mensalidade:
             cpf = mensalidade[0]
             descricao = mensalidade[1]
-            valor = mensalidade[2]
-            vencimentp = mensalidade[3]
+            mes_venc = mensalidade[2]
+            ano_venc = mensalidade[3]
 
         sg.change_look_and_feel("Reddit")
         layout = [
             [sg.Text("CPF*", size=(15, 1)), sg.InputText(cpf, size=(15, 1))],
             [sg.Text("Descrição", size=(15, 1)), sg.InputText(descricao)],
-            [sg.Text("Valor*", size=(15, 1)), sg.InputText(valor)],
-            [sg.Text("Vencimento*", size=(15, 1)), sg.InputText(vencimento)],
+            [sg.Text("Mês e ano de vencimento*", size=(15, 1)), sg.InputText(mes_venc, size=(2, 1)),
+             sg.Text("/", size=(0, 1)), sg.InputText(ano_venc, size=(4, 1))],
             [sg.Button("Salvar", size=(20, 1), key="salvar", button_color='green'), sg.Button("Voltar", key='voltar', size=(15, 1))]
         ]
 

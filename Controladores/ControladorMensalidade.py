@@ -53,38 +53,42 @@ class ControladorMensalidade:
         button, values = self.__tela_mensalidades.open(mensalidades)
         options = {4: self.voltar, 9: self.abre_tela_cadastro_mensalidade}
 
+        if not button:
+            button = 4
         return options[button]()
 
     def abre_tela_cadastro_mensalidade(self, mensalidade=None):
         button, values = self.__tela_cadastro.open(mensalidade)
 
-        options = {'voltar': self.voltar_lista(),
+        options = {'voltar': self.voltar_lista,
                    'salvar': self.pre_cadastro_mensalidade}
 
         values = {
             "cpf": values[0],
             "descricao": values[1],
-            "mes_vencimento": values[2],
-            "ano_vencimento": values[3],
+            "mes_venc": values[2],
+            "ano_venc": values[3],
         }
+
+        if not button:
+            button = 'voltar'
 
         if button != 'voltar':
             return options[button](values)
         else:
             return options[button]()
 
-    def valida_data_vencimento(self, data_nasc):
+    def valida_data_vencimento(self, mes, ano):
         try:
-            [dia, mes, ano] = data_nasc.split('/')
-            if (1 <= int(dia) <= 31) and (1 <= int(mes) <= 12) and (1900 <= int(ano) < 2021):
+            if (1 <= int(mes) <= 12) and (1900 <= int(ano)):
                 return True
             else:
                 raise Exception
         except Exception as err:
-            raise Exception('Data de nascimento inválida')
+            raise Exception('Data de vencimento inválida')
 
     def valida_mensalidade(self, values):
-        self.valida_data_vencimento(values['vencimento'])
+        self.valida_data_vencimento(values['mes_venc'], values['ano_venc'])
 
     def pre_cadastro_mensalidade(self, values):
         try:
@@ -99,9 +103,10 @@ class ControladorMensalidade:
                 self.__tela_cadastro.close()
                 self.abre_tela_cadastro_mensalidade(list(values.values()))
 
-            self.cadastrar_mensalidade(values['descricao'], False, aluno['valor_mensalidade'], values['vencimento'],
-                                       aluno)
-            self.voltar()
+            self.cadastrar_mensalidade(values['descricao'], False, aluno.valor_mensalidade, str(aluno.venc_mensalidade)
+                                       + '/' + values['mes_venc'] + '/' + values['ano_venc'],aluno)
+
+            self.voltar_lista()
 
         except Exception as e:
             self.__tela_cadastro.show_message("Erro", e)
@@ -111,28 +116,10 @@ class ControladorMensalidade:
     def cadastrar_mensalidade(self, descricao, pago, valor, vencimento, aluno):
         mensalidade = Mensalidade(descricao, pago, valor, vencimento)
 
-        self.__alunos_DAO.remove(aluno['codigo'])
-        aluno['mensalidades'].append(mensalidade)
-        self.__alunos_DAO.add(aluno['codigo'], aluno)
+        self.__alunos_DAO.remove(aluno.codigo)
+        aluno.mensalidades.append(mensalidade)
+        self.__alunos_DAO.add(aluno.codigo, aluno)
         self.__tela_cadastro.show_message("Sucesso", "Mensalidade cadastrada com sucesso")
-
-    def listar_alunos_inadimplentes(self):
-        todos_os_alunos = self.__alunos_DAO.get_all()
-        alunos_inadimplentes = []
-        for aluno in todos_os_alunos:
-            if aluno.tem_mensalidade_atrasada():
-                alunos_inadimplentes.append("Nome: " + str(aluno.nome) + '  -  ' +
-                                            "Email: " + str(aluno.email) + '  -  ' +
-                                            "cpf: " + str(aluno.cpf))
-
-        button, values = self.__tela_alunos_inadimpletes.open(alunos_inadimplentes)
-        options = {4: self.voltar}
-
-        return options[button]()
-
-    @property
-    def alunos(self):
-        return self.__alunos
 
     def voltar(self):
         self.__tela_mensalidades.close()

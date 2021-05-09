@@ -3,6 +3,7 @@ from Telas.TelaLogin import TelaLogin
 from Controladores.ControladorFuncionario import ControladorFuncionario
 from Controladores.ControladorAluno import ControladorAluno
 from Controladores.ControladorConta import ControladorConta
+from Controladores.ControladorMensalidade import ControladorMensalidade
 
 class ControladorPrincipal:
     __instance = None
@@ -12,6 +13,7 @@ class ControladorPrincipal:
         self.__tela_login = TelaLogin(self)
         self.__controlador_funcionario = ControladorFuncionario(self)
         self.__controlador_aluno = ControladorAluno(self)
+        self.__controlador_mensalidade = ControladorMensalidade(self)
         self.__controlador_conta = ControladorConta(self)
         self.__user_session = None
 
@@ -67,11 +69,15 @@ class ControladorPrincipal:
         return self.__controlador_aluno
 
     @property
+    def controlador_mensalidade(self):
+        return self.__controlador_mensalidade
+
+    @property
     def controlador_gerente(self):
         return self.__controlador_gerente
 
     def abre_tela_inicial(self):
-        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.open_alunos_inadimplentes, 5: self.cadastra_conta, 888: self.contas}
+        options = {0: self.funcionario, 1: self.aluno, 2: self.cadastra_func, 3: self.cadastra_alu, 4: self.open_alunos_inadimplentes, 5: self.cadastra_conta, 6: self.cadastra_mensalidade, 888: self.contas}
 
         button, values = self.__tela_principal.open()
         return options[button]()
@@ -84,6 +90,9 @@ class ControladorPrincipal:
 
     def cadastra_alu(self):
         self.__controlador_aluno.abre_tela_cadastro_aluno()
+
+    def cadastra_mensalidade(self):
+        self.__controlador_mensalidade.abre_mensalidade()
 
     def funcionario(self):
         self.__controlador_funcionario.abre_funcionario()

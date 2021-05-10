@@ -121,34 +121,38 @@ class ControladorFuncionario:
             self.__tela_cadastro.show_message("Erro", "Funcionário já cadastrado com esse código")
 
     def cadastra(self):
-        button, values = self.__tela_cadastro.open()
+        user = self.__controlador_principal.user_session
+        if isinstance(user, Gerente):
+            button, values = self.__tela_cadastro.open()
 
-        codigo = values[0]
-        if codigo:
-            try:
-                senha = values[1]
-                nome = values[2]
-                data_nasc = values[3]
-                email = values[4]
-                cpf = values[5]
-                pix = values[6]
-                carga_horaria = int(values[7])
-                salario = int(values[8])
-                cargo = values[9]
+            codigo = values[0]
+            if codigo:
+                try:
+                    senha = values[1]
+                    nome = values[2]
+                    data_nasc = values[3]
+                    email = values[4]
+                    cpf = values[5]
+                    pix = values[6]
+                    carga_horaria = int(values[7])
+                    salario = int(values[8])
+                    cargo = values[9]
 
-                if not senha or not cpf or not nome or not email or not data_nasc or not pix or not cargo or not carga_horaria or not salario:
-                    raise Exception()
-                else:
-                    pagamentos = []
-                    self.cadastrar_funcionario(codigo, senha, nome, cpf, data_nasc, email, pix,
-                                               carga_horaria, salario, cargo, pagamentos)
-            except ValueError:
-                self.__tela_cadastro.show_message("Erro", "Salario e carga horaria sao numeros inteiros")
-            except Exception:
-                print("Todos os campos devem ser preenchidos!")
-                self.__tela_cadastro.show_message("Erro", "Todos os campos devem ser preenchidos")
+                    if not senha or not cpf or not nome or not email or not data_nasc or not pix or not cargo or not carga_horaria or not salario:
+                        raise Exception()
+                    else:
+                        pagamentos = []
+                        self.cadastrar_funcionario(codigo, senha, nome, cpf, data_nasc, email, pix,
+                                                   carga_horaria, salario, cargo, pagamentos)
+                except ValueError:
+                    self.__tela_cadastro.show_message("Erro", "Salario e carga horaria sao numeros inteiros")
+                except Exception:
+                    print("Todos os campos devem ser preenchidos!")
+                    self.__tela_cadastro.show_message("Erro", "Todos os campos devem ser preenchidos")
+            else:
+                self.__tela_cadastro.show_message("Erro", "codigo nao pode ser vazio")
         else:
-            self.__tela_cadastro.show_message("Erro", "codigo nao pode ser vazio")
+            self.__tela_funcionario.show_message("Erro", "Você não tem permissão para adicionar um funcionário.")
         self.voltar()
 
     def existe_funcionario(self, usuario):

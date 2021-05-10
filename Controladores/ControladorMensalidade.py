@@ -110,6 +110,8 @@ class ControladorMensalidade:
             raise Exception('Identificador já cadastrado')
 
     def valida_mensalidade(self, values):
+        if not values['identificador']:
+            raise Exception('É necessário informar um identificador para cadastrar uma mensalidade.')
         self.valida_ident(values['identificador'])
         self.valida_data_vencimento(values['mes_venc'], values['ano_venc'])
 

@@ -100,7 +100,17 @@ class ControladorMensalidade:
         except Exception as err:
             raise Exception('Data de vencimento inválida')
 
+    def valida_ident(self, id):
+        try:
+            if not self.__mensalidades_DAO.get(id):
+                return True
+            else:
+                raise Exception
+        except Exception as err:
+            raise Exception('Identificador já cadastrado')
+
     def valida_mensalidade(self, values):
+        self.valida_ident(values['identificador'])
         self.valida_data_vencimento(values['mes_venc'], values['ano_venc'])
 
     def pre_cadastro_mensalidade(self, values):

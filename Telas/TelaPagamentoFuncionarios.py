@@ -19,11 +19,11 @@ class TelaMarcaPagamentoFuncionario(AbstractTela):
         new = True
         sg.change_look_and_feel("Reddit")
         layout = [
-            [sg.Text("Identificador:", size=(15, 1)), sg.InputText(identificador, disabled=exclude)],
-            [sg.Text("Data de Pagamento.:", size=(15, 1)), sg.InputText(dia_venc, size=(2, 1), disabled=exclude),
+            [sg.Text("Identificador*:", size=(15, 1)), sg.InputText(identificador, disabled=exclude)],
+            [sg.Text("Data de Pagamento*:", size=(15, 1)), sg.InputText(dia_venc, size=(2, 1), disabled=exclude),
              sg.Text("/", size=(0, 1)), sg.InputText(mes_venc, size=(2, 1), disabled=exclude),
              sg.Text("/", size=(0, 1)), sg.InputText(ano_venc, size=(4, 1), disabled=exclude)],
-            [sg.Text("Valor (R$):", size=(15, 1)), sg.InputText(valor, disabled=exclude)],
+            [sg.Text("Valor (R$)*:", size=(15, 1)), sg.InputText(valor, disabled=exclude)],
             [sg.Text("Descrição:", size=(15, 1)), sg.InputText(descricao, disabled=exclude)],
             [sg.Button("Salvar", size=(15, 1), key=5, button_color='green', visible=new),
              sg.Button("Voltar", size=(15, 1), key=4)]
